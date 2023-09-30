@@ -1,10 +1,13 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomeScreen from './HomeScreen';
+
 import HomeIcon from '../../assets/icons/grid-fill.svg';
+import ServiceIcon from '../../assets/icons/envelope-plus-fill.svg';
+import AccountIcon from '../../assets/icons/gear-fill.svg';
+import HomeScreen from '../Menu/HomeScreen';
+import ServiceScreen from '../Menu/ServiceScreen';
+import AccountScreen from '../Menu/AccountScreen';
 import { PRIMARY_COLOR } from '../../components/style';
-import ServiceScreen from './ServiceScreen';
-import AccountScreen from './AccountScreen';
 
 type RootTabParamList = {
     Home: undefined;
@@ -23,9 +26,9 @@ export default function HomeTabs() {
                     tabBarActiveTintColor: '#d4eaf7',
                     tabBarInactiveTintColor: '#fff',
                     tabBarLabelStyle: {
-                        marginVertical: 0,
                         fontFamily: 'Viga-Regular',
                         fontSize: 10,
+                        marginBottom: 4,
                     },
                     tabBarIconStyle: {
                         justifyContent: 'center',
@@ -37,7 +40,7 @@ export default function HomeTabs() {
                         backgroundColor: PRIMARY_COLOR,
                         borderTopWidth: 0,
                         elevation: 0,
-                        height: 45,
+                        height: 50,
                         borderTopLeftRadius: 10,
                         borderTopRightRadius: 10,
                     },
@@ -60,9 +63,9 @@ export default function HomeTabs() {
                 component={ServiceScreen}
                 options={{
                     headerShown: false,
-                    tabBarLabel: 'Service',
+                    tabBarLabel: 'Layanan',
                     tabBarIcon: ({ color }) => (
-                        <HomeIcon fill={color} width={20} height={20} />
+                        <ServiceIcon fill={color} width={20} height={20} />
                     ),
                 }}
             />
@@ -71,9 +74,9 @@ export default function HomeTabs() {
                 component={AccountScreen}
                 options={{
                     headerShown: false,
-                    tabBarLabel: 'Account',
+                    tabBarLabel: 'Pengaturan',
                     tabBarIcon: ({ color }) => (
-                        <HomeIcon fill={color} width={20} height={20} />
+                        <AccountIcon fill={color} width={20} height={20} />
                     ),
                 }}
             />

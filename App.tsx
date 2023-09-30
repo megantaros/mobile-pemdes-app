@@ -10,18 +10,15 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import SplashScreen from './src/pages/SplashScreen/SplashScreen';
-import Register from './src/pages/Authentication/Register';
 import Login from './src/pages/Authentication/Login';
-import UpdateProfile from './src/pages/Authentication/UpdateProfile';
-import HomeTabs from './src/pages/Menu/HomeTab';
 import RegisterScreen from './src/pages/Authentication/Register';
+import RouteAuth from './src/pages/Routes/IsAuth';
 
 export type RootStackParamList = {
   SplashScreen: undefined;
   Register: undefined;
   Login: undefined;
-  UpdateProfile: undefined;
-  HomeTabs: undefined;
+  AuthRoutes: undefined;
 };
 
 const App = () => {
@@ -47,13 +44,8 @@ const App = () => {
           options={{ headerShown: false }}
         />
         <RootStack.Screen
-          name="UpdateProfile"
-          component={UpdateProfile}
-          options={{ headerShown: false }}
-        />
-        <RootStack.Screen
-          name="HomeTabs"
-          component={HomeTabs}
+          name="AuthRoutes"
+          component={RouteAuth}
           options={{ headerShown: false }}
         />
       </RootStack.Navigator>

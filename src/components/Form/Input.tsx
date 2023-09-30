@@ -11,9 +11,10 @@ interface Props {
     children?: React.ReactNode;
     errors?: any;
     keyType?: KeyboardType;
+    initialValue?: string;
 }
 
-const Input: FC<Props> = ({ placeholder, control, name, children, rules, errors, keyType }) => {
+const Input: FC<Props> = ({ placeholder, control, name, children, rules, errors, keyType, initialValue }) => {
 
     const [border, setBorder] = React.useState<boolean>(true);
 
@@ -43,7 +44,7 @@ const Input: FC<Props> = ({ placeholder, control, name, children, rules, errors,
                             onFocus={onFocus}
                             onBlur={!border ? onFocus : onBlur}
                             onChangeText={onChange}
-                            value={value}
+                            value={initialValue ? initialValue : value}
                         />
                     </View>
                 )}
@@ -61,6 +62,7 @@ const Input: FC<Props> = ({ placeholder, control, name, children, rules, errors,
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        width: '100%',
     },
     icon: {
         flex: 1,

@@ -29,6 +29,8 @@ const HorizontalItem: FC<Props> = ({ title, img, onPress }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        alignItems: 'flex-start',
+        justifyContent: 'space-between',
     },
     item: {
         height: 'auto',
@@ -58,7 +60,7 @@ const styles = StyleSheet.create({
         height: 'auto',
         borderRadius: 10,
         padding: 10,
-        width: '100%',
+        width: 'auto',
     },
 });
 

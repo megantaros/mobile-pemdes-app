@@ -18,37 +18,37 @@ const items = [
     {
         id: 1,
         title: 'Permohonan Pengantar KK',
-        img: <FamilyCard width={40} height={40} fill={PRIMARY_COLOR} />,
+        img: <FamilyCard width={30} height={30} fill={PRIMARY_COLOR} />,
     },
     {
         id: 2,
         title: 'Permohonan Pengantar KTP',
-        img: <IdentityCard width={40} height={40} fill={PRIMARY_COLOR} />,
+        img: <IdentityCard width={30} height={30} fill={PRIMARY_COLOR} />,
     },
     {
         id: 3,
         title: 'Permohonan Pengantar SKCK',
-        img: <Police width={40} height={40} fill={PRIMARY_COLOR} />,
+        img: <Police width={30} height={30} fill={PRIMARY_COLOR} />,
     },
     {
         id: 4,
         title: 'Permohonan Keterangan Domisili',
-        img: <Domisili width={40} height={40} fill={PRIMARY_COLOR} />,
+        img: <Domisili width={30} height={30} fill={PRIMARY_COLOR} />,
     },
     {
         id: 5,
         title: 'Permohonan Keterangan Usaha',
-        img: <Store width={40} height={40} fill={PRIMARY_COLOR} />,
+        img: <Store width={30} height={30} fill={PRIMARY_COLOR} />,
     },
     {
         id: 6,
         title: 'Permohonan Keterangan Pindah',
-        img: <HouseLeave width={40} height={40} fill={PRIMARY_COLOR} />,
+        img: <HouseLeave width={30} height={30} fill={PRIMARY_COLOR} />,
     },
     {
         id: 7,
         title: 'Permohonan Keterangan Datang',
-        img: <HouseReturn width={40} height={40} fill={PRIMARY_COLOR} />,
+        img: <HouseReturn width={30} height={30} fill={PRIMARY_COLOR} />,
     },
 ];
 

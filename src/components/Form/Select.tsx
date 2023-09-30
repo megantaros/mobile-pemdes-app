@@ -54,6 +54,7 @@ const Select: FC<Props> = ({ placeholder, control, name, rules, errors, data }) 
                 {item.value === 'Konghucu' && (
                     <Konghucu style={styles.imageStyle} fill="#022E57" width={16} height={16} />
                 )}
+
                 <Text style={styles.renderItemText}>{item.lable}</Text>
             </View>
         );
@@ -102,9 +103,10 @@ const Select: FC<Props> = ({ placeholder, control, name, rules, errors, data }) 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        width: '100%',
     },
     dropdown: {
-        height: 42,
+        height: 50,
         marginVertical: 4,
         width: '100%',
         backgroundColor: '#fff',
@@ -140,6 +142,7 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontFamily: 'Viga-Regular',
         marginLeft: 12,
+        color: PRIMARY_COLOR,
     },
     onError: {
         fontFamily: PRIMARY_FONT,

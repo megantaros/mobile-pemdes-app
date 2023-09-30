@@ -4,6 +4,7 @@ import { PRIMARY_COLOR, SECONDARY_COLOR } from '../style';
 import ListIcon from '../../assets/icons/list.svg';
 
 const logoKebumen = require('../../assets/img/logo-kebumen.png');
+const avatar = require('../../assets/img/man.png');
 
 const Header = () => {
     return (

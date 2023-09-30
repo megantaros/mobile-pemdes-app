@@ -5,15 +5,19 @@ import { PRIMARY_COLOR } from './style';
 type Props = {
     children: React.ReactNode;
     title?: string;
+    text?: string;
 }
 
-const Section: FC<Props> = ({ children, title }) => {
+const Section: FC<Props> = ({ children, title, text }) => {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>{title}</Text>
-            {/* <Text style={styles.text}>Misi</Text> */}
 
-            <View style={{ marginBottom: 5 }} />
+            {text && (
+                <Text style={styles.text}>{text}</Text>
+            )}
+
+            <View style={{ marginBottom: 10 }} />
 
             {children}
         </View>
@@ -32,6 +36,13 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
         color: PRIMARY_COLOR,
+    },
+    text: {
+        fontFamily: 'Poppins-Regular',
+        fontSize: 12,
+        fontWeight: '400',
+        color: PRIMARY_COLOR,
+        textAlign: 'center',
     },
 });
 

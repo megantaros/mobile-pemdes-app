@@ -35,8 +35,8 @@ const LoginScreen = ({ navigation }: Props) => {
 
     const onSubmit = (data: Object) => {
         console.log(data);
-        setModalVisible(!isModalVisible);
-        navigation.push('UpdateProfile');
+        // setModalVisible(!isModalVisible);
+        navigation.push('AuthRoutes');
     };
 
     return (
