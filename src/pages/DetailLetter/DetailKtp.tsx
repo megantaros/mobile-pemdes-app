@@ -7,15 +7,16 @@ import Section from '../../components/Section';
 import Select from '../../components/Form/Select';
 import { useForm } from 'react-hook-form';
 import Input from '../../components/Form/Input';
-import { launchImageLibrary } from 'react-native-image-picker';
 import TextAreaDisabled from '../../components/DisabledForm/TextAreaDisabled';
+
+import { launchImageLibrary } from 'react-native-image-picker';
 
 import PersonFill from '../../assets/icons/person-fill.svg';
 import PersonCard from '../../assets/icons/person-vcard-fill.svg';
 import Location from '../../assets/icons/geo-alt-fill.svg';
 import ButtonVariant from '../../components/Form/Button';
 import { PRIMARY_COLOR } from '../../components/style';
-import PaperClip from '../../assets/icons/paperclip.svg'
+import PaperClip from '../../assets/icons/paperclip.svg';
 import InputDisabled from '../../components/DisabledForm/InputDisabled';
 
 const jenis_permohonan = [
@@ -29,6 +30,18 @@ type Props = NativeStackScreenProps<AuthStackParamList, 'DetailKtp'>;
 const DetailKtp = ({ navigation, route }: Props) => {
 
     // console.log(route.params.id);
+
+    const [selectedImage, setSelectedImage] = React.useState<any>(null);
+
+    const handleImagePicker = async () => {
+        const images = await launchImageLibrary({
+            mediaType: 'photo',
+            includeBase64: false,
+            maxHeight: 200,
+            maxWidth: 200,
+        });
+        console.log(images.assets?.[0].fileName);
+    };
 
     const {
         control,
@@ -47,8 +60,6 @@ const DetailKtp = ({ navigation, route }: Props) => {
     const onSubmit = (data: any) => {
         console.log(data);
     };
-
-    const [selectedImage, setSelectedImage] = React.useState<any>(null);
 
     return (
         <LayoutWithoutHeader>
@@ -134,12 +145,7 @@ const DetailKtp = ({ navigation, route }: Props) => {
                             fill={PRIMARY_COLOR}
                         />
                     </Input>
-                    <Button onPress={
-                        () => launchImageLibrary({ mediaType: 'photo' }, (response) => {
-                            console.log(response);
-                            setSelectedImage(response);
-                        })}
-                        title="Upload Foto" />
+                    <Button onPress={handleImagePicker} title="Upload Foto" />
                     <ButtonVariant
                         title="Update Profile"
                         variant={{ color: '#fff', backgroundColor: PRIMARY_COLOR }}
