@@ -1,6 +1,6 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { PRIMARY_BACKGROUND_COLOR, PRIMARY_COLOR } from '../../components/style';
+import { DANGER_COLOR, PRIMARY_BACKGROUND_COLOR, PRIMARY_COLOR } from '../../components/style';
 import Layout from '../../components/Layout/Layout';
 
 import FamilyCard from '../../assets/icons/game.svg';
@@ -58,8 +58,6 @@ const mision = [
     '3. Mendorong terciptanya Lembaga Perekonomian Desa yang profesional dan meningkatkan derajat kehidupan masyarakat.',
     '4. Mendorong kegiatan dunia usaha guna menciptakan lapangan kerja.',
 ];
-
-// type Props = NativeStackScreenProps<RootTabParamList, 'Home'>;
 
 const HomeScreen = () => {
 
@@ -131,7 +129,7 @@ const HomeScreen = () => {
                     title="Visi"
                 >
                     <View style={styles.cardContainer}>
-                        <Text style={[styles.text, { fontSize: 14, textAlign: 'center' }]}>
+                        <Text style={[styles.text, { fontSize: 12, textAlign: 'center' }]}>
                             Menuju Desa Maju Mandiri
                         </Text>
                     </View>
@@ -170,7 +168,7 @@ const styles = StyleSheet.create({
         height: 50,
     },
     sectionTitle: {
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: 'bold',
         fontFamily: 'Viga-Regular',
         color: PRIMARY_COLOR,
@@ -183,11 +181,11 @@ const styles = StyleSheet.create({
     },
     vision: {
         flex: 1,
-        padding: 20,
+        padding: 10,
         backgroundColor: '#fff',
     },
     cardContainer: {
-        borderLeftColor: PRIMARY_COLOR,
+        borderLeftColor: DANGER_COLOR,
         borderLeftWidth: 3,
         backgroundColor: '#fff',
         padding: 15,
@@ -196,7 +194,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontFamily: 'Viga-Regular',
-        fontSize: 12,
+        fontSize: 10,
         fontWeight: '400',
         color: PRIMARY_COLOR,
     },

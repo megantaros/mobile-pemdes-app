@@ -138,9 +138,9 @@ const ModalRules: FC<Props> = ({ id, isVisible, onPress }) => {
 
 const styles = StyleSheet.create({
     contentModal: {
-        flex: 2,
+        flex: 1,
         borderRadius: 20,
-        maxHeight: 430,
+        maxHeight: 410,
         backgroundColor: '#fff',
         justifyContent: 'center',
         alignItems: 'center',
@@ -151,6 +151,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Viga-Regular',
         fontSize: 14,
         color: PRIMARY_COLOR,
+        marginBottom: 10,
     },
     textModal: {
         fontFamily: 'Viga-Regular',

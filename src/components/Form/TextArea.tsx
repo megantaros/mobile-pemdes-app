@@ -6,13 +6,15 @@ import { Control, Controller } from 'react-hook-form';
 interface Props {
     placeholder?: string;
     name: string;
-    control: Control<any>;
+    control?: Control<any>;
     rules?: any;
     children?: React.ReactNode;
     errors?: any;
+    initialValue?: string;
+    disabled?: boolean;
 }
 
-const TextArea: FC<Props> = ({ placeholder, control, name, children, rules, errors }) => {
+const TextArea: FC<Props> = ({ placeholder, control, name, children, rules, errors, initialValue, disabled }) => {
 
     const [border, setBorder] = React.useState<boolean>(true);
 
@@ -35,12 +37,13 @@ const TextArea: FC<Props> = ({ placeholder, control, name, children, rules, erro
                             {children}
                         </View>
                         <TextInput
+                            disableFullscreenUI={disabled ? disabled : false}
                             style={styles.input}
                             placeholder={placeholder}
                             onFocus={onFocus}
                             onBlur={!border ? onFocus : onBlur}
                             onChangeText={onChange}
-                            value={value}
+                            value={initialValue ? initialValue : value}
                             multiline={true}
                             numberOfLines={4}
                         />
@@ -60,6 +63,7 @@ const TextArea: FC<Props> = ({ placeholder, control, name, children, rules, erro
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        width: '100%',
     },
     icon: {
         flex: 1,
@@ -91,6 +95,7 @@ const styles = StyleSheet.create({
         color: PRIMARY_COLOR,
         flex: 6,
         textAlignVertical: 'top',
+        paddingTop: 6,
     },
     onError: {
         fontFamily: PRIMARY_FONT,

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { PRIMARY_BACKGROUND_COLOR, PRIMARY_COLOR, PRIMARY_FONT, SECONDARY_COLOR, SECONDARY_FONT } from '../../components/style';
-import { RootStackParamList } from '../../../App';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -17,8 +16,7 @@ import Calendar from '../../assets/icons/calendar-event.svg';
 import Work from '../../assets/icons/briefcase-fill.svg';
 import Select from '../../components/Form/Select';
 import ButtonVariant from '../../components/Form/Button';
-
-type Props = NativeStackScreenProps<RootStackParamList, 'UpdateProfile'>;
+import { AuthStackParamList } from '../Routes/IsAuth';
 
 const sex = [
     {
@@ -58,6 +56,7 @@ const religion = [
     },
 ];
 
+type Props = NativeStackScreenProps<AuthStackParamList, 'UpdateProfile'>;
 
 const UpdateProfile = ({ navigation }: Props) => {
 
@@ -81,7 +80,7 @@ const UpdateProfile = ({ navigation }: Props) => {
 
     const onSubmit = (data: Object) => {
         console.log(data);
-        navigation.push('HomeTabs');
+        navigation.push('AuthRoutes');
     };
 
     return (

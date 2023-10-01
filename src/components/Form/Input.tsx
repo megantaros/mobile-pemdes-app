@@ -6,15 +6,16 @@ import { Control, Controller } from 'react-hook-form';
 interface Props {
     placeholder?: string;
     name: string;
-    control: Control<any>;
+    control?: Control<any>;
     rules?: any;
     children?: React.ReactNode;
     errors?: any;
     keyType?: KeyboardType;
     initialValue?: string;
+    disabled?: boolean;
 }
 
-const Input: FC<Props> = ({ placeholder, control, name, children, rules, errors, keyType, initialValue }) => {
+const Input: FC<Props> = ({ placeholder, control, name, children, rules, errors, keyType, initialValue, disabled }) => {
 
     const [border, setBorder] = React.useState<boolean>(true);
 
@@ -37,6 +38,7 @@ const Input: FC<Props> = ({ placeholder, control, name, children, rules, errors,
                             {children}
                         </View>
                         <TextInput
+                            disableFullscreenUI={disabled ? disabled : false}
                             secureTextEntry={name === 'password' || name === 'confirm_password' ? true : false}
                             keyboardType={keyType ? keyType : 'default'}
                             style={styles.input}

@@ -6,9 +6,13 @@ import Card from '../../components/Card';
 
 import PersonGear from '../../assets/icons/person-fill-gear.svg';
 import PaperPlane from '../../assets/icons/paper-plane.svg';
-import { PRIMARY_COLOR } from '../../components/style';
+import { DANGER_COLOR, PRIMARY_COLOR } from '../../components/style';
+import { AuthStackParamList } from '../Routes/IsAuth';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-const AccountScreen = () => {
+type Props = NativeStackScreenProps<AuthStackParamList, 'InfoAccount'>;
+
+const AccountScreen = ({ navigation }: Props) => {
 
     return (
         <Layout>
@@ -18,7 +22,7 @@ const AccountScreen = () => {
                     text="Fitur pengaturan akun"
                 >
                     <Card style={styles.cardStyle}>
-                        <Pressable onPress={() => console.log('Info Akun')} style={styles.cardContainer}>
+                        <Pressable onPress={() => navigation.push('InfoAccount')} style={styles.cardContainer}>
                             <View style={styles.cardIcon}>
                                 <PersonGear width={26} height={26} fill={PRIMARY_COLOR} />
                             </View>
@@ -29,7 +33,7 @@ const AccountScreen = () => {
                         </Pressable>
                     </Card>
                     <Card style={styles.cardStyle}>
-                        <Pressable onPress={() => console.log('Status Surat')} style={styles.cardContainer}>
+                        <Pressable onPress={() => navigation.push('StatusLetters')} style={styles.cardContainer}>
                             <View style={styles.cardIcon}>
                                 <PaperPlane width={26} height={26} fill={PRIMARY_COLOR} />
                             </View>
@@ -56,6 +60,8 @@ const styles = StyleSheet.create({
     cardStyle: {
         width: '100%',
         marginVertical: 5,
+        borderLeftColor: DANGER_COLOR,
+        borderLeftWidth: 3,
     },
     cardContainer: {
         flexDirection: 'row',

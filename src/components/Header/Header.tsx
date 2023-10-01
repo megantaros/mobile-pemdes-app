@@ -2,9 +2,9 @@ import React from 'react';
 import { View, StyleSheet, Text, Image } from 'react-native';
 import { PRIMARY_COLOR, SECONDARY_COLOR } from '../style';
 import ListIcon from '../../assets/icons/list.svg';
+import Person from '../../assets/icons/person-fill.svg';
 
 const logoKebumen = require('../../assets/img/logo-kebumen.png');
-const avatar = require('../../assets/img/man.png');
 
 const Header = () => {
     return (
@@ -14,7 +14,7 @@ const Header = () => {
                 <Text style={styles.title}>Portal Pelayanan</Text>
                 <Text style={styles.text}>Pemdes Kembaran</Text>
             </View>
-            <ListIcon width={30} height={30} fill={'#fff'} />
+            {/* <Person width={20} height={20} fill={'#fff'} /> */}
         </View>
     );
 };
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
         backgroundColor: PRIMARY_COLOR,
         padding: 15,
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         width: '100%',
         borderBottomEndRadius: 20,
         shadowColor: '#000',

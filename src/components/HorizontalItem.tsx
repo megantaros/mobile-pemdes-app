@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { View, StyleSheet, Text, Pressable } from 'react-native';
-import { PRIMARY_COLOR } from './style';
+import { DANGER_COLOR, PRIMARY_COLOR } from './style';
 
 interface Props {
     title: string;
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
         marginRight: 10,
         padding: 10,
         borderLeftWidth: 3,
-        borderLeftColor: PRIMARY_COLOR,
+        borderLeftColor: DANGER_COLOR,
     },
     rowItem: {
         flexDirection: 'column',
@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
         height: 40,
         fontFamily: 'Viga-Regular',
         color: PRIMARY_COLOR,
+        width: 'auto',
     },
     contentItem: {
         backgroundColor: '#d4eaf7',
