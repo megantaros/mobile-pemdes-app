@@ -7,10 +7,10 @@ import Card from '../../components/Card';
 import PersonGear from '../../assets/icons/person-fill-gear.svg';
 import PaperPlane from '../../assets/icons/paper-plane.svg';
 import { DANGER_COLOR, PRIMARY_COLOR } from '../../components/style';
-import { AuthStackParamList } from '../Routes/IsAuth';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootTabParamList } from '../Routes/HomeTab';
 
-type Props = NativeStackScreenProps<AuthStackParamList, 'InfoAccount'>;
+type Props = NativeStackScreenProps<RootTabParamList, 'Account'>;
 
 const AccountScreen = ({ navigation }: Props) => {
 

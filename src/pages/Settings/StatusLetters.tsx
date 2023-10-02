@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import Section from '../../components/Section';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { AuthStackParamList } from '../Routes/IsAuth';
+import { AuthStackParamList } from '../Routes/RouteAuth';
 
 import LayoutWithoutHeader from '../../components/Layout/LayoutWithoutHeader';
 import ListLetters from '../../features/ListLetters/ListLetters';

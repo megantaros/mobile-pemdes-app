@@ -1,8 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useEffect } from 'react';
-import { StyleSheet, Text, Image, LayoutAnimation, Button, View, Platform, UIManager } from 'react-native';
+import React from 'react';
+import { StyleSheet, Text, Image, LayoutAnimation, SafeAreaView, View, Platform, UIManager } from 'react-native';
 import { RootStackParamList } from '../../../App';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SplashScreen'>;
 
@@ -15,7 +14,7 @@ const SplashScreen = ({ navigation }: Props) => {
         UIManager.setLayoutAnimationEnabledExperimental(true);
     }
 
-    useEffect(() => {
+    React.useEffect(() => {
         LayoutAnimation.configureNext({
             duration: 1000,
             create: {
@@ -31,12 +30,10 @@ const SplashScreen = ({ navigation }: Props) => {
                 property: LayoutAnimation.Properties.opacity,
             },
         });
-        setTimeout(() => {
-            navigation.navigate('Register');
-        }, 2000);
+        navigation.replace('Login');
     }, [navigation]);
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <Image source={require('../../assets/img/splash-screen.png')} style={styles.bgSplashScreen} />
             <View style={styles.section}>
                 <Image source={require('../../assets/img/logo-kebumen.png')} style={styles.image} />
@@ -48,7 +45,7 @@ const SplashScreen = ({ navigation }: Props) => {
             <View style={styles.footer}>
                 <Text style={styles.textFooter}>© 2022 Copyright: Gita Megantara</Text>
             </View>
-        </View>
+        </SafeAreaView>
     );
 };
 

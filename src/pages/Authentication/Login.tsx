@@ -12,13 +12,40 @@ import ButtonVariant from '../../components/Form/Button';
 import { PRIMARY_COLOR } from '../../components/style';
 import ModalSuccess from '../../components/Modal/ModalSuccess';
 import ModalError from '../../components/Modal/ModalError';
+import https from '../../utils/api/http';
+import { useAppDispatch } from '../../hooks/hooks';
+import { setUser } from '../../stores/user';
 
 const imgHeaderLogin = require('../../assets/img/header-register.png');
 const imgPerangkat_2 = require('../../assets/img/perangkat-desa-2.png');
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
+interface IModalError {
+    isVisible: boolean;
+    description: string;
+}
+
+interface IModalSuccess {
+    isVisible: boolean;
+    description: string;
+}
+
 const LoginScreen = ({ navigation }: Props) => {
+
+    const [isModalError, setModalError] = React.useState<IModalError>({
+        isVisible: false,
+        description: '',
+    });
+
+    const [isModalSuccess, setModalSuccess] = React.useState<IModalSuccess>({
+        isVisible: false,
+        description: '',
+    });
+
+    const [isLoading, setIsLoading] = React.useState<boolean>(false);
+
+    const dispatch = useAppDispatch();
 
     const {
         control,
@@ -31,12 +58,45 @@ const LoginScreen = ({ navigation }: Props) => {
         },
     });
 
-    const [isModalVisible, setModalVisible] = React.useState<boolean>(false);
+    const onSubmit = async (data: any) => {
+        setIsLoading(true);
 
-    const onSubmit = (data: Object) => {
-        console.log(data);
-        // setModalVisible(!isModalVisible);
-        navigation.push('AuthRoutes');
+        await https().post('/login', {
+            email: data.email,
+            password: data.password,
+        }).then((res) => {
+            // console.log(res.data.data);
+            // console.log(res.data.access_token);
+            dispatch(setUser(
+                {
+                    id_warga: res.data.data.id_warga,
+                    nama_warga: res.data.data.nama_warga,
+                    email: res.data.data.email,
+                    notelpon: res.data.data.notelpon,
+                    nik: res.data.data.nik,
+                    ttl: res.data.data.ttl,
+                    jenis_kelamin: res.data.data.jenis_kelamin,
+                    pekerjaan: res.data.data.pekerjaan,
+                    agama: res.data.data.agama,
+                    alamat: res.data.data.alamat,
+                    isLoggedIn: true,
+                    token: res.data.access_token,
+                },
+            ));
+            setModalSuccess({
+                isVisible: true,
+                description: 'Anda berhasil login!',
+            });
+            setIsLoading(false);
+        }).catch((err) => {
+            console.log(err.response.data);
+            setModalError({
+                isVisible: true,
+                description: 'Email atau Password Salah!',
+            });
+            setIsLoading(false);
+        });
+
     };
 
     return (
@@ -45,15 +105,15 @@ const LoginScreen = ({ navigation }: Props) => {
                 style={
                     styles.scroll_view
                 }>
-                {/* <ModalSuccess
-                    isVisible={isModalVisible}
-                    onPress={() => setModalVisible(!isModalVisible)}
-                    description="Anda telah terdaftar sebagai warga desa Kembaran"
-                /> */}
+                <ModalSuccess
+                    isVisible={isModalSuccess.isVisible}
+                    onPress={() => navigation.push('AuthRoutes')}
+                    description={isModalSuccess.description}
+                />
                 <ModalError
-                    isVisible={isModalVisible}
-                    onPress={() => setModalVisible(!isModalVisible)}
-                    description="Email sudah terdaftar!"
+                    isVisible={isModalError.isVisible}
+                    onPress={() => setModalError({ isVisible: false, description: '' })}
+                    description={isModalError.description}
                 />
                 <View style={styles.container_header}>
                     <Image source={imgHeaderLogin} style={styles.bg_header} />
@@ -90,6 +150,7 @@ const LoginScreen = ({ navigation }: Props) => {
                     <ButtonVariant
                         variant={{ color: '#fff', backgroundColor: PRIMARY_COLOR }}
                         title="Login"
+                        isLoading={isLoading}
                         onPress={handleSubmit(onSubmit)}
                     />
                 </View>

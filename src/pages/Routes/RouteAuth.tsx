@@ -8,6 +8,8 @@ import LeftIcon from '../../assets/icons/left-arrow.svg';
 import StatusLetters from '../Settings/StatusLetters';
 import DetailKk from '../DetailLetter/DetailKk';
 import DetailKtp from '../DetailLetter/DetailKtp';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../../App';
 
 export type AuthStackParamList = {
     UpdateProfile: undefined;
@@ -18,7 +20,9 @@ export type AuthStackParamList = {
     DetailKtp: { id: number };
 };
 
-const RouteAuth = () => {
+type Props = NativeStackScreenProps<RootStackParamList, 'AuthRoutes'>;
+
+const RouteAuth = ({ navigation }: Props) => {
 
     const AuthStack = createStackNavigator<AuthStackParamList>();
 

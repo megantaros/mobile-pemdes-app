@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Pressable, StyleSheet, Text } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
 import { PRIMARY_COLOR, PRIMARY_FONT } from '../style';
 
 type variant = { color?: string, backgroundColor?: string };
@@ -8,20 +8,23 @@ interface Props {
     title: string;
     onPress?: () => void;
     variant?: variant;
+    isLoading?: boolean;
 }
 
-const ButtonVariant: FC<Props> = ({ title, onPress, variant }) => {
+const ButtonVariant: FC<Props> = ({ title, onPress, variant, isLoading }) => {
     const styles = StyleSheet.create({
         container: {
             flex: 1,
             alignItems: 'center',
-            justifyContent: 'flex-start',
+            justifyContent: 'center',
             backgroundColor: variant?.backgroundColor,
             padding: 10,
             borderRadius: 10,
             marginTop: 30,
             width: '100%',
             maxHeight: 42,
+            flexDirection: 'row',
+            gap: 5,
         },
         text: {
             fontFamily: PRIMARY_FONT,
@@ -29,8 +32,10 @@ const ButtonVariant: FC<Props> = ({ title, onPress, variant }) => {
             color: variant?.color,
         },
     });
+
     return (
         <Pressable style={styles.container} onPress={onPress}>
+            {isLoading && <ActivityIndicator size={'small'} color={'#fff'} />}
             <Text style={styles.text}>{title}</Text>
         </Pressable>
     );

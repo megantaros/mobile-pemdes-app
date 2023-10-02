@@ -16,7 +16,9 @@ import Calendar from '../../assets/icons/calendar-event.svg';
 import Work from '../../assets/icons/briefcase-fill.svg';
 import Select from '../../components/Form/Select';
 import ButtonVariant from '../../components/Form/Button';
-import { AuthStackParamList } from '../Routes/IsAuth';
+import { AuthStackParamList } from '../Routes/RouteAuth';
+import { useAppDispatch } from '../../hooks/hooks';
+import ModalError from '../../components/Modal/ModalError';
 
 const sex = [
     {
@@ -58,9 +60,31 @@ const religion = [
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'UpdateProfile'>;
 
+interface IModalError {
+    isVisible: boolean;
+    description: string;
+}
+
+interface IModalSuccess {
+    isVisible: boolean;
+    description: string;
+}
+
 const UpdateProfile = ({ navigation }: Props) => {
 
-    const [isModalVisible, setModalVisible] = useState<boolean>(false);
+    const [isModalError, setModalError] = React.useState<IModalError>({
+        isVisible: false,
+        description: '',
+    });
+
+    const [isModalSuccess, setModalSuccess] = React.useState<IModalSuccess>({
+        isVisible: false,
+        description: '',
+    });
+
+    const [isLoading, setIsLoading] = React.useState<boolean>(false);
+
+    const dispatch = useAppDispatch();
 
     const {
         control,
@@ -80,18 +104,22 @@ const UpdateProfile = ({ navigation }: Props) => {
 
     const onSubmit = (data: Object) => {
         console.log(data);
-        navigation.push('AuthRoutes');
     };
 
     return (
         <SafeAreaView
             style={styles.container}
         >
-            {/* <ModalSuccess
-                isVisible={isModalVisible}
-                onPress={() => setModalVisible(!isModalVisible)}
-                description="Anda telah berhasil login, silahkan lengkapi profil Anda"
-            /> */}
+            <ModalSuccess
+                isVisible={isModalSuccess.isVisible}
+                onPress={() => setModalSuccess({ isVisible: false, description: '' })}
+                description={isModalSuccess.description}
+            />
+            <ModalError
+                isVisible={isModalError.isVisible}
+                onPress={() => setModalError({ isVisible: false, description: '' })}
+                description={isModalError.description}
+            />
             <ScrollView
                 style={styles.scroll_view}
             >
@@ -176,6 +204,7 @@ const UpdateProfile = ({ navigation }: Props) => {
                         <ButtonVariant
                             title="Update Profile"
                             variant={{ color: '#fff', backgroundColor: PRIMARY_COLOR }}
+                            isLoading={isLoading}
                             onPress={handleSubmit(onSubmit)}
                         />
                     </Card>

@@ -12,7 +12,9 @@ import { createStackNavigator } from '@react-navigation/stack';
 import SplashScreen from './src/pages/SplashScreen/SplashScreen';
 import Login from './src/pages/Authentication/Login';
 import RegisterScreen from './src/pages/Authentication/Register';
-import RouteAuth from './src/pages/Routes/IsAuth';
+import RouteAuth from './src/pages/Routes/RouteAuth';
+import { Provider } from 'react-redux';
+import { stores } from './src/stores/store';
 
 export type RootStackParamList = {
   SplashScreen: undefined;
@@ -21,7 +23,7 @@ export type RootStackParamList = {
   AuthRoutes: undefined;
 };
 
-const App = () => {
+function AppWrapper() {
 
   const RootStack = createStackNavigator<RootStackParamList>();
 
@@ -50,6 +52,14 @@ const App = () => {
         />
       </RootStack.Navigator>
     </NavigationContainer>
+  );
+}
+
+const App = () => {
+  return (
+    <Provider store={stores}>
+      <AppWrapper />
+    </Provider>
   );
 };
 

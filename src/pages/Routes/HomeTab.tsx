@@ -8,8 +8,9 @@ import HomeScreen from '../Menu/HomeScreen';
 import ServiceScreen from '../Menu/ServiceScreen';
 import AccountScreen from '../Menu/AccountScreen';
 import { PRIMARY_COLOR } from '../../components/style';
+import { useAppSelector } from '../../hooks/hooks';
 
-type RootTabParamList = {
+export type RootTabParamList = {
     Home: undefined;
     Service: undefined;
     Account: undefined;
@@ -18,6 +19,9 @@ type RootTabParamList = {
 const Tab = createBottomTabNavigator<RootTabParamList>();
 
 export default function HomeTabs() {
+
+    const getUser = useAppSelector(state => state.user);
+
     return (
         <Tab.Navigator
             initialRouteName="Home"

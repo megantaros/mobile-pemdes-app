@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 import { View, Image, ScrollView, StyleSheet, Text } from 'react-native';
 import { RootStackParamList } from '../../../App';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useForm } from 'react-hook-form';
+
 import HeaderLogo from '../../components/Header/HeaderLogo';
 import Input from '../../components/Form/Input';
-import { useForm } from 'react-hook-form';
 import UserSolid from '../../assets/icons/person-fill.svg';
 import EmailIcon from '../../assets/icons/envelope-at-fill.svg';
 import KeyIcon from '../../assets/icons/shield-lock-fill.svg';
@@ -14,13 +15,36 @@ import { PRIMARY_COLOR } from '../../components/style';
 import ModalSuccess from '../../components/Modal/ModalSuccess';
 import ModalError from '../../components/Modal/ModalError';
 
+import https from '../../utils/api/http';
+
 const imgHeaderLogin = require('../../assets/img/header-login.png');
 const imgPerangkat_1 = require('../../assets/img/perangkat-desa-1.png');
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Register'>;
 
+interface IModalError {
+    isVisible: boolean;
+    description: string;
+}
+
+interface IModalSuccess {
+    isVisible: boolean;
+    description: string;
+}
+
 const RegisterScreen = ({ navigation }: Props) => {
-    const [isModalVisible, setModalVisible] = useState<boolean>(false);
+
+    const [isModalError, setModalError] = useState<IModalError>({
+        isVisible: false,
+        description: '',
+    });
+
+    const [isModalSuccess, setModalSuccess] = useState<IModalSuccess>({
+        isVisible: false,
+        description: '',
+    });
+
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const {
         control,
@@ -35,9 +59,39 @@ const RegisterScreen = ({ navigation }: Props) => {
         },
     });
 
-    const onSubmit = (data: Object) => {
-        console.log(data);
-        setModalVisible(!isModalVisible);
+    const onSubmit = async (data: any) => {
+
+        setIsLoading(true);
+
+        if (data.password !== data.confirm_password) {
+            setModalError({
+                isVisible: true,
+                description: 'Password dan Konfirmasi Password tidak sama',
+            });
+            setIsLoading(false);
+            return;
+        }
+
+        await https().post('/register', {
+            nama_warga: data.nama_warga,
+            email: data.email,
+            password: data.password,
+        }).then((res) => {
+            console.log(res.data.data);
+            setModalSuccess({
+                isVisible: true,
+                description: 'Anda telah terdaftar, Silahkan Login!',
+            });
+            setIsLoading(false);
+            navigation.push('Login');
+        }).catch((err) => {
+            console.log(err.response.data);
+            setModalError({
+                isVisible: true,
+                description: 'Email sudah terdaftar!',
+            });
+            setIsLoading(false);
+        });
     };
 
     return (
@@ -46,15 +100,15 @@ const RegisterScreen = ({ navigation }: Props) => {
                 style={
                     styles.scroll_view
                 }>
-                {/* <ModalSuccess
-                    isVisible={isModalVisible}
-                    onPress={() => setModalVisible(!isModalVisible)}
-                    description="Anda telah terdaftar sebagai warga desa Kembaran"
-                /> */}
+                <ModalSuccess
+                    isVisible={isModalSuccess.isVisible}
+                    onPress={() => setModalSuccess({ isVisible: false, description: '' })}
+                    description={isModalSuccess.description}
+                />
                 <ModalError
-                    isVisible={isModalVisible}
-                    onPress={() => setModalVisible(!isModalVisible)}
-                    description="Email sudah terdaftar!"
+                    isVisible={isModalError.isVisible}
+                    onPress={() => setModalError({ isVisible: false, description: '' })}
+                    description={isModalError.description}
                 />
                 <View style={styles.container_header}>
                     <Image source={imgHeaderLogin} style={styles.bg_header} />
@@ -109,6 +163,7 @@ const RegisterScreen = ({ navigation }: Props) => {
                     <ButtonVariant
                         variant={{ color: '#fff', backgroundColor: PRIMARY_COLOR }}
                         title="Daftar Akun"
+                        isLoading={isLoading}
                         onPress={handleSubmit(onSubmit)}
                     />
                 </View>

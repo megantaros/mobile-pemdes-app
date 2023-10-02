@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { Suspense, lazy } from 'react';
 import { Text, View } from 'react-native';
-import { AuthStackParamList } from '../Routes/IsAuth';
+import { AuthStackParamList } from '../Routes/RouteAuth';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'DetailKk'>;
 

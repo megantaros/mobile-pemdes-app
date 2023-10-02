@@ -109,7 +109,7 @@ const HomeScreen = () => {
                     onPress={() => setIsVisible(false)}
                 />
                 <View style={styles.sectionHeader}>
-                    <Text style={styles.sectionTitle}>Hi, Megan</Text>
+                    <Text style={styles.sectionTitle}>Hi, </Text>
                     <Text style={styles.sectionText}>Apakah ada yang bisa kami bantu?</Text>
                 </View>
                 <ScrollView
