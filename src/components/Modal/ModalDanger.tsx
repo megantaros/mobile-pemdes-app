@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Modal from 'react-native-modal';
-import XCircelIcon from '../../assets/icons/x-circle.svg';
+import WarningIcon from '../../assets/icons/warning.svg';
 import ButtonVariant from '../Form/Button';
-import { DANGER_COLOR, PRIMARY_COLOR } from '../style';
+import { PRIMARY_COLOR, WARNING_COLOR } from '../style';
 
 interface Props {
     description: string;
@@ -11,7 +11,7 @@ interface Props {
     onPress: () => void;
 }
 
-const ModalUpdateProfile: FC<Props> = ({ isVisible, onPress, description }) => {
+const ModalDanger: FC<Props> = ({ isVisible, onPress, description }) => {
 
     return (
         <Modal
@@ -24,11 +24,11 @@ const ModalUpdateProfile: FC<Props> = ({ isVisible, onPress, description }) => {
             backdropTransitionOutTiming={500}
         >
             <View style={styles.contentModal}>
-                <XCircelIcon height={70} width={70} />
+                <WarningIcon height={70} width={70} fill={WARNING_COLOR} />
                 <Text
                     style={styles.titleModal}
                 >
-                    Error !
+                    Warning !
                 </Text>
                 <Text
                     style={styles.descModal}
@@ -36,7 +36,7 @@ const ModalUpdateProfile: FC<Props> = ({ isVisible, onPress, description }) => {
                     {description}
                 </Text>
                 <View style={styles.modalAction}>
-                    <ButtonVariant title="Ok" onPress={onPress} variant={{ backgroundColor: DANGER_COLOR, color: '#fff' }} />
+                    <ButtonVariant title="Ok" onPress={onPress} variant={{ backgroundColor: WARNING_COLOR, color: '#fff' }} />
                 </View>
             </View>
         </Modal>
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     contentModal: {
         flex: 1,
         borderRadius: 20,
-        maxHeight: 250,
+        maxHeight: '50%',
         backgroundColor: '#fff',
         justifyContent: 'center',
         alignItems: 'center',
@@ -56,8 +56,8 @@ const styles = StyleSheet.create({
     },
     titleModal: {
         fontFamily: 'Viga-Regular',
-        fontSize: 14,
-        color: DANGER_COLOR,
+        fontSize: 18,
+        color: WARNING_COLOR,
     },
     descModal: {
         fontFamily: 'Poppins-Regular',
@@ -66,11 +66,10 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     modalAction: {
-        flex: 1,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'flex-end',
     },
 });
 
-export default ModalUpdateProfile;
+export default ModalDanger;

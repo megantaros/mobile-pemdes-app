@@ -1,22 +1,43 @@
 import React, { FC } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Modal from 'react-native-modal';
-import CheckCircelIcon from '../../assets/icons/check-circle.svg';
+import WarningIcon from '../../assets/icons/warning.svg';
 import ButtonVariant from '../Form/Button';
-import { PRIMARY_COLOR, SUCCESS_COLOR } from '../style';
+import { DANGER_COLOR, PRIMARY_COLOR, SUCCESS_COLOR, WARNING_COLOR } from '../style';
+import { useAppSelector } from '../../hooks/hooks';
+import https from '../../utils/api/http';
 
 interface Props {
     description: string;
     isVisible: boolean;
     onPress: () => void;
+    navigation?: any;
 }
 
-const ModalSuccess: FC<Props> = ({ description, isVisible, onPress }) => {
+const ModalConfirm: FC<Props> = ({ isVisible, onPress, description, navigation }) => {
+
+    const [isLoading, setLoading] = React.useState<boolean>(false);
+
+    const token = useAppSelector(state => state.user.token);
+    const apiClient = https(token ? token : '');
+
+    const onSubmit = async () => {
+        setLoading(true);
+        apiClient.post('/logout')
+            .then((res) => {
+                console.log(res.data.message);
+                setLoading(false);
+                navigation.replace('Login');
+            })
+            .catch((err) => {
+                console.log(err);
+                setLoading(false);
+            });
+    };
 
     return (
         <Modal
             isVisible={isVisible}
-            backdropOpacity={0.3}
             animationIn="slideInUp"
             animationOut="slideOutDown"
             animationInTiming={500}
@@ -25,11 +46,11 @@ const ModalSuccess: FC<Props> = ({ description, isVisible, onPress }) => {
             backdropTransitionOutTiming={500}
         >
             <View style={styles.contentModal}>
-                <CheckCircelIcon height={70} width={70} />
+                <WarningIcon height={70} width={70} fill={WARNING_COLOR} />
                 <Text
                     style={styles.titleModal}
                 >
-                    Selamat!
+                    Warning !
                 </Text>
                 <Text
                     style={styles.descModal}
@@ -37,7 +58,8 @@ const ModalSuccess: FC<Props> = ({ description, isVisible, onPress }) => {
                     {description}
                 </Text>
                 <View style={styles.modalAction}>
-                    <ButtonVariant title="Ok" onPress={onPress} variant={{ backgroundColor: SUCCESS_COLOR, color: '#fff' }} />
+                    <ButtonVariant title="Tidak" onPress={onPress} variant={{ backgroundColor: SUCCESS_COLOR, color: '#fff' }} />
+                    <ButtonVariant title="Ya" onPress={onSubmit} variant={{ backgroundColor: DANGER_COLOR, color: '#fff' }} isLoading={isLoading} />
                 </View>
             </View>
         </Modal>
@@ -57,7 +79,7 @@ const styles = StyleSheet.create({
     titleModal: {
         fontFamily: 'Viga-Regular',
         fontSize: 18,
-        color: SUCCESS_COLOR,
+        color: WARNING_COLOR,
     },
     descModal: {
         fontFamily: 'Poppins-Regular',
@@ -66,10 +88,12 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     modalAction: {
+        marginTop: 10,
+        gap: 10,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'flex-end',
     },
 });
 
-export default ModalSuccess;
+export default ModalConfirm;

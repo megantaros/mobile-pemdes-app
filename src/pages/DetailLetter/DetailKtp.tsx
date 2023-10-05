@@ -33,21 +33,13 @@ const DetailKtp = ({ navigation, route }: Props) => {
         control,
         handleSubmit,
         formState: { errors },
-    } = useForm({
-        defaultValues: {
-            pengantar_rt: '',
-            jenis_permohonan: '',
-            kk: '',
-            foto_ktp: '',
-            foto_kk: '',
-        },
-    });
+    } = useForm();
 
     const onSubmit = (data: any) => {
         const formData = new FormData();
-        formData.append('pengantar_rt', data.pengantar_rt);
-        formData.append('jenis_permohonan', data.jenis_permohonan);
         formData.append('kk', data.kk);
+        formData.append('jenis_permohonan', data.jenis_permohonan);
+        formData.append('pengantar_rt', data.pengantar_rt);
         formData.append('foto_ktp', data.foto_ktp);
         formData.append('foto_kk', data.foto_kk);
         console.log(formData);

@@ -21,10 +21,9 @@ interface Props {
     rules?: any;
     errors?: any;
     data: any;
-    initialValue?: string;
 }
 
-const Select: FC<Props> = ({ placeholder, control, name, rules, errors, data, initialValue }) => {
+const Select: FC<Props> = ({ placeholder, control, name, rules, errors, data }) => {
 
     const [selectedItem, setSelectedItem] = React.useState<string>('');
 
@@ -69,13 +68,13 @@ const Select: FC<Props> = ({ placeholder, control, name, rules, errors, data, in
                 name={name}
                 control={control}
                 rules={rules}
-                render={({ field: { onChange } }) => (
+                render={({ field: { onChange, value } }) => (
                     <Dropdown
                         style={styles.dropdown}
                         selectedTextStyle={styles.selectedTextStyle}
                         placeholderStyle={styles.placeholderStyle}
                         maxHeight={200}
-                        value={initialValue ? initialValue : selectedItem}
+                        value={value}
                         data={data}
                         valueField="value"
                         labelField="lable"

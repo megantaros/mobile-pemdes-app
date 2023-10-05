@@ -1,41 +1,31 @@
 import React, { FC } from 'react';
-import { TextInput, StyleSheet, View, Text, KeyboardType } from 'react-native';
-import { DANGER_COLOR, PRIMARY_COLOR, PRIMARY_FONT } from '../style';
-import { Control, Controller } from 'react-hook-form';
+import { TextInput, StyleSheet, View, Text, Image } from 'react-native';
+import { DANGER_COLOR, PRIMARY_COLOR, PRIMARY_COLOR_LIGHT, PRIMARY_FONT } from '../style';
 
-
+import ImageFile from '../../assets/icons/file-image.svg';
 import PaperClip from '../../assets/icons/paperclip.svg';
-import { launchImageLibrary } from 'react-native-image-picker';
 
 interface Props {
-    placeholder?: string;
-    name: string;
-    control?: Control<any>;
-    rules?: any;
-    children?: React.ReactNode;
-    errors?: any;
-    keyType?: KeyboardType;
-    disabled?: boolean;
+    uri?: string;
+    fileName: any;
+    placeholder: string;
+    onPress?: () => void;
 }
 
-const InputFile: FC<Props> = ({ placeholder, control, name, rules, errors, keyType, disabled }) => {
+const File = ({ uri }: any) => {
+    return (
+        <View style={styles.containerFile}>
+            <Image
+                source={{ uri: uri }}
+                style={{ width: '100%', height: '100%' }}
+            />
+        </View>
+    );
+};
+
+const InputFile: FC<Props> = ({ uri, fileName, placeholder, onPress }) => {
 
     const [border, setBorder] = React.useState<boolean>(true);
-
-    const [uriImg, setUriImg] = React.useState<any>(null);
-    const [fileNameValue, setFileNameValue] = React.useState<any>(null);
-
-    const handleImagePicker = async () => {
-        const images = await launchImageLibrary({
-            mediaType: 'photo',
-            includeBase64: false,
-            maxHeight: 200,
-            maxWidth: 200,
-        });
-        setUriImg(images.assets?.[0].uri);
-        setFileNameValue(images.assets?.[0].fileName);
-    };
-
 
     const onFocus = () => {
         setBorder(!border);
@@ -45,6 +35,16 @@ const InputFile: FC<Props> = ({ placeholder, control, name, rules, errors, keyTy
         <View
             style={styles.container}
         >
+            {uri ? <File uri={uri} /> :
+                <View style={styles.containerFile}>
+                    <ImageFile
+                        width={50}
+                        height={50}
+                        fill={PRIMARY_COLOR}
+                    />
+                    <Text style={styles.lableFile}>Tidak ada gambar yang diupload</Text>
+                </View>
+            }
             <View style={
                 border ? styles.inputSection : { ...styles.inputSection, ...styles.inputSection.onfocus }
             }>
@@ -55,39 +55,15 @@ const InputFile: FC<Props> = ({ placeholder, control, name, rules, errors, keyTy
                         fill={PRIMARY_COLOR}
                     />
                 </View>
-
                 <TextInput
-                    onPressIn={handleImagePicker}
-                    disableFullscreenUI={disabled ? disabled : false}
-                    secureTextEntry={name === 'password' || name === 'confirm_password' ? true : false}
-                    keyboardType={keyType ? keyType : 'default'}
+                    onPressIn={onPress}
                     style={styles.input}
                     placeholder={placeholder}
                     onFocus={onFocus}
                     onBlur={!border ? onFocus : undefined}
-                    value={fileNameValue ? fileNameValue : ''}
+                    value={fileName}
                 />
-
             </View>
-            <Controller
-                control={control}
-                rules={rules}
-                name={name}
-                render={({ field: { onChange, onBlur, value } }) => (
-                    <TextInput
-                        style={{ display: 'none' }}
-                        onBlur={onBlur}
-                        onChangeText={onChange}
-                        value={value ? value : uriImg}
-                    />
-                )}
-
-            />
-            {errors && <Text
-                style={styles.onError}
-            >
-                {errors?.message}
-            </Text>}
         </View>
     );
 };
@@ -96,6 +72,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         width: '100%',
+        marginVertical: 4,
     },
     icon: {
         flex: 1,
@@ -103,7 +80,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     inputSection: {
-        flex: 1,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
@@ -134,6 +110,27 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         marginVertical: 4,
     },
+    containerFile: {
+        width: '100%',
+        height: 200,
+        backgroundColor: PRIMARY_COLOR_LIGHT,
+        borderRadius: 10,
+        marginBottom: 4,
+        overflow: 'hidden',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    lableFile: {
+        marginTop: 10,
+        fontFamily: PRIMARY_FONT,
+        fontSize: 12,
+        color: PRIMARY_COLOR,
+    },
+    // textFile: {
+    //     fontFamily: PRIMARY_FONT,
+    //     fontSize: 10,
+    //     color: PRIMARY_COLOR,
+    // },
 });
 
 export default InputFile;

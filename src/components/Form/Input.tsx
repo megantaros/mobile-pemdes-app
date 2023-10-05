@@ -11,11 +11,10 @@ interface Props {
     children?: React.ReactNode;
     errors?: any;
     keyType?: KeyboardType;
-    initialValue?: string;
     disabled?: boolean;
 }
 
-const Input: FC<Props> = ({ placeholder, control, name, children, rules, errors, keyType, initialValue, disabled }) => {
+const Input: FC<Props> = ({ placeholder, control, name, children, rules, errors, keyType, disabled }) => {
 
     const [border, setBorder] = React.useState<boolean>(true);
 
@@ -39,6 +38,7 @@ const Input: FC<Props> = ({ placeholder, control, name, children, rules, errors,
                         </View>
                         <TextInput
                             disableFullscreenUI={disabled ? disabled : false}
+                            // aria-disabled={disabled ? disabled : false}
                             secureTextEntry={name === 'password' || name === 'confirm_password' ? true : false}
                             keyboardType={keyType ? keyType : 'default'}
                             style={styles.input}
@@ -46,7 +46,7 @@ const Input: FC<Props> = ({ placeholder, control, name, children, rules, errors,
                             onFocus={onFocus}
                             onBlur={!border ? onFocus : onBlur}
                             onChangeText={onChange}
-                            value={initialValue ? initialValue : value}
+                            value={value}
                         />
                     </View>
                 )}
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#fff',
-        minHeight: 42,
+        maxHeight: 50,
         borderRadius: 25,
         paddingHorizontal: 10,
         marginVertical: 4,

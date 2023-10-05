@@ -10,11 +10,10 @@ interface Props {
     rules?: any;
     children?: React.ReactNode;
     errors?: any;
-    initialValue?: string;
     disabled?: boolean;
 }
 
-const TextArea: FC<Props> = ({ placeholder, control, name, children, rules, errors, initialValue, disabled }) => {
+const TextArea: FC<Props> = ({ placeholder, control, name, children, rules, errors, disabled }) => {
 
     const [border, setBorder] = React.useState<boolean>(true);
 
@@ -43,7 +42,7 @@ const TextArea: FC<Props> = ({ placeholder, control, name, children, rules, erro
                             onFocus={onFocus}
                             onBlur={!border ? onFocus : onBlur}
                             onChangeText={onChange}
-                            value={initialValue ? initialValue : value}
+                            value={value}
                             multiline={true}
                             numberOfLines={4}
                         />

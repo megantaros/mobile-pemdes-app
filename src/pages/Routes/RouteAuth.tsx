@@ -8,21 +8,22 @@ import LeftIcon from '../../assets/icons/left-arrow.svg';
 import StatusLetters from '../Settings/StatusLetters';
 import DetailKk from '../DetailLetter/DetailKk';
 import DetailKtp from '../DetailLetter/DetailKtp';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../App';
+import FormKtp from '../Form/FormKtp';
+import FormKk from '../Form/FormKk';
 
 export type AuthStackParamList = {
     UpdateProfile: undefined;
     HomeTabs: undefined;
     InfoAccount: undefined;
     StatusLetters: undefined;
-    DetailKk: { id: number };
-    DetailKtp: { id: number };
+    FormKtp: undefined;
+    FormKk: undefined;
+    DetailKk: { id: string };
+    DetailKtp: { id: string };
 };
 
-type Props = NativeStackScreenProps<RootStackParamList, 'AuthRoutes'>;
 
-const RouteAuth = ({ navigation }: Props) => {
+const RouteAuth = () => {
 
     const AuthStack = createStackNavigator<AuthStackParamList>();
 
@@ -70,6 +71,58 @@ const RouteAuth = ({ navigation }: Props) => {
                 options={{
                     headerShown: true,
                     title: 'Permohonan Surat',
+                    headerStyle: {
+                        backgroundColor: PRIMARY_COLOR,
+                    },
+                    headerTintColor: '#fff',
+                    headerTitleStyle: {
+                        fontFamily: 'Viga-Regular',
+                        fontSize: 16,
+                    },
+                    headerBackImage(props) {
+                        return (
+                            <LeftIcon
+                                {...props}
+                                width={24}
+                                height={24}
+                                fill="#fff"
+                            />
+                        );
+                    },
+                }}
+            />
+            <AuthStack.Screen
+                name="FormKtp"
+                component={FormKtp}
+                options={{
+                    headerShown: true,
+                    title: 'Form Surat Pengantar KTP',
+                    headerStyle: {
+                        backgroundColor: PRIMARY_COLOR,
+                    },
+                    headerTintColor: '#fff',
+                    headerTitleStyle: {
+                        fontFamily: 'Viga-Regular',
+                        fontSize: 16,
+                    },
+                    headerBackImage(props) {
+                        return (
+                            <LeftIcon
+                                {...props}
+                                width={24}
+                                height={24}
+                                fill="#fff"
+                            />
+                        );
+                    },
+                }}
+            />
+            <AuthStack.Screen
+                name="FormKk"
+                component={FormKk}
+                options={{
+                    headerShown: true,
+                    title: 'Form Surat Pengantar KK',
                     headerStyle: {
                         backgroundColor: PRIMARY_COLOR,
                     },

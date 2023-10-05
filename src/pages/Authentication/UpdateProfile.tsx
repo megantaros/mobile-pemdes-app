@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { PRIMARY_BACKGROUND_COLOR, PRIMARY_COLOR, PRIMARY_FONT, SECONDARY_COLOR, SECONDARY_FONT } from '../../components/style';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';

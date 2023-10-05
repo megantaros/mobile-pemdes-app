@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
-import { PRIMARY_COLOR, PRIMARY_FONT } from '../style';
+import { PRIMARY_COLOR } from '../style';
 
 type variant = { color?: string, backgroundColor?: string };
 
@@ -9,9 +9,10 @@ interface Props {
     onPress?: () => void;
     variant?: variant;
     isLoading?: boolean;
+    margin?: number;
 }
 
-const ButtonVariant: FC<Props> = ({ title, onPress, variant, isLoading }) => {
+const ButtonVariant: FC<Props> = ({ title, onPress, variant, isLoading, margin }) => {
     const styles = StyleSheet.create({
         container: {
             flex: 1,
@@ -20,14 +21,14 @@ const ButtonVariant: FC<Props> = ({ title, onPress, variant, isLoading }) => {
             backgroundColor: variant?.backgroundColor,
             padding: 10,
             borderRadius: 10,
-            marginTop: 30,
+            marginTop: margin,
             width: '100%',
             maxHeight: 42,
             flexDirection: 'row',
             gap: 5,
         },
         text: {
-            fontFamily: PRIMARY_FONT,
+            fontFamily: 'Viga-Regular',
             fontSize: 14,
             color: variant?.color,
         },

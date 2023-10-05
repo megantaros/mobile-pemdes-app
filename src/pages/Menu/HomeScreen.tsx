@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { DANGER_COLOR, PRIMARY_BACKGROUND_COLOR, PRIMARY_COLOR } from '../../components/style';
 import Layout from '../../components/Layout/Layout';
@@ -13,6 +13,14 @@ import HouseReturn from '../../assets/icons/house-return.svg';
 import HorizontalItem from '../../components/HorizontalItem';
 import ModalRules from '../../components/Modal/ModalRules';
 import Section from '../../components/Section';
+import ModalDanger from '../../components/Modal/ModalDanger';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootTabParamList } from '../Routes/HomeTab';
+import { useAppSelector } from '../../hooks/hooks';
+import https from '../../utils/api/http';
+import { get, set } from 'react-hook-form';
+import { AuthStackParamList } from '../Routes/RouteAuth';
+import { RootStackParamList } from '../../../App';
 
 const items = [
     {
@@ -59,10 +67,35 @@ const mision = [
     '4. Mendorong kegiatan dunia usaha guna menciptakan lapangan kerja.',
 ];
 
-const HomeScreen = () => {
+type Props = NativeStackScreenProps<RootStackParamList, 'AuthRoutes'>;
+
+const HomeScreen = ({ navigation }: Props) => {
 
     const [isVisible, setIsVisible] = React.useState(false);
     const [id, setId] = React.useState(0);
+    const [username, setUsername] = React.useState<string>('');
+    const [modalUpdateProfile, setModalUpdateProfile] = React.useState<boolean>(false);
+
+    const token = useAppSelector(state => state.user.token);
+    const apiClient = https(token ? token : '');
+
+    const getUser = async () => {
+        await apiClient.get('/user').then((res) => {
+            console.log(res.data);
+            setUsername(res.data.data.nama_warga);
+
+            if (res.data.data.nik === null) {
+                setModalUpdateProfile(true);
+            }
+
+        }).catch((err) => {
+            console.log(err.response);
+        });
+    };
+
+    React.useEffect(() => {
+        getUser();
+    }, []);
 
     const handlePress = (index: number) => {
         switch (index) {
@@ -103,13 +136,20 @@ const HomeScreen = () => {
     return (
         <Layout>
             <View style={styles.container}>
+                <ModalDanger
+                    isVisible={modalUpdateProfile}
+                    onPress={() => navigation.push('InfoAccount')}
+                    description="Anda belum melakukan update profil, silahkan update profil terlebih dahulu"
+                />
                 <ModalRules
                     id={id}
                     isVisible={isVisible}
                     onPress={() => setIsVisible(false)}
                 />
                 <View style={styles.sectionHeader}>
-                    <Text style={styles.sectionTitle}>Hi, </Text>
+                    <Suspense fallback={<Text style={styles.sectionTitle}>Loading...</Text>}>
+                        <Text style={styles.sectionTitle}>Hi, {username}</Text>
+                    </Suspense>
                     <Text style={styles.sectionText}>Apakah ada yang bisa kami bantu?</Text>
                 </View>
                 <ScrollView
@@ -168,7 +208,7 @@ const styles = StyleSheet.create({
         height: 50,
     },
     sectionTitle: {
-        fontSize: 14,
+        fontSize: 16,
         fontWeight: 'bold',
         fontFamily: 'Viga-Regular',
         color: PRIMARY_COLOR,

@@ -58,44 +58,38 @@ const LoginScreen = ({ navigation }: Props) => {
         },
     });
 
-    const onSubmit = async (data: any) => {
-        setIsLoading(true);
+    const apiClient = https('');
 
-        await https().post('/login', {
-            email: data.email,
-            password: data.password,
-        }).then((res) => {
-            // console.log(res.data.data);
-            // console.log(res.data.access_token);
-            dispatch(setUser(
-                {
-                    id_warga: res.data.data.id_warga,
-                    nama_warga: res.data.data.nama_warga,
-                    email: res.data.data.email,
-                    notelpon: res.data.data.notelpon,
-                    nik: res.data.data.nik,
-                    ttl: res.data.data.ttl,
-                    jenis_kelamin: res.data.data.jenis_kelamin,
-                    pekerjaan: res.data.data.pekerjaan,
-                    agama: res.data.data.agama,
-                    alamat: res.data.data.alamat,
-                    isLoggedIn: true,
-                    token: res.data.access_token,
-                },
-            ));
-            setModalSuccess({
-                isVisible: true,
-                description: 'Anda berhasil login!',
-            });
-            setIsLoading(false);
-        }).catch((err) => {
-            console.log(err.response.data);
-            setModalError({
-                isVisible: true,
-                description: 'Email atau Password Salah!',
-            });
-            setIsLoading(false);
-        });
+    const onSubmit = async (data: any) => {
+
+        navigation.push('AuthRoutes');
+        // setIsLoading(true);
+
+        // await apiClient.post('/login', {
+        //     email: data.email,
+        //     password: data.password,
+        // }).then((res) => {
+        //     // console.log(res.data.data);
+        //     // console.log(res.data.access_token);
+        //     dispatch(setUser({
+        //         id_warga: res.data.data.id_warga,
+        //         isLoggedIn: true,
+        //         token: res.data.access_token,
+        //     },
+        //     ));
+        //     setModalSuccess({
+        //         isVisible: true,
+        //         description: 'Anda berhasil login!',
+        //     });
+        //     setIsLoading(false);
+        // }).catch((err) => {
+        //     console.log(err.response.data);
+        //     setModalError({
+        //         isVisible: true,
+        //         description: 'Email atau Password Salah!',
+        //     });
+        //     setIsLoading(false);
+        // });
 
     };
 
@@ -107,7 +101,10 @@ const LoginScreen = ({ navigation }: Props) => {
                 }>
                 <ModalSuccess
                     isVisible={isModalSuccess.isVisible}
-                    onPress={() => navigation.push('AuthRoutes')}
+                    onPress={() => {
+                        setModalSuccess({ isVisible: false, description: '' });
+                        navigation.push('AuthRoutes');
+                    }}
                     description={isModalSuccess.description}
                 />
                 <ModalError
@@ -148,6 +145,7 @@ const LoginScreen = ({ navigation }: Props) => {
                         <KeyIcon width={16} height={16} />
                     </Input>
                     <ButtonVariant
+                        margin={30}
                         variant={{ color: '#fff', backgroundColor: PRIMARY_COLOR }}
                         title="Login"
                         isLoading={isLoading}

@@ -68,7 +68,7 @@ const ModalRules: FC<Props> = ({ id, isVisible, onPress }) => {
             backdropTransitionOutTiming={500}
         >
             <View style={styles.contentModal}>
-                <Info height={50} width={50} fill={INFO_COLOR} />
+                <Info height={50} width={50} fill={PRIMARY_COLOR} />
                 <Text
                     style={styles.titleModal}
                 >
@@ -139,8 +139,8 @@ const ModalRules: FC<Props> = ({ id, isVisible, onPress }) => {
 const styles = StyleSheet.create({
     contentModal: {
         flex: 1,
+        maxHeight: '70%',
         borderRadius: 20,
-        maxHeight: 410,
         backgroundColor: '#fff',
         justifyContent: 'center',
         alignItems: 'center',
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
     modalAction: {
         flex: 1,
         justifyContent: 'flex-end',
-        alignItems: 'center',
+        alignItems: 'flex-end',
         width: '100%',
     },
 });

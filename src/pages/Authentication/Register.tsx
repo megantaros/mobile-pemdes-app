@@ -59,6 +59,8 @@ const RegisterScreen = ({ navigation }: Props) => {
         },
     });
 
+    const apiClient = https('');
+
     const onSubmit = async (data: any) => {
 
         setIsLoading(true);
@@ -72,7 +74,7 @@ const RegisterScreen = ({ navigation }: Props) => {
             return;
         }
 
-        await https().post('/register', {
+        apiClient.post('/register', {
             nama_warga: data.nama_warga,
             email: data.email,
             password: data.password,
@@ -83,7 +85,6 @@ const RegisterScreen = ({ navigation }: Props) => {
                 description: 'Anda telah terdaftar, Silahkan Login!',
             });
             setIsLoading(false);
-            navigation.push('Login');
         }).catch((err) => {
             console.log(err.response.data);
             setModalError({
@@ -102,7 +103,7 @@ const RegisterScreen = ({ navigation }: Props) => {
                 }>
                 <ModalSuccess
                     isVisible={isModalSuccess.isVisible}
-                    onPress={() => setModalSuccess({ isVisible: false, description: '' })}
+                    onPress={() => navigation.push('Login')}
                     description={isModalSuccess.description}
                 />
                 <ModalError
