@@ -23,6 +23,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../Routes/RouteAuth';
 import EmailIcon from '../../assets/icons/envelope-at-fill.svg';
 import ModalEditPass from '../../components/Modal/ModalEditPass';
+import { RootStackParamList } from '../../../App';
 
 const sex = [
     {
@@ -84,7 +85,7 @@ interface IModalSuccess {
     description: string;
 }
 
-type Props = NativeStackScreenProps<AuthStackParamList, 'InfoAccount'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'InfoAccount'>;
 
 const InfoAccount = ({ navigation }: Props) => {
 
@@ -126,7 +127,7 @@ const InfoAccount = ({ navigation }: Props) => {
 
     const apiClient = https(user.token ? user.token : '');
     const getUser = async () => {
-        await apiClient.get('/user').then((res) => {
+        await apiClient.get('user').then((res) => {
 
             setValue('nama_warga', res.data.data.nama_warga);
             setValue('email', res.data.data.email);

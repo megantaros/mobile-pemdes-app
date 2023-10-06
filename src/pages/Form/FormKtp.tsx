@@ -13,10 +13,10 @@ import InputFile from '../../components/Form/InputFile';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { useAppSelector } from '../../hooks/hooks';
 import https from '../../utils/api/http';
-import { AuthStackParamList } from '../Routes/RouteAuth';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import ModalSuccess from '../../components/Modal/ModalSuccess';
 import ModalError from '../../components/Modal/ModalError';
+import { RootStackParamList } from '../../../App';
 
 const jenis_permohonan = [
     { value: 'Baru', lable: 'Baru' },
@@ -46,7 +46,7 @@ interface IModalSuccess {
     description: string;
 }
 
-type Props = NativeStackScreenProps<AuthStackParamList, 'FormKtp'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'FormKtp'>;
 
 const FormKtp = ({ navigation }: Props) => {
 
@@ -139,14 +139,14 @@ const FormKtp = ({ navigation }: Props) => {
                 'Content-Type': 'multipart/form-data',
             },
         }).then((res) => {
-            console.log(res.data.data);
+            console.log(res);
             setModalSuccess({
                 isVisible: true,
                 description: 'Surat berhasil dikirim',
             });
             setIsLoading(false);
         }).catch((err) => {
-            console.log(err.data);
+            console.log(err);
             setModalError({
                 isVisible: true,
                 description: 'Surat gagal dikirim',
@@ -180,6 +180,8 @@ const FormKtp = ({ navigation }: Props) => {
                         name="kk"
                         placeholder="Masukkan No. KK"
                         control={control}
+                        rules={{ required: 'No. KK tidak boleh kosong' }}
+                        errors={errors.kk}
                     >
                         <PersonCard
                             width={16}
@@ -192,6 +194,8 @@ const FormKtp = ({ navigation }: Props) => {
                         placeholder="Pilih Jenis Permohonan"
                         control={control}
                         data={jenis_permohonan}
+                        rules={{ required: 'Jenis Permohonan tidak boleh kosong' }}
+                        errors={errors.jenis_permohonan}
                     />
                     <InputFile
                         uri={firstFile.uri}
@@ -215,6 +219,7 @@ const FormKtp = ({ navigation }: Props) => {
                         title="Kirim Surat"
                         variant={{ color: '#fff', backgroundColor: PRIMARY_COLOR }}
                         margin={30}
+                        isLoading={isLoading}
                         onPress={handleSubmit(onSubmit)}
                     />
                 </Section>

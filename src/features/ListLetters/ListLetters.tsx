@@ -10,13 +10,13 @@ import AcceptIcon from '../../assets/icons/send-check-fill.svg';
 import RejectIcon from '../../assets/icons/send-x-fill.svg';
 
 interface Props {
-    title: string;
+    jenis_surat: string;
     status: string;
-    date: string;
+    tanggal_pengajuan: string;
     onPress?: () => void;
 }
 
-const ListLetters: FC<Props> = ({ title, status, date, onPress }) => {
+const ListLetters: FC<Props> = ({ jenis_surat, status, tanggal_pengajuan, onPress }) => {
 
 
     const statusColor = (statusLetter: string) => {
@@ -102,14 +102,14 @@ const ListLetters: FC<Props> = ({ title, status, date, onPress }) => {
     return (
         <Card style={styles.cardStyle}>
             <View style={styles.cardContainer}>
-                <Text style={styles.titleLetter}>{title}</Text>
+                <Text style={styles.titleLetter}>{jenis_surat}</Text>
                 <View style={styles.textStatus}>
                     {statusIcon(status)}
                     <Text style={styles.textLetter}>
                         {status}
                     </Text>
                 </View>
-                <Text style={styles.dateLetter}>Tanggal: {date}</Text>
+                <Text style={styles.dateLetter}>Tanggal: {tanggal_pengajuan}</Text>
             </View>
             <View style={styles.cardAction}>
 

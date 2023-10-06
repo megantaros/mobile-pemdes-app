@@ -62,34 +62,34 @@ const LoginScreen = ({ navigation }: Props) => {
 
     const onSubmit = async (data: any) => {
 
-        navigation.push('AuthRoutes');
-        // setIsLoading(true);
+        // navigation.push('AuthRoutes');
+        setIsLoading(true);
 
-        // await apiClient.post('/login', {
-        //     email: data.email,
-        //     password: data.password,
-        // }).then((res) => {
-        //     // console.log(res.data.data);
-        //     // console.log(res.data.access_token);
-        //     dispatch(setUser({
-        //         id_warga: res.data.data.id_warga,
-        //         isLoggedIn: true,
-        //         token: res.data.access_token,
-        //     },
-        //     ));
-        //     setModalSuccess({
-        //         isVisible: true,
-        //         description: 'Anda berhasil login!',
-        //     });
-        //     setIsLoading(false);
-        // }).catch((err) => {
-        //     console.log(err.response.data);
-        //     setModalError({
-        //         isVisible: true,
-        //         description: 'Email atau Password Salah!',
-        //     });
-        //     setIsLoading(false);
-        // });
+        await apiClient.post('login', {
+            email: data.email,
+            password: data.password,
+        }).then((res) => {
+            // console.log(res.data.data);
+            // console.log(res.data.access_token);
+            dispatch(setUser({
+                id_warga: res.data.data.id_warga,
+                isLoggedIn: true,
+                token: res.data.access_token,
+            },
+            ));
+            setModalSuccess({
+                isVisible: true,
+                description: 'Anda berhasil login!',
+            });
+            setIsLoading(false);
+        }).catch((err) => {
+            console.log(err.response.data);
+            setModalError({
+                isVisible: true,
+                description: 'Email atau Password Salah!',
+            });
+            setIsLoading(false);
+        });
 
     };
 

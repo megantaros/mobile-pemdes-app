@@ -10,10 +10,10 @@ import { DANGER_COLOR, DANGER_COLOR_LIGHT, PRIMARY_COLOR } from '../../component
 import SignOut from '../../assets/icons/sign-out-alt.svg';
 import ModalConfirm from '../../components/Modal/ModalConfirm';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { AuthStackParamList } from '../Routes/RouteAuth';
+import { RootStackParamList } from '../../../App';
 // import { RootStackParamList } from '../../../App';
 
-type Props = NativeStackScreenProps<AuthStackParamList, 'HomeTabs'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'HomeTabs'>;
 
 const AccountScreen = ({ navigation }: Props) => {
 

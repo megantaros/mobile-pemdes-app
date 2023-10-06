@@ -6,7 +6,7 @@ const Loading = () => {
     return (
         <SafeAreaView style={styles.body}>
             <View style={styles.container}>
-                <ActivityIndicator size="large" color={PRIMARY_COLOR} />
+                <ActivityIndicator size="small" color={PRIMARY_COLOR} />
                 <Text style={styles.text}>Mohon Tunggu...</Text>
             </View>
         </SafeAreaView>

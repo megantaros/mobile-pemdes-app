@@ -74,7 +74,7 @@ const RegisterScreen = ({ navigation }: Props) => {
             return;
         }
 
-        apiClient.post('/register', {
+        apiClient.post('register', {
             nama_warga: data.nama_warga,
             email: data.email,
             password: data.password,
@@ -103,7 +103,10 @@ const RegisterScreen = ({ navigation }: Props) => {
                 }>
                 <ModalSuccess
                     isVisible={isModalSuccess.isVisible}
-                    onPress={() => navigation.push('Login')}
+                    onPress={() => {
+                        navigation.push('Login');
+                        setModalSuccess({ isVisible: false, description: '' });
+                    }}
                     description={isModalSuccess.description}
                 />
                 <ModalError

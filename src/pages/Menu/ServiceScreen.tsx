@@ -14,7 +14,7 @@ import { useAppSelector } from '../../hooks/hooks';
 import Input from '../../components/Form/Input';
 import https from '../../utils/api/http';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { AuthStackParamList } from '../Routes/RouteAuth';
+import { RootStackParamList } from '../../../App';
 
 const letters = [
     { value: 'Surat Pengantar KK', lable: 'Surat Pengantar KK' },
@@ -26,7 +26,7 @@ const letters = [
     { value: 'Surat Keterangan Datang', lable: 'Surat Keterangan Datang' },
 ];
 
-type Props = NativeStackScreenProps<AuthStackParamList, 'HomeTabs'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'HomeTabs'>;
 
 const ServiceScreen = ({ navigation }: Props) => {
 

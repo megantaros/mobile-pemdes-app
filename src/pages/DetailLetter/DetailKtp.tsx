@@ -16,6 +16,7 @@ import ButtonVariant from '../../components/Form/Button';
 import { PRIMARY_COLOR } from '../../components/style';
 import InputDisabled from '../../components/DisabledForm/InputDisabled';
 import InputFile from '../../components/Form/InputFile';
+import { RootStackParamList } from '../../../App';
 
 const jenis_permohonan = [
     { value: 'Baru', lable: 'Baru' },
@@ -23,7 +24,7 @@ const jenis_permohonan = [
     { value: 'Pergantian', lable: 'Pergantian' },
 ];
 
-type Props = NativeStackScreenProps<AuthStackParamList, 'DetailKtp'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'DetailKtp'>;
 
 const DetailKtp = ({ navigation, route }: Props) => {
 

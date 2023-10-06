@@ -14,24 +14,28 @@ const SplashScreen = ({ navigation }: Props) => {
         UIManager.setLayoutAnimationEnabledExperimental(true);
     }
 
+    LayoutAnimation.configureNext({
+        duration: 1000,
+        create: {
+            type: LayoutAnimation.Types.linear,
+            property: LayoutAnimation.Properties.opacity,
+        },
+        update: {
+            type: LayoutAnimation.Types.linear,
+            property: LayoutAnimation.Properties.opacity,
+        },
+        delete: {
+            type: LayoutAnimation.Types.linear,
+            property: LayoutAnimation.Properties.opacity,
+        },
+    });
+
     React.useEffect(() => {
-        LayoutAnimation.configureNext({
-            duration: 1000,
-            create: {
-                type: LayoutAnimation.Types.linear,
-                property: LayoutAnimation.Properties.opacity,
-            },
-            update: {
-                type: LayoutAnimation.Types.linear,
-                property: LayoutAnimation.Properties.opacity,
-            },
-            delete: {
-                type: LayoutAnimation.Types.linear,
-                property: LayoutAnimation.Properties.opacity,
-            },
-        });
-        navigation.replace('Login');
+        setTimeout(() => {
+            navigation.replace('Login');
+        }, 2000);
     }, [navigation]);
+
     return (
         <SafeAreaView style={styles.container}>
             <Image source={require('../../assets/img/splash-screen.png')} style={styles.bgSplashScreen} />

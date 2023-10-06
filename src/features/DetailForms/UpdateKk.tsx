@@ -50,9 +50,9 @@ const shdk = [
 ];
 
 const alasan_permohonan = [
-    { lable: 'Membentuk Rumah Tangga Baru', value: 1 },
-    { lable: 'KK Hilang/Rusak', value: 2 },
-    { lable: 'Lainnnya', value: 3 },
+    { lable: 'Membentuk Rumah Tangga Baru', value: '1' },
+    { lable: 'KK Hilang/Rusak', value: '2' },
+    { lable: 'Lainnnya', value: '3' },
 ];
 
 interface Props {
@@ -68,6 +68,7 @@ const UpdateKk: React.FC<Props> = ({ id }) => {
 
     const {
         control,
+        setValue,
         handleSubmit,
         formState: { errors },
     } = useForm();
@@ -117,10 +118,43 @@ const UpdateKk: React.FC<Props> = ({ id }) => {
 
     const token = useAppSelector((state) => state.user.token);
     const apiClient = https(token ? token : '');
+    const BASE_IMG = 'http://192.168.1.18:8000/berkaspemohon/';
+
+    const getDetailLetters = async () => {
+        await apiClient.get(`surat/permohonan-kk/${id}/edit`).then((res) => {
+            console.log(res.data.data);
+            setValue('kk_lama', res.data.data.kk_lama);
+            setValue('shdk', res.data.data.shdk);
+            setValue('alasan_permohonan', res.data.data.alasan_permohonan);
+            setValue('jml_angg_keluarga', (res.data.data.jml_angg_keluarga).toString());
+            setFirstFile({
+                uri: BASE_IMG + res.data.data.pengantar_rt,
+                name: res.data.data.pengantar_rt,
+                type: '',
+            });
+            setSecondFile({
+                uri: BASE_IMG + res.data.data.foto_ktp,
+                name: res.data.data.foto_ktp,
+                type: '',
+            });
+            setThirdFile({
+                uri: BASE_IMG + res.data.data.foto_kk,
+                name: res.data.data.foto_kk,
+                type: '',
+            });
+            setFourthFile({
+                uri: BASE_IMG + res.data.data.fc_buku_nikah,
+                name: res.data.data.fc_buku_nikah,
+                type: '',
+            });
+        }).catch((err) => {
+            console.log(err.response);
+        });
+    };
 
     React.useEffect(() => {
-        console.log(id);
-    }, [id]);
+        getDetailLetters();
+    }, []);
 
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
@@ -140,8 +174,10 @@ const UpdateKk: React.FC<Props> = ({ id }) => {
 
         const formData = new FormData();
 
-        formData.append('kk', data.kk);
-        formData.append('jenis_permohonan', data.jenis_permohonan);
+        formData.append('kk_lama', data.kk_lama);
+        formData.append('shdk', data.shdk);
+        formData.append('alasan_permohonan', data.alasan_permohonan);
+        formData.append('jml_angg_keluarga', data.jml_angg_keluarga);
         formData.append('pengantar_rt', {
             uri: firstFile.uri,
             name: firstFile.name,

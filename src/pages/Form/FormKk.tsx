@@ -1,7 +1,6 @@
 import React from 'react';
 import LayoutWithoutHeader from '../../components/Layout/LayoutWithoutHeader';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { AuthStackParamList } from '../Routes/RouteAuth';
 import { StyleSheet, View } from 'react-native';
 import { useForm } from 'react-hook-form';
 import { launchImageLibrary } from 'react-native-image-picker';
@@ -16,8 +15,11 @@ import { PRIMARY_COLOR } from '../../components/style';
 import Select from '../../components/Form/Select';
 import InputFile from '../../components/Form/InputFile';
 import ButtonVariant from '../../components/Form/Button';
+import { RootStackParamList } from '../../../App';
+import ModalSuccess from '../../components/Modal/ModalSuccess';
+import ModalError from '../../components/Modal/ModalError';
 
-type Props = NativeStackScreenProps<AuthStackParamList, 'FormKk'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'FormKk'>;
 
 interface File {
     uri?: string;
@@ -136,9 +138,10 @@ const FormKk = ({ navigation }: Props) => {
         setIsLoading(true);
 
         const formData = new FormData();
-
-        formData.append('kk', data.kk);
-        formData.append('jenis_permohonan', data.jenis_permohonan);
+        formData.append('kk_lama', data.kk_lama);
+        formData.append('shdk', data.shdk);
+        formData.append('alasan_permohonan', data.alasan_permohonan);
+        formData.append('jml_angg_keluarga', data.jml_angg_keluarga);
         formData.append('pengantar_rt', {
             uri: firstFile.uri,
             name: firstFile.name,
@@ -172,7 +175,7 @@ const FormKk = ({ navigation }: Props) => {
             });
             setIsLoading(false);
         }).catch((err) => {
-            console.log(err.data);
+            console.log(err);
             setModalError({
                 isVisible: true,
                 description: 'Surat gagal dikirim',
@@ -181,8 +184,27 @@ const FormKk = ({ navigation }: Props) => {
         });
     };
 
+
     return (
         <LayoutWithoutHeader>
+            <ModalSuccess
+                isVisible={isModalSuccess.isVisible}
+                description={isModalSuccess.description}
+                onPress={
+                    () => {
+                        setModalSuccess({ isVisible: false, description: '' });
+                        navigation.push('StatusLetters');
+                    }
+                }
+            />
+            <ModalError
+                isVisible={isModalError.isVisible}
+                description={isModalError.description}
+                onPress={() => setModalError({
+                    isVisible: false,
+                    description: '',
+                })}
+            />
             <View style={styles.container}>
                 <Section
                     title="Form Permohonan KK"
@@ -191,6 +213,8 @@ const FormKk = ({ navigation }: Props) => {
                         name="kk_lama"
                         placeholder="Masukkan No. KK Lama"
                         control={control}
+                        rules={{ required: 'No. KK Lama tidak boleh kosong' }}
+                        errors={errors.kk_lama}
                     >
                         <PersonCard
                             width={16}
@@ -203,17 +227,23 @@ const FormKk = ({ navigation }: Props) => {
                         placeholder="Pilih SHDK"
                         control={control}
                         data={shdk}
+                        rules={{ required: 'SHDK tidak boleh kosong' }}
+                        errors={errors.shdk}
                     />
                     <Select
                         name="alasan_permohonan"
                         placeholder="Pilih Alasan Permohonan"
                         control={control}
                         data={alasan_permohonan}
+                        rules={{ required: 'Alasan Permohonan tidak boleh kosong' }}
+                        errors={errors.alasan_permohonan}
                     />
                     <Input
                         name="jml_angg_keluarga"
                         placeholder="Masukkan Jumlah Anggota Keluarga"
                         control={control}
+                        rules={{ required: 'Jumlah Anggota Keluarga tidak boleh kosong' }}
+                        errors={errors.jml_angg_keluarga}
                     >
                         <Family
                             width={16}

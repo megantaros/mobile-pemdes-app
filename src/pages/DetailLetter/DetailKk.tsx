@@ -1,10 +1,10 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { Suspense, lazy } from 'react';
-import { Text, StyleSheet, View } from 'react-native';
-import { AuthStackParamList } from '../Routes/RouteAuth';
+import { StyleSheet, View } from 'react-native';
 import LayoutWithoutHeader from '../../components/Layout/LayoutWithoutHeader';
 import Section from '../../components/Section';
 import Loading from '../../components/Loading';
+import { RootStackParamList } from '../../../App';
 
 const FormKk = lazy(() => delayForDemo(import('../../features/DetailForms/UpdateKk')));
 
@@ -16,7 +16,7 @@ function delayForDemo<T>(promise: Promise<T>, ms: number = 5000) {
     });
 }
 
-type Props = NativeStackScreenProps<AuthStackParamList, 'DetailKk'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'DetailKk'>;
 
 const DetailKk = ({ route }: Props) => {
 

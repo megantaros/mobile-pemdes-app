@@ -81,7 +81,7 @@ const Select: FC<Props> = ({ placeholder, control, name, rules, errors, data }) 
                         placeholder={placeholder}
                         searchPlaceholder="Search..."
                         onChange={(e: any) => {
-                            setSelectedItem(e.value);
+                            setSelectedItem(e.lable);
                             onChange(e.value);
                         }}
                         renderLeftIcon={() => {

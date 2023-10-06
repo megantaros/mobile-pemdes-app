@@ -1,8 +1,12 @@
 import axios from 'axios';
 
+
+export const BASE_URL = 'http://192.168.1.18:8000/';
+export const BASE_IMG = BASE_URL + 'berkaspemohon/';
+
 export default function https(token: string | null) {
     const client = axios.create({
-        baseURL: 'http://192.168.1.18:8000/api',
+        baseURL: BASE_URL + 'api/',
     });
     client.interceptors.request.use((config) => {
         try {

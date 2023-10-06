@@ -138,7 +138,10 @@ const HomeScreen = ({ navigation }: Props) => {
             <View style={styles.container}>
                 <ModalDanger
                     isVisible={modalUpdateProfile}
-                    onPress={() => navigation.push('InfoAccount')}
+                    onPress={() => {
+                        navigation.push('InfoAccount');
+                        setModalUpdateProfile(false);
+                    }}
                     description="Anda belum melakukan update profil, silahkan update profil terlebih dahulu"
                 />
                 <ModalRules

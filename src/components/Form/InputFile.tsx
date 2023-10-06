@@ -10,6 +10,7 @@ interface Props {
     fileName: any;
     placeholder: string;
     onPress?: () => void;
+    isError?: boolean;
 }
 
 const File = ({ uri }: any) => {
@@ -23,7 +24,7 @@ const File = ({ uri }: any) => {
     );
 };
 
-const InputFile: FC<Props> = ({ uri, fileName, placeholder, onPress }) => {
+const InputFile: FC<Props> = ({ uri, fileName, placeholder, onPress, isError }) => {
 
     const [border, setBorder] = React.useState<boolean>(true);
 
@@ -64,6 +65,10 @@ const InputFile: FC<Props> = ({ uri, fileName, placeholder, onPress }) => {
                     value={fileName}
                 />
             </View>
+            {isError === true
+                ? <Text style={styles.onError}>File tidak boleh kosong!</Text>
+                : null
+            }
         </View>
     );
 };

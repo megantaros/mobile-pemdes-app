@@ -1,62 +1,44 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { View, StyleSheet } from 'react-native';
 import Section from '../../components/Section';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { AuthStackParamList } from '../Routes/RouteAuth';
 
 import LayoutWithoutHeader from '../../components/Layout/LayoutWithoutHeader';
-import ListLetters from '../../features/ListLetters/ListLetters';
+import { RootStackParamList } from '../../../App';
+import { useAppSelector } from '../../hooks/hooks';
+import https from '../../utils/api/http';
+import Loading from '../../components/Loading';
 
-const letters = [
-    {
-        id: Math.random(),
-        title: 'Surat Pengantar KK',
-        status: 'Terkirim',
-        date: '28-10-2023',
-    },
-    {
-        id: Math.random(),
-        title: 'Surat Pengantar KTP',
-        status: 'Terkirim',
-        date: '28-10-2023',
-    },
-    {
-        id: Math.random(),
-        title: 'Surat Pengantar SKCK',
-        status: 'Terkirim',
-        date: '28-10-2023',
-    },
-    {
-        id: Math.random(),
-        title: 'Surat Keterangan Domisili',
-        status: 'Terkirim',
-        date: '28-10-2023',
-    },
-    {
-        id: Math.random(),
-        title: 'Surat Keterangan Usaha',
-        status: 'Diterima',
-        date: '28-10-2023',
-    },
-    {
-        id: Math.random(),
-        title: 'Surat Keterangan Pindah',
-        status: 'Ditolak',
-        date: '28-10-2023',
-    },
-    {
-        id: Math.random(),
-        title: 'Surat Keterangan Pindah Datang',
-        status: 'Ditolak',
-        date: '28-10-2023',
-    },
-];
+type Letter = {
+    id_surat_pengajuan?: string;
+    id_surat?: string;
+    id_warga?: string;
+    jenis_surat: string;
+    status: string;
+    tanggal_pengajuan: string;
+};
 
-type Props = NativeStackScreenProps<AuthStackParamList, 'StatusLetters'>;
+const ListLetters = lazy(() => import('../../features/ListLetters/ListLetters'));
+
+type Props = NativeStackScreenProps<RootStackParamList, 'StatusLetters'>;
 
 const StatusLetters = ({ navigation }: Props) => {
 
-    const handlePress = (id: number, title: string) => {
+    const [letters, setLetters] = React.useState<Letter[]>([]);
+
+    const token = useAppSelector(state => state.user.token);
+    const apiClient = https(token ? token : '');
+
+    const getLetters = async () => {
+        await apiClient.get('surat/permohonan-surat').then((res) => {
+            console.log(res.data.data);
+            setLetters(res.data.data);
+        }).catch((err) => {
+            console.log(err.response);
+        });
+    };
+
+    const handlePress = (id: any, title: string) => {
         switch (title) {
             case 'Surat Pengantar KK':
                 navigation.navigate('DetailKk', { id });
@@ -69,6 +51,10 @@ const StatusLetters = ({ navigation }: Props) => {
         }
     };
 
+    React.useEffect(() => {
+        getLetters();
+    }, []);
+
     return (
         <LayoutWithoutHeader>
             <View style={styles.container}>
@@ -76,9 +62,11 @@ const StatusLetters = ({ navigation }: Props) => {
                     title="Permohonan Surat"
                     text="Status permohonan surat yang diajukan"
                 >
-                    {letters.map((letter, index) => (
-                        <ListLetters key={index} {...letter} onPress={() => handlePress(letter.id, letter.title)} />
-                    ))}
+                    <Suspense fallback={<Loading />}>
+                        {letters.map((letter, index) => (
+                            <ListLetters key={index} {...letter} onPress={() => handlePress(letter.id_surat, letter.jenis_surat)} />
+                        ))}
+                    </Suspense>
                 </Section>
             </View>
         </LayoutWithoutHeader>
