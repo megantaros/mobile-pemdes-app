@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import Modal from 'react-native-modal';
 import CheckCircelIcon from '../../assets/icons/check-circle.svg';
 import ButtonVariant from '../Form/Button';
-import { PRIMARY_COLOR, SUCCESS_COLOR } from '../style';
+import { GRAY_COLOR, SUCCESS_COLOR, SUCCESS_COLOR_LIGHT } from '../style';
 
 interface Props {
     description: string;
@@ -25,17 +25,11 @@ const ModalSuccess: FC<Props> = ({ description, isVisible, onPress }) => {
             backdropTransitionOutTiming={500}
         >
             <View style={styles.contentModal}>
-                <CheckCircelIcon height={70} width={70} />
-                <Text
-                    style={styles.titleModal}
-                >
-                    Selamat!
-                </Text>
-                <Text
-                    style={styles.descModal}
-                >
-                    {description}
-                </Text>
+                <View style={styles.headerModal}>
+                    <CheckCircelIcon height={50} width={50} />
+                    <Text style={styles.titleModal}>Selamat!</Text>
+                </View>
+                <Text style={styles.descModal}>{description}</Text>
                 <View style={styles.modalAction}>
                     <ButtonVariant title="Ok" onPress={onPress} variant={{ backgroundColor: SUCCESS_COLOR, color: '#fff' }} />
                 </View>
@@ -54,15 +48,24 @@ const styles = StyleSheet.create({
         padding: 20,
         gap: 10,
     },
+    headerModal: {
+        backgroundColor: SUCCESS_COLOR_LIGHT,
+        padding: 15,
+        borderRadius: 10,
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 10,
+    },
     titleModal: {
         fontFamily: 'Viga-Regular',
-        fontSize: 18,
+        fontSize: 16,
         color: SUCCESS_COLOR,
     },
     descModal: {
-        fontFamily: 'Poppins-Regular',
+        fontFamily: 'Viga-Regular',
         fontSize: 12,
-        color: PRIMARY_COLOR,
+        color: GRAY_COLOR,
         textAlign: 'center',
     },
     modalAction: {

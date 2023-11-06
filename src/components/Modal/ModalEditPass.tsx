@@ -4,7 +4,7 @@ import Modal from 'react-native-modal';
 import SecureIcon from '../../assets/icons/shield-lock-fill.svg';
 import KeyIcon from '../../assets/icons/key-fill.svg';
 import ButtonVariant from '../Form/Button';
-import { DANGER_COLOR, PRIMARY_COLOR, WARNING_COLOR, WARNING_COLOR_LIGHT } from '../style';
+import { DANGER_COLOR, PRIMARY_COLOR, SUCCESS_COLOR, WARNING_COLOR, WARNING_COLOR_LIGHT } from '../style';
 import Input from '../Form/Input';
 import { useForm } from 'react-hook-form';
 import { useAppSelector } from '../../hooks/hooks';
@@ -38,7 +38,7 @@ const ModalEditPass: FC<Props> = ({ isVisible, onPress }) => {
     const onSubmit = async (data: any) => {
         setIsLoading(true);
 
-        await apiClient.put(`/user/${user.id_warga}`, {
+        await apiClient.put(`user/${user.id_warga}`, {
             password: data.password,
         }).then(res => {
             console.log(res);
@@ -66,39 +66,28 @@ const ModalEditPass: FC<Props> = ({ isVisible, onPress }) => {
                 description="Password anda berhasil diubah!"
             />
             <View style={styles.contentModal}>
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', gap: 10 }}>
-                    <Text
-                        style={styles.titleModal}
-                    >
-                        Ubah Password
-                    </Text>
-                    <Text
-                        style={styles.descModal}
-                    >
-                        Pastikan password yang anda masukkan sudah benar
-                    </Text>
-                    <SecureIcon height={70} width={70} fill={WARNING_COLOR} />
+                <View style={styles.headerModal}>
+                    <SecureIcon height={50} width={50} fill={WARNING_COLOR} />
+                    <Text style={styles.titleModal}>Ubah Password</Text>
                 </View>
-                <View style={{ flex: 1, width: '100%', backgroundColor: WARNING_COLOR_LIGHT, padding: 10, justifyContent: 'center', alignItems: 'center', borderRadius: 20 }}>
-                    <Input
-                        name="password"
-                        placeholder="Password"
-                        control={control}
-                        errors={errors.password}
-                        rules={{ required: 'Password tidak boleh kosong!' }}
-                    >
-                        <KeyIcon width={16} height={16} />
-                    </Input>
-                    <Input
-                        name="confirm_password"
-                        placeholder="Konfirmasi Password"
-                        control={control}
-                        errors={errors.password}
-                        rules={{ required: 'Konfirmasi Password tidak boleh kosong!' }}
-                    >
-                        <KeyIcon width={16} height={16} />
-                    </Input>
-                </View>
+                <Input
+                    name="password"
+                    placeholder="Password"
+                    control={control}
+                    errors={errors.password}
+                    rules={{ required: 'Password tidak boleh kosong!' }}
+                >
+                    <KeyIcon width={16} height={16} />
+                </Input>
+                <Input
+                    name="confirm_password"
+                    placeholder="Konfirmasi Password"
+                    control={control}
+                    errors={errors.password}
+                    rules={{ required: 'Konfirmasi Password tidak boleh kosong!' }}
+                >
+                    <KeyIcon width={16} height={16} />
+                </Input>
                 <View style={styles.modalAction}>
                     <ButtonVariant
                         title="Batal"
@@ -106,10 +95,10 @@ const ModalEditPass: FC<Props> = ({ isVisible, onPress }) => {
                         variant={{ backgroundColor: DANGER_COLOR, color: '#fff' }}
                     />
                     <ButtonVariant
-                        title="Ubah Password"
+                        title="Simpan"
                         isLoading={isLoading}
                         onPress={handleSubmit(onSubmit)}
-                        variant={{ backgroundColor: WARNING_COLOR, color: '#fff' }}
+                        variant={{ backgroundColor: SUCCESS_COLOR, color: '#fff' }}
                     />
                 </View>
             </View >
@@ -125,8 +114,17 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 20,
-        maxHeight: 450,
+        height: '60%',
         gap: 20,
+    },
+    headerModal: {
+        backgroundColor: WARNING_COLOR_LIGHT,
+        padding: 15,
+        borderRadius: 10,
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 10,
     },
     titleModal: {
         textAlign: 'center',

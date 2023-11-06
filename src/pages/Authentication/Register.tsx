@@ -1,10 +1,9 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Image, ScrollView, StyleSheet, Text } from 'react-native';
 import { RootStackParamList } from '../../../App';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useForm } from 'react-hook-form';
-
 import HeaderLogo from '../../components/Header/HeaderLogo';
 import Input from '../../components/Form/Input';
 import UserSolid from '../../assets/icons/person-fill.svg';
@@ -14,112 +13,55 @@ import ButtonVariant from '../../components/Form/Button';
 import { PRIMARY_COLOR } from '../../components/style';
 import ModalSuccess from '../../components/Modal/ModalSuccess';
 import ModalError from '../../components/Modal/ModalError';
-
-import https from '../../utils/api/http';
+import useRegister from '../../hooks/Auth/useRegister';
+import { IRegister } from '../../models/model';
 
 const imgHeaderLogin = require('../../assets/img/header-login.png');
 const imgPerangkat_1 = require('../../assets/img/perangkat-desa-1.png');
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Register'>;
 
-interface IModalError {
-    isVisible: boolean;
-    description: string;
-}
-
-interface IModalSuccess {
-    isVisible: boolean;
-    description: string;
-}
-
 const RegisterScreen = ({ navigation }: Props) => {
-
-    const [isModalError, setModalError] = useState<IModalError>({
-        isVisible: false,
-        description: '',
-    });
-
-    const [isModalSuccess, setModalSuccess] = useState<IModalSuccess>({
-        isVisible: false,
-        description: '',
-    });
-
-    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const {
         control,
         handleSubmit,
         formState: { errors },
-    } = useForm({
-        defaultValues: {
-            nama_warga: '',
-            email: '',
-            password: '',
-            confirm_password: '',
-        },
-    });
+    } = useForm<IRegister>();
 
-    const apiClient = https('');
+    const {
+        isLoading,
+        isModalError,
+        isModalSuccess,
+        register,
+        closeModalError,
+        closeModalSuccess,
+    } = useRegister();
 
-    const onSubmit = async (data: any) => {
-
-        setIsLoading(true);
-
-        if (data.password !== data.confirm_password) {
-            setModalError({
-                isVisible: true,
-                description: 'Password dan Konfirmasi Password tidak sama',
-            });
-            setIsLoading(false);
-            return;
-        }
-
-        apiClient.post('register', {
-            nama_warga: data.nama_warga,
-            email: data.email,
-            password: data.password,
-        }).then((res) => {
-            console.log(res.data.data);
-            setModalSuccess({
-                isVisible: true,
-                description: 'Anda telah terdaftar, Silahkan Login!',
-            });
-            setIsLoading(false);
-        }).catch((err) => {
-            console.log(err.response.data);
-            setModalError({
-                isVisible: true,
-                description: 'Email sudah terdaftar!',
-            });
-            setIsLoading(false);
-        });
+    const onSubmit = async (data: IRegister) => {
+        await register(data);
     };
 
     return (
         <SafeAreaView style={styles.container}>
-            <ScrollView
-                style={
-                    styles.scroll_view
-                }>
+            <ScrollView style={styles.scroll_view}>
                 <ModalSuccess
                     isVisible={isModalSuccess.isVisible}
                     onPress={() => {
-                        navigation.push('Login');
-                        setModalSuccess({ isVisible: false, description: '' });
+                        navigation.navigate('Login');
+                        closeModalSuccess();
                     }}
                     description={isModalSuccess.description}
                 />
                 <ModalError
                     isVisible={isModalError.isVisible}
-                    onPress={() => setModalError({ isVisible: false, description: '' })}
+                    onPress={() => closeModalError()}
                     description={isModalError.description}
                 />
                 <View style={styles.container_header}>
                     <Image source={imgHeaderLogin} style={styles.bg_header} />
                     <View style={styles.container_header_logo}>
-                        <View style={
-                            styles.row
-                        }>
+                        <View style={styles.row}>
                             <HeaderLogo title="Selamat Datang" description="di Portal Pelayanan Administrasi Pemdes Kembaran" />
                         </View>
                         <View style={styles.img_asn}>
@@ -166,23 +108,15 @@ const RegisterScreen = ({ navigation }: Props) => {
                     </Input>
                     <ButtonVariant
                         variant={{ color: '#fff', backgroundColor: PRIMARY_COLOR }}
+                        margin={30}
                         title="Daftar Akun"
                         isLoading={isLoading}
                         onPress={handleSubmit(onSubmit)}
                     />
                 </View>
-                <View
-                    style={styles.footer}
-                >
-                    <Text
-                        style={styles.footer_text}
-                    >
-                        Sudah punya akun?
-                    </Text>
-                    <Text
-                        style={styles.footer_link}
-                        onPress={() => navigation.push('Login')}
-                    >
+                <View style={styles.footer}>
+                    <Text style={styles.footer_text}>Sudah punya akun?</Text>
+                    <Text style={styles.footer_link} onPress={() => navigation.replace('Login')}>
                         Login
                     </Text>
                 </View>

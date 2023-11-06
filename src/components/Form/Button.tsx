@@ -10,9 +10,10 @@ interface Props {
     variant?: variant;
     isLoading?: boolean;
     margin?: number;
+    icon?: React.ReactNode;
 }
 
-const ButtonVariant: FC<Props> = ({ title, onPress, variant, isLoading, margin }) => {
+const ButtonVariant: FC<Props> = ({ title, onPress, variant, isLoading, margin, icon }) => {
     const styles = StyleSheet.create({
         container: {
             flex: 1,
@@ -36,8 +37,9 @@ const ButtonVariant: FC<Props> = ({ title, onPress, variant, isLoading, margin }
 
     return (
         <Pressable style={styles.container} onPress={onPress}>
-            {isLoading && <ActivityIndicator size={'small'} color={'#fff'} />}
+            {icon}
             <Text style={styles.text}>{title}</Text>
+            {isLoading && <ActivityIndicator size={'small'} color={'#fff'} />}
         </Pressable>
     );
 };

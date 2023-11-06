@@ -1,15 +1,25 @@
 import React from 'react';
-import { SafeAreaView, Text, View, ActivityIndicator, StyleSheet } from 'react-native';
+import { Text, View, ActivityIndicator, StyleSheet } from 'react-native';
 import { PRIMARY_COLOR } from './style';
+import Modal from 'react-native-modal';
 
 const Loading = () => {
     return (
-        <SafeAreaView style={styles.body}>
+        <Modal
+            style={styles.body}
+            isVisible={true}
+            animationIn="slideInUp"
+            animationOut="slideOutDown"
+            animationInTiming={500}
+            animationOutTiming={500}
+            backdropTransitionInTiming={500}
+            backdropTransitionOutTiming={500}
+        >
             <View style={styles.container}>
-                <ActivityIndicator size="small" color={PRIMARY_COLOR} />
+                <ActivityIndicator size="large" color={PRIMARY_COLOR} />
                 <Text style={styles.text}>Mohon Tunggu...</Text>
             </View>
-        </SafeAreaView>
+        </Modal>
     );
 };
 
@@ -17,14 +27,16 @@ const styles = StyleSheet.create({
     body: {
         flex: 1,
         height: '100%',
+        width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
     },
     container: {
         padding: 20,
-        // backgroundColor: '#fff',
+        width: '50%',
+        backgroundColor: '#fff',
         borderRadius: 10,
-        flexDirection: 'row',
+        flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
         gap: 10,

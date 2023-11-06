@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { DANGER_COLOR, PRIMARY_BACKGROUND_COLOR, PRIMARY_COLOR } from '../../components/style';
 import Layout from '../../components/Layout/Layout';
@@ -15,12 +15,9 @@ import ModalRules from '../../components/Modal/ModalRules';
 import Section from '../../components/Section';
 import ModalDanger from '../../components/Modal/ModalDanger';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootTabParamList } from '../Routes/HomeTab';
-import { useAppSelector } from '../../hooks/hooks';
-import https from '../../utils/api/http';
-import { get, set } from 'react-hook-form';
-import { AuthStackParamList } from '../Routes/RouteAuth';
 import { RootStackParamList } from '../../../App';
+import useGetUser from '../../hooks/Auth/useGetUser';
+import Loading from '../../components/Loading';
 
 const items = [
     {
@@ -67,35 +64,19 @@ const mision = [
     '4. Mendorong kegiatan dunia usaha guna menciptakan lapangan kerja.',
 ];
 
-type Props = NativeStackScreenProps<RootStackParamList, 'AuthRoutes'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'HomeScreen'>;
 
 const HomeScreen = ({ navigation }: Props) => {
 
     const [isVisible, setIsVisible] = React.useState(false);
     const [id, setId] = React.useState(0);
-    const [username, setUsername] = React.useState<string>('');
-    const [modalUpdateProfile, setModalUpdateProfile] = React.useState<boolean>(false);
+    const [modalUpdate, setModalUpdate] = React.useState(false);
 
-    const token = useAppSelector(state => state.user.token);
-    const apiClient = https(token ? token : '');
+    const { data } = useGetUser();
 
-    const getUser = async () => {
-        await apiClient.get('/user').then((res) => {
-            console.log(res.data);
-            setUsername(res.data.data.nama_warga);
-
-            if (res.data.data.nik === null) {
-                setModalUpdateProfile(true);
-            }
-
-        }).catch((err) => {
-            console.log(err.response);
-        });
-    };
-
-    React.useEffect(() => {
-        getUser();
-    }, []);
+    useEffect(() => {
+        data?.nik === null && setModalUpdate(true);
+    }, [data?.nik]);
 
     const handlePress = (index: number) => {
         switch (index) {
@@ -126,7 +107,6 @@ const HomeScreen = ({ navigation }: Props) => {
             case 7:
                 setId(index);
                 setIsVisible(true);
-
                 break;
             default:
                 break;
@@ -137,10 +117,10 @@ const HomeScreen = ({ navigation }: Props) => {
         <Layout>
             <View style={styles.container}>
                 <ModalDanger
-                    isVisible={modalUpdateProfile}
+                    isVisible={modalUpdate}
                     onPress={() => {
-                        navigation.push('InfoAccount');
-                        setModalUpdateProfile(false);
+                        setModalUpdate(false);
+                        navigation.navigate('InfoAccount');
                     }}
                     description="Anda belum melakukan update profil, silahkan update profil terlebih dahulu"
                 />
@@ -150,8 +130,8 @@ const HomeScreen = ({ navigation }: Props) => {
                     onPress={() => setIsVisible(false)}
                 />
                 <View style={styles.sectionHeader}>
-                    <Suspense fallback={<Text style={styles.sectionTitle}>Loading...</Text>}>
-                        <Text style={styles.sectionTitle}>Hi, {username}</Text>
+                    <Suspense fallback={<Loading />}>
+                        <Text style={styles.sectionTitle}>Hi, {data?.nama_warga}</Text>
                     </Suspense>
                     <Text style={styles.sectionText}>Apakah ada yang bisa kami bantu?</Text>
                 </View>
@@ -168,18 +148,14 @@ const HomeScreen = ({ navigation }: Props) => {
                         />
                     ))}
                 </ScrollView>
-                <Section
-                    title="Visi"
-                >
+                <Section title="Visi">
                     <View style={styles.cardContainer}>
                         <Text style={[styles.text, { fontSize: 12, textAlign: 'center' }]}>
                             Menuju Desa Maju Mandiri
                         </Text>
                     </View>
                 </Section>
-                <Section
-                    title="Misi"
-                >
+                <Section title="Misi">
                     <View style={styles.cardContainer}>
                         {mision.map((item, index) => (
                             <Text key={index} style={styles.text}>

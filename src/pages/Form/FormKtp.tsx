@@ -16,6 +16,7 @@ import https from '../../utils/api/http';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import ModalSuccess from '../../components/Modal/ModalSuccess';
 import ModalError from '../../components/Modal/ModalError';
+import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../../App';
 
 const jenis_permohonan = [
@@ -164,7 +165,7 @@ const FormKtp = ({ navigation }: Props) => {
                         isVisible: false,
                         description: '',
                     });
-                    navigation.navigate('StatusLetters');
+                    navigation.navigate('Letters');
                 }}
             />
             <ModalError

@@ -3,37 +3,17 @@ import { View, Text, StyleSheet } from 'react-native';
 import Modal from 'react-native-modal';
 import WarningIcon from '../../assets/icons/warning.svg';
 import ButtonVariant from '../Form/Button';
-import { DANGER_COLOR, PRIMARY_COLOR, SUCCESS_COLOR, WARNING_COLOR } from '../style';
-import { useAppSelector } from '../../hooks/hooks';
-import https from '../../utils/api/http';
+import { DANGER_COLOR, GRAY_COLOR, SUCCESS_COLOR, WARNING_COLOR, WARNING_COLOR_LIGHT } from '../style';
 
 interface Props {
     description: string;
     isVisible: boolean;
-    onPress: () => void;
-    navigation?: any;
+    onCancle: () => void;
+    onConfirm: () => void;
+    isLoading?: boolean;
 }
 
-const ModalConfirm: FC<Props> = ({ isVisible, onPress, description, navigation }) => {
-
-    const [isLoading, setLoading] = React.useState<boolean>(false);
-
-    const token = useAppSelector(state => state.user.token);
-    const apiClient = https(token ? token : '');
-
-    const onSubmit = async () => {
-        setLoading(true);
-        apiClient.post('/logout')
-            .then((res) => {
-                console.log(res.data.message);
-                setLoading(false);
-                navigation.replace('Login');
-            })
-            .catch((err) => {
-                console.log(err);
-                setLoading(false);
-            });
-    };
+const ModalConfirm: FC<Props> = ({ isVisible, onCancle, onConfirm, description, isLoading }) => {
 
     return (
         <Modal
@@ -46,20 +26,14 @@ const ModalConfirm: FC<Props> = ({ isVisible, onPress, description, navigation }
             backdropTransitionOutTiming={500}
         >
             <View style={styles.contentModal}>
-                <WarningIcon height={70} width={70} fill={WARNING_COLOR} />
-                <Text
-                    style={styles.titleModal}
-                >
-                    Warning !
-                </Text>
-                <Text
-                    style={styles.descModal}
-                >
-                    {description}
-                </Text>
+                <View style={styles.headerModal}>
+                    <WarningIcon height={50} width={50} fill={WARNING_COLOR} />
+                    <Text style={styles.titleModal}>Warning !</Text>
+                </View>
+                <Text style={styles.descModal}>{description}</Text>
                 <View style={styles.modalAction}>
-                    <ButtonVariant title="Tidak" onPress={onPress} variant={{ backgroundColor: SUCCESS_COLOR, color: '#fff' }} />
-                    <ButtonVariant title="Ya" onPress={onSubmit} variant={{ backgroundColor: DANGER_COLOR, color: '#fff' }} isLoading={isLoading} />
+                    <ButtonVariant title="Tidak" onPress={onCancle} variant={{ backgroundColor: SUCCESS_COLOR, color: '#fff' }} />
+                    <ButtonVariant title="Ya" onPress={onConfirm} variant={{ backgroundColor: DANGER_COLOR, color: '#fff' }} isLoading={isLoading} />
                 </View>
             </View>
         </Modal>
@@ -76,15 +50,24 @@ const styles = StyleSheet.create({
         padding: 20,
         gap: 10,
     },
+    headerModal: {
+        backgroundColor: WARNING_COLOR_LIGHT,
+        padding: 15,
+        borderRadius: 10,
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 10,
+    },
     titleModal: {
         fontFamily: 'Viga-Regular',
-        fontSize: 18,
+        fontSize: 16,
         color: WARNING_COLOR,
     },
     descModal: {
-        fontFamily: 'Poppins-Regular',
+        fontFamily: 'Viga-Regular',
         fontSize: 12,
-        color: PRIMARY_COLOR,
+        color: GRAY_COLOR,
         textAlign: 'center',
     },
     modalAction: {

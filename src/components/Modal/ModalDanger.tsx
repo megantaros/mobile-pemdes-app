@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import Modal from 'react-native-modal';
 import WarningIcon from '../../assets/icons/warning.svg';
 import ButtonVariant from '../Form/Button';
-import { PRIMARY_COLOR, WARNING_COLOR } from '../style';
+import { GRAY_COLOR, WARNING_COLOR, WARNING_COLOR_LIGHT } from '../style';
 
 interface Props {
     description: string;
@@ -24,17 +24,11 @@ const ModalDanger: FC<Props> = ({ isVisible, onPress, description }) => {
             backdropTransitionOutTiming={500}
         >
             <View style={styles.contentModal}>
-                <WarningIcon height={70} width={70} fill={WARNING_COLOR} />
-                <Text
-                    style={styles.titleModal}
-                >
-                    Warning !
-                </Text>
-                <Text
-                    style={styles.descModal}
-                >
-                    {description}
-                </Text>
+                <View style={styles.headerModal}>
+                    <WarningIcon height={50} width={50} fill={WARNING_COLOR} />
+                    <Text style={styles.titleModal}>Warning !</Text>
+                </View>
+                <Text style={styles.descModal}>{description}</Text>
                 <View style={styles.modalAction}>
                     <ButtonVariant title="Ok" onPress={onPress} variant={{ backgroundColor: WARNING_COLOR, color: '#fff' }} />
                 </View>
@@ -45,7 +39,6 @@ const ModalDanger: FC<Props> = ({ isVisible, onPress, description }) => {
 
 const styles = StyleSheet.create({
     contentModal: {
-        flex: 1,
         borderRadius: 20,
         maxHeight: '50%',
         backgroundColor: '#fff',
@@ -54,15 +47,24 @@ const styles = StyleSheet.create({
         padding: 20,
         gap: 10,
     },
+    headerModal: {
+        backgroundColor: WARNING_COLOR_LIGHT,
+        padding: 15,
+        borderRadius: 10,
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 10,
+    },
     titleModal: {
         fontFamily: 'Viga-Regular',
         fontSize: 18,
         color: WARNING_COLOR,
     },
     descModal: {
-        fontFamily: 'Poppins-Regular',
+        fontFamily: 'Viga-Regular',
         fontSize: 12,
-        color: PRIMARY_COLOR,
+        color: GRAY_COLOR,
         textAlign: 'center',
     },
     modalAction: {

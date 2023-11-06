@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import Layout from '../../components/Layout/Layout';
 import Section from '../../components/Section';
@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 
 import PersonSolid from '../../assets/icons/person-fill.svg';
 import PersonCard from '../../assets/icons/person-vcard-fill.svg';
+import PaperPlane from '../../assets/icons/paper-plane.svg';
 import Mobile from '../../assets/icons/phone-fill.svg';
 import { PRIMARY_COLOR } from '../../components/style';
 import Select from '../../components/Form/Select';
@@ -15,6 +16,7 @@ import Input from '../../components/Form/Input';
 import https from '../../utils/api/http';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../App';
+import Loading from '../../components/Loading';
 
 const letters = [
     { value: 'Surat Pengantar KK', lable: 'Surat Pengantar KK' },
@@ -26,7 +28,7 @@ const letters = [
     { value: 'Surat Keterangan Datang', lable: 'Surat Keterangan Datang' },
 ];
 
-type Props = NativeStackScreenProps<RootStackParamList, 'HomeTabs'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'ServiceScreen'>;
 
 const ServiceScreen = ({ navigation }: Props) => {
 
@@ -46,13 +48,21 @@ const ServiceScreen = ({ navigation }: Props) => {
 
     const token = useAppSelector((state) => state.user.token);
     const apiClient = https(token ? token : '');
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const getUser = async () => {
+        setIsLoading(true);
+
         const response = await apiClient.get('/user');
         const { data } = response.data;
-        setValue('nama_warga', data.nama_warga);
-        setValue('nik', data.nik);
-        setValue('notelpon', data.notelpon);
+        if (data) {
+            setValue('nama_warga', data.nama_warga);
+            setValue('nik', data.nik);
+            setValue('notelpon', data.notelpon);
+
+            setIsLoading(false);
+        }
+
     };
 
     React.useEffect(() => {
@@ -60,14 +70,15 @@ const ServiceScreen = ({ navigation }: Props) => {
     }, []);
 
     const onSubmit = async (data: any) => {
-        console.log(data);
-
         switch (data.jenis_surat) {
             case 'Surat Pengantar KK':
                 navigation.navigate('FormKk');
                 break;
             case 'Surat Pengantar KTP':
                 navigation.navigate('FormKtp');
+                break;
+            case 'Surat Keterangan Domisili':
+                navigation.navigate('FormDomisili');
                 break;
             default:
                 break;
@@ -81,6 +92,7 @@ const ServiceScreen = ({ navigation }: Props) => {
                     title="Permohonan Surat"
                     text="Isi form dibawah ini untuk membuat permohonan surat"
                 >
+                    {isLoading && <Loading />}
                     <Input
                         disabled={true}
                         name="nama_warga"
@@ -135,6 +147,13 @@ const ServiceScreen = ({ navigation }: Props) => {
                         title="Buat Permohonan"
                         margin={20}
                         onPress={handleSubmit(onSubmit)}
+                        icon={
+                            <PaperPlane
+                                width={16}
+                                height={16}
+                                fill="#fff"
+                            />
+                        }
                     />
                 </Section>
             </View>

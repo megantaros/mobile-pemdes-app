@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 import Card from '../../components/Card';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { DANGER_COLOR, INFO_COLOR, PRIMARY_COLOR, SUCCESS_COLOR } from '../../components/style';
@@ -8,16 +8,9 @@ import InfoAccount from '../../assets/icons/info.svg';
 import SentIcon from '../../assets/icons/send-fill.svg';
 import AcceptIcon from '../../assets/icons/send-check-fill.svg';
 import RejectIcon from '../../assets/icons/send-x-fill.svg';
+import { ILetters } from '../../models/model';
 
-interface Props {
-    jenis_surat: string;
-    status: string;
-    tanggal_pengajuan: string;
-    onPress?: () => void;
-}
-
-const ListLetters: FC<Props> = ({ jenis_surat, status, tanggal_pengajuan, onPress }) => {
-
+const ListLetters = ({ jenis_surat, status, tanggal, onPress, onDestroy }: ILetters) => {
 
     const statusColor = (statusLetter: string) => {
         switch (statusLetter) {
@@ -45,10 +38,29 @@ const ListLetters: FC<Props> = ({ jenis_surat, status, tanggal_pengajuan, onPres
         }
     };
 
+    const formattedDate = (dateString: string) => {
+
+        const monthNames = [
+            'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+            'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
+        ];
+
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) {
+            return 'Invalid Date';
+        }
+
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = monthNames[date.getMonth()];
+        const year = String(date.getFullYear());
+
+        return `${day} ${month} ${year}`;
+    };
+
     const styles = StyleSheet.create({
         cardStyle: {
             width: '100%',
-            borderLeftColor: statusColor(status),
+            borderLeftColor: statusColor(status ? status : ''),
             borderLeftWidth: 3,
             flexDirection: 'row',
             alignItems: 'flex-start',
@@ -88,7 +100,7 @@ const ListLetters: FC<Props> = ({ jenis_surat, status, tanggal_pengajuan, onPres
         textLetter: {
             fontSize: 12,
             fontFamily: 'Poppins-Regular',
-            color: statusColor(status),
+            color: statusColor(status ? status : ''),
             fontWeight: 'bold',
         },
         dateLetter: {
@@ -104,12 +116,10 @@ const ListLetters: FC<Props> = ({ jenis_surat, status, tanggal_pengajuan, onPres
             <View style={styles.cardContainer}>
                 <Text style={styles.titleLetter}>{jenis_surat}</Text>
                 <View style={styles.textStatus}>
-                    {statusIcon(status)}
-                    <Text style={styles.textLetter}>
-                        {status}
-                    </Text>
+                    {statusIcon(status ? status : '')}
+                    <Text style={styles.textLetter}>{status}</Text>
                 </View>
-                <Text style={styles.dateLetter}>Tanggal: {tanggal_pengajuan}</Text>
+                <Text style={styles.dateLetter}>Tanggal: {formattedDate(tanggal)}</Text>
             </View>
             <View style={styles.cardAction}>
 
@@ -118,7 +128,7 @@ const ListLetters: FC<Props> = ({ jenis_surat, status, tanggal_pengajuan, onPres
                         <Pressable onPress={onPress} style={styles.btnInfo}>
                             <InfoAccount width={20} height={20} fill="#fff" />
                         </Pressable>
-                        <Pressable onPress={() => console.log('Destroy')} style={styles.btnDestroy}>
+                        <Pressable onPress={onDestroy} style={styles.btnDestroy}>
                             <TrashIcon width={20} height={20} fill="#fff" />
                         </Pressable>
                     </>
@@ -129,7 +139,7 @@ const ListLetters: FC<Props> = ({ jenis_surat, status, tanggal_pengajuan, onPres
                         <Pressable onPress={onPress} style={styles.btnInfo}>
                             <InfoAccount width={20} height={20} fill="#fff" />
                         </Pressable>
-                        <Pressable onPress={() => console.log('Destroy')} style={styles.btnDestroy}>
+                        <Pressable onPress={onDestroy} style={styles.btnDestroy}>
                             <TrashIcon width={20} height={20} fill="#fff" />
                         </Pressable>
                     </>

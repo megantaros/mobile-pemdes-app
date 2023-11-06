@@ -12,112 +12,52 @@ import ButtonVariant from '../../components/Form/Button';
 import { PRIMARY_COLOR } from '../../components/style';
 import ModalSuccess from '../../components/Modal/ModalSuccess';
 import ModalError from '../../components/Modal/ModalError';
-import https from '../../utils/api/http';
-import { useAppDispatch } from '../../hooks/hooks';
-import { setUser } from '../../stores/user';
+import { ILogin } from '../../models/model';
+import useLogin from '../../hooks/Auth/useLogin';
 
 const imgHeaderLogin = require('../../assets/img/header-register.png');
 const imgPerangkat_2 = require('../../assets/img/perangkat-desa-2.png');
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
-interface IModalError {
-    isVisible: boolean;
-    description: string;
-}
-
-interface IModalSuccess {
-    isVisible: boolean;
-    description: string;
-}
-
 const LoginScreen = ({ navigation }: Props) => {
-
-    const [isModalError, setModalError] = React.useState<IModalError>({
-        isVisible: false,
-        description: '',
-    });
-
-    const [isModalSuccess, setModalSuccess] = React.useState<IModalSuccess>({
-        isVisible: false,
-        description: '',
-    });
-
-    const [isLoading, setIsLoading] = React.useState<boolean>(false);
-
-    const dispatch = useAppDispatch();
 
     const {
         control,
         handleSubmit,
         formState: { errors },
-    } = useForm({
-        defaultValues: {
-            email: '',
-            password: '',
-        },
-    });
+    } = useForm<ILogin>();
 
-    const apiClient = https('');
+    const {
+        isLoading,
+        isModalError,
+        isModalSuccess,
+        login,
+        closeModalError,
+        closeModalSuccess,
+    } = useLogin();
 
-    const onSubmit = async (data: any) => {
-
-        // navigation.push('AuthRoutes');
-        setIsLoading(true);
-
-        await apiClient.post('login', {
-            email: data.email,
-            password: data.password,
-        }).then((res) => {
-            // console.log(res.data.data);
-            // console.log(res.data.access_token);
-            dispatch(setUser({
-                id_warga: res.data.data.id_warga,
-                isLoggedIn: true,
-                token: res.data.access_token,
-            },
-            ));
-            setModalSuccess({
-                isVisible: true,
-                description: 'Anda berhasil login!',
-            });
-            setIsLoading(false);
-        }).catch((err) => {
-            console.log(err.response.data);
-            setModalError({
-                isVisible: true,
-                description: 'Email atau Password Salah!',
-            });
-            setIsLoading(false);
-        });
-
+    const onSubmit = async (form: ILogin) => {
+        await login(form);
     };
 
     return (
         <SafeAreaView style={styles.container}>
-            <ScrollView
-                style={
-                    styles.scroll_view
-                }>
+            <ScrollView style={styles.scroll_view}>
                 <ModalSuccess
                     isVisible={isModalSuccess.isVisible}
-                    onPress={() => {
-                        setModalSuccess({ isVisible: false, description: '' });
-                        navigation.push('AuthRoutes');
-                    }}
+                    onPress={() => closeModalSuccess()}
                     description={isModalSuccess.description}
                 />
                 <ModalError
                     isVisible={isModalError.isVisible}
-                    onPress={() => setModalError({ isVisible: false, description: '' })}
+                    onPress={() => closeModalError()}
                     description={isModalError.description}
                 />
                 <View style={styles.container_header}>
                     <Image source={imgHeaderLogin} style={styles.bg_header} />
                     <View style={styles.container_header_logo}>
-                        <View style={
-                            styles.row
-                        }>
+                        <View style={styles.row}>
                             <HeaderLogo title="Selamat Datang Kembali" description="di Portal Pelayanan Administrasi Pemdes Kembaran" />
                         </View>
                         <View style={styles.img_asn}>
@@ -152,20 +92,9 @@ const LoginScreen = ({ navigation }: Props) => {
                         onPress={handleSubmit(onSubmit)}
                     />
                 </View>
-                <View
-                    style={styles.footer}
-                >
-                    <Text
-                        style={styles.footer_text}
-                    >
-                        Belum punya akun?
-                    </Text>
-                    <Text
-                        style={styles.footer_link}
-                        onPress={() => navigation.push('Register')}
-                    >
-                        Daftar
-                    </Text>
+                <View style={styles.footer}>
+                    <Text style={styles.footer_text}>Belum punya akun?</Text>
+                    <Text style={styles.footer_link} onPress={() => navigation.push('Register')}>Daftar</Text>
                 </View>
             </ScrollView>
         </SafeAreaView >

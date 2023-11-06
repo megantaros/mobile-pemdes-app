@@ -1,29 +1,30 @@
 import React from 'react';
-import LayoutWithoutHeader from '../../components/Layout/LayoutWithoutHeader';
+import { RootStackParamList } from '../../../App';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { StyleSheet, View } from 'react-native';
+import LayoutWithoutHeader from '../../components/Layout/LayoutWithoutHeader';
+import Section from '../../components/Section';
+import Loading from '../../components/Loading';
+import { File, IModalError, IModalSuccess } from '../../models/model';
 import { useForm } from 'react-hook-form';
 import { launchImageLibrary } from 'react-native-image-picker';
-import { useAppSelector } from '../../hooks/hooks';
-import https from '../../utils/api/http';
-import Section from '../../components/Section';
+import useGetDomisili from '../../hooks/Letters/useGetDomisili';
 import Input from '../../components/Form/Input';
-
-import PersonCard from '../../assets/icons/person-vcard-fill.svg';
-import Family from '../../assets/icons/users-alt.svg';
-import { PRIMARY_COLOR } from '../../components/style';
-import Select from '../../components/Form/Select';
+import TextArea from '../../components/Form/TextArea';
 import InputFile from '../../components/Form/InputFile';
+import PersonCard from '../../assets/icons/person-vcard-fill.svg';
+import Location from '../../assets/icons/geo-alt-fill.svg';
+import { PRIMARY_COLOR, WARNING_COLOR } from '../../components/style';
+import https, { BASE_IMG } from '../../utils/api/http';
 import ButtonVariant from '../../components/Form/Button';
-import { RootStackParamList } from '../../../App';
+import TextAreaDisabled from '../../components/DisabledForm/TextAreaDisabled';
+import { useAppSelector } from '../../hooks/hooks';
 import ModalSuccess from '../../components/Modal/ModalSuccess';
 import ModalError from '../../components/Modal/ModalError';
+import CommentIcon from '../../assets/icons/comment-alt-dots.svg';
+import DiskIcon from '../../assets/icons/disk.svg';
 
-interface File {
-    uri?: string;
-    name?: string;
-    type?: string;
-}
+type Props = NativeStackScreenProps<RootStackParamList, 'DetailDomisili'>;
 
 const initialValue = {
     uri: '',
@@ -31,38 +32,9 @@ const initialValue = {
     type: '',
 };
 
-interface IModalError {
-    isVisible: boolean;
-    description: string;
-}
+const DetailDomisili = ({ route }: Props) => {
 
-interface IModalSuccess {
-    isVisible: boolean;
-    description: string;
-}
-
-const shdk = [
-    { lable: 'Kepala Keluarga', value: 'Kepala Keluarga' },
-    { lable: 'Suami', value: 'Suami' },
-    { lable: 'Istri', value: 'Istri' },
-    { lable: 'Anak', value: 'Anak' },
-    { lable: 'Menantu', value: 'Menantu' },
-    { lable: 'Cucu', value: 'Cucu' },
-    { lable: 'Orang Tua', value: 'Orang Tua' },
-    { lable: 'Mertua', value: 'Mertua' },
-    { lable: 'Famili Lainnya', value: 'Famili Lainnya' },
-    { lable: 'Pembantu', value: 'Pembantu' },
-];
-
-const alasan_permohonan = [
-    { lable: 'Membentuk Rumah Tangga Baru', value: 1 },
-    { lable: 'KK Hilang/Rusak', value: 2 },
-    { lable: 'Lainnnya', value: 3 },
-];
-
-type Props = NativeStackScreenProps<RootStackParamList, 'FormKk'>;
-
-const FormKk = ({ navigation }: Props) => {
+    const { id } = route.params;
 
     const [firstFile, setFirstFile] = React.useState<File>(initialValue);
     const [secondFile, setSecondFile] = React.useState<File>(initialValue);
@@ -71,6 +43,7 @@ const FormKk = ({ navigation }: Props) => {
 
     const {
         control,
+        setValue,
         handleSubmit,
         formState: { errors },
     } = useForm();
@@ -92,7 +65,7 @@ const FormKk = ({ navigation }: Props) => {
             });
         }
 
-        if (name === 'foto_ktp') {
+        if (name === 'fc_ktp') {
             setSecondFile({
                 uri: images.assets?.[0].uri,
                 name: images.assets?.[0].fileName,
@@ -100,7 +73,7 @@ const FormKk = ({ navigation }: Props) => {
             });
         }
 
-        if (name === 'foto_kk') {
+        if (name === 'fc_kk') {
             setThirdFile({
                 uri: images.assets?.[0].uri,
                 name: images.assets?.[0].fileName,
@@ -108,20 +81,43 @@ const FormKk = ({ navigation }: Props) => {
             });
         }
 
-        if (name === 'fc_buku_nikah') {
+        if (name === 'foto_lokasi') {
             setFourthFile({
                 uri: images.assets?.[0].uri,
                 name: images.assets?.[0].fileName,
                 type: images.assets?.[0].type,
             });
         }
-
     };
 
-    const token = useAppSelector((state) => state.user.token);
-    const apiClient = https(token ? token : '');
-
+    const { data } = useGetDomisili(id);
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
+
+    React.useEffect(() => {
+        setValue('kk', data?.kk);
+        setValue('alamat_domisili', data?.alamat_domisili);
+        setValue('keterangan_warga', data?.keterangan_warga);
+        setFirstFile({
+            uri: BASE_IMG + data?.pengantar_rt,
+            name: data?.pengantar_rt,
+            type: 'image/jpeg',
+        });
+        setSecondFile({
+            uri: BASE_IMG + data?.fc_ktp,
+            name: data?.fc_ktp,
+            type: 'image/jpeg',
+        });
+        setThirdFile({
+            uri: BASE_IMG + data?.fc_kk,
+            name: data?.fc_kk,
+            type: 'image/jpeg',
+        });
+        setFourthFile({
+            uri: BASE_IMG + data?.foto_lokasi,
+            name: data?.foto_lokasi,
+            type: 'image/jpeg',
+        });
+    }, [id, data, setValue]);
 
     const [isModalError, setModalError] = React.useState<IModalError>({
         isVisible: false,
@@ -133,39 +129,39 @@ const FormKk = ({ navigation }: Props) => {
         description: '',
     });
 
-    const onSubmit = async (data: any) => {
 
+    const token = useAppSelector((state) => state.user.token);
+    const apiClient = https(token ? token : '');
+    const onSubmit = async (form: any) => {
         setIsLoading(true);
 
         const formData = new FormData();
-        formData.append('kk_lama', data.kk_lama);
-        formData.append('shdk', data.shdk);
-        formData.append('alasan_permohonan', data.alasan_permohonan);
-        formData.append('jml_angg_keluarga', data.jml_angg_keluarga);
+        formData.append('_method', 'PUT');
+        formData.append('kk', form.kk);
+        formData.append('alamat_domisili', form.alamat_domisili);
+        formData.append('keterangan_warga', form.keterangan_warga);
         formData.append('pengantar_rt', {
             uri: firstFile.uri,
             name: firstFile.name,
             type: firstFile.type,
         });
-        formData.append('foto_ktp', {
+        formData.append('fc_ktp', {
             uri: secondFile.uri,
             name: secondFile.name,
             type: secondFile.type,
         });
-        formData.append('foto_kk', {
+        formData.append('fc_kk', {
             uri: thirdFile.uri,
             name: thirdFile.name,
             type: thirdFile.type,
         });
-        formData.append('fc_buku_nikah', {
+        formData.append('foto_lokasi', {
             uri: fourthFile.uri,
             name: fourthFile.name,
             type: fourthFile.type,
         });
 
-        console.log(formData);
-
-        await apiClient.post('surat/permohonan-kk', formData, {
+        await apiClient.post(`surat/permohonan-domisili/${data?.id_surat_ket_domisili}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
@@ -173,50 +169,44 @@ const FormKk = ({ navigation }: Props) => {
             console.log(res.data.data);
             setModalSuccess({
                 isVisible: true,
-                description: 'Surat berhasil dikirim',
+                description: 'Surat berhasil diubah',
             });
             setIsLoading(false);
         }).catch((err) => {
-            console.log(err);
+            console.log(err.message);
             setModalError({
                 isVisible: true,
-                description: 'Surat gagal dikirim',
+                description: 'Masalah koneksi',
             });
             setIsLoading(false);
         });
     };
-
 
     return (
         <LayoutWithoutHeader>
             <ModalSuccess
                 isVisible={isModalSuccess.isVisible}
                 description={isModalSuccess.description}
-                onPress={
-                    () => {
-                        setModalSuccess({ isVisible: false, description: '' });
-                        navigation.push('Letters');
-                    }
-                }
+                onPress={() => setModalSuccess({ isVisible: false, description: '' })}
             />
             <ModalError
                 isVisible={isModalError.isVisible}
                 description={isModalError.description}
-                onPress={() => setModalError({
-                    isVisible: false,
-                    description: '',
-                })}
+                onPress={() => setModalError({ isVisible: false, description: '' })}
             />
             <View style={styles.container}>
                 <Section
-                    title="Form Permohonan KK"
-                    text="Isi form dibawah ini untuk membuat permohonan surat">
+                    title="Detail Surat Domisili"
+                    text="Silahkan lengkapi form dibawah ini"
+                >
+                    {isLoading && <Loading />}
                     <Input
-                        name="kk_lama"
-                        placeholder="Masukkan No. KK Lama"
+                        name="kk"
+                        placeholder="Masukkan No. KK"
+                        keyType="numeric"
                         control={control}
-                        rules={{ required: 'No. KK Lama tidak boleh kosong' }}
-                        errors={errors.kk_lama}
+                        rules={{ required: 'No. KK tidak boleh kosong' }}
+                        errors={errors.kk}
                     >
                         <PersonCard
                             width={16}
@@ -224,35 +214,17 @@ const FormKk = ({ navigation }: Props) => {
                             fill={PRIMARY_COLOR}
                         />
                     </Input>
-                    <Select
-                        name="shdk"
-                        placeholder="Pilih SHDK"
+                    <TextArea
+                        name="alamat_domisili"
+                        placeholder="Masukkan alamat domisili"
                         control={control}
-                        data={shdk}
-                        rules={{ required: 'SHDK tidak boleh kosong' }}
-                        errors={errors.shdk}
-                    />
-                    <Select
-                        name="alasan_permohonan"
-                        placeholder="Pilih Alasan Permohonan"
-                        control={control}
-                        data={alasan_permohonan}
-                        rules={{ required: 'Alasan Permohonan tidak boleh kosong' }}
-                        errors={errors.alasan_permohonan}
-                    />
-                    <Input
-                        name="jml_angg_keluarga"
-                        placeholder="Masukkan Jumlah Anggota Keluarga"
-                        control={control}
-                        rules={{ required: 'Jumlah Anggota Keluarga tidak boleh kosong' }}
-                        errors={errors.jml_angg_keluarga}
                     >
-                        <Family
+                        <Location
                             width={16}
                             height={16}
                             fill={PRIMARY_COLOR}
                         />
-                    </Input>
+                    </TextArea>
                     <InputFile
                         uri={firstFile.uri}
                         fileName={firstFile.name}
@@ -262,26 +234,55 @@ const FormKk = ({ navigation }: Props) => {
                     <InputFile
                         uri={secondFile.uri}
                         fileName={secondFile.name}
-                        placeholder="Upload Scan KTP Asli"
-                        onPress={() => handleImagePicker('foto_ktp')}
+                        placeholder="Upload Fotokopi KTP Asli"
+                        onPress={() => handleImagePicker('fc_ktp')}
                     />
                     <InputFile
                         uri={thirdFile.uri}
                         fileName={thirdFile.name}
-                        placeholder="Upload Scan KK Asli"
-                        onPress={() => handleImagePicker('foto_kk')}
+                        placeholder="Upload Fotokopi KK Asli"
+                        onPress={() => handleImagePicker('fc_kk')}
                     />
                     <InputFile
                         uri={fourthFile.uri}
                         fileName={fourthFile.name}
-                        placeholder="Upload Fotokopi Buku Nikah"
-                        onPress={() => handleImagePicker('fc_buku_nikah')}
+                        placeholder="Upload Foto Lokasi"
+                        onPress={() => handleImagePicker('foto_lokasi')}
                     />
+                    <TextAreaDisabled
+                        placeholder="Keterangan Admin"
+                        value={data?.keterangan_admin ? data?.keterangan_admin : 'Belum ada keterangan admin'}
+                    >
+                        <CommentIcon
+                            width={16}
+                            height={16}
+                            fill={PRIMARY_COLOR}
+                        />
+                    </TextAreaDisabled>
+                    <TextArea
+                        name="keterangan_warga"
+                        placeholder="Masukkan keterangan warga (opsional)"
+                        control={control}
+                    >
+                        <CommentIcon
+                            width={16}
+                            height={16}
+                            fill={PRIMARY_COLOR}
+                        />
+                    </TextArea>
                     <ButtonVariant
-                        title="Kirim"
-                        onPress={handleSubmit(onSubmit)}
-                        isLoading={isLoading}
+                        title="Update"
+                        variant={{ color: '#fff', backgroundColor: WARNING_COLOR }}
                         margin={30}
+                        isLoading={isLoading}
+                        onPress={handleSubmit(onSubmit)}
+                        icon={
+                            <DiskIcon
+                                width={16}
+                                height={16}
+                                fill="#fff"
+                            />
+                        }
                     />
                 </Section>
             </View>
@@ -306,4 +307,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default FormKk;
+export default DetailDomisili;

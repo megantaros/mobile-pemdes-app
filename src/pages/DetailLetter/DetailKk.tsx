@@ -6,15 +6,7 @@ import Section from '../../components/Section';
 import Loading from '../../components/Loading';
 import { RootStackParamList } from '../../../App';
 
-const FormKk = lazy(() => delayForDemo(import('../../features/DetailForms/UpdateKk')));
-
-function delayForDemo<T>(promise: Promise<T>, ms: number = 5000) {
-    return new Promise<T>((resolve) => {
-        setTimeout(() => {
-            resolve(promise);
-        }, ms);
-    });
-}
+const FormKk = lazy(() => import('../../features/DetailForms/UpdateKk'));
 
 type Props = NativeStackScreenProps<RootStackParamList, 'DetailKk'>;
 

@@ -23,9 +23,7 @@ const Input: FC<Props> = ({ placeholder, control, name, children, rules, errors,
     };
 
     return (
-        <View
-            style={styles.container}
-        >
+        <View style={styles.container}>
             <Controller
                 control={control}
                 rules={rules}

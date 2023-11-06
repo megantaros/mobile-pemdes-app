@@ -1,7 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
-import { AuthStackParamList } from '../Routes/RouteAuth';
 import LayoutWithoutHeader from '../../components/Layout/LayoutWithoutHeader';
 import Section from '../../components/Section';
 import Select from '../../components/Form/Select';
@@ -27,9 +26,7 @@ const jenis_permohonan = [
 type Props = NativeStackScreenProps<RootStackParamList, 'DetailKtp'>;
 
 const DetailKtp = ({ navigation, route }: Props) => {
-
     // console.log(route.params.id);
-
     const {
         control,
         handleSubmit,

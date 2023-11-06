@@ -3,13 +3,16 @@ const PRIMARY_COLOR = '#022E57';
 const PRIMARY_COLOR_LIGHT = '#d4eaf7';
 const SECONDARY_COLOR = '#FFEBAD';
 const WARNING_COLOR = '#ff983f';
-const WARNING_COLOR_LIGHT = '#FFCC99';
+const WARNING_COLOR_LIGHT = '#FFFFCC';
 const SUCCESS_COLOR = '#24613b';
+const SUCCESS_COLOR_LIGHT = '#C7EFCF';
 const DANGER_COLOR = '#EE1D52';
-const DANGER_COLOR_LIGHT = '#ff3c63';
+const DANGER_COLOR_LIGHT = '#fff3bf';
+const GRAY_COLOR = '#4e4e4e';
 
 const INFO_COLOR = '#6EC3FF';
 const PRIMARY_BACKGROUND_COLOR = '#F0F4F4';
+const DARK_PRIMARY = '#001427';
 
 const PRIMARY_FONT = 'Viga-Regular';
 const SECONDARY_FONT = 'Poppins-Regular';
@@ -17,6 +20,7 @@ const SECONDARY_FONT = 'Poppins-Regular';
 export {
     PRIMARY_COLOR,
     PRIMARY_COLOR_LIGHT,
+    DARK_PRIMARY,
     SECONDARY_COLOR,
     WARNING_COLOR,
     WARNING_COLOR_LIGHT,
@@ -27,4 +31,6 @@ export {
     PRIMARY_FONT,
     SECONDARY_FONT,
     DANGER_COLOR_LIGHT,
+    SUCCESS_COLOR_LIGHT,
+    GRAY_COLOR,
 };
