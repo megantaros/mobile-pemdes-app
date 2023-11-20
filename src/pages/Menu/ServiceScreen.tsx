@@ -80,6 +80,12 @@ const ServiceScreen = ({ navigation }: Props) => {
             case 'Surat Keterangan Domisili':
                 navigation.navigate('FormDomisili');
                 break;
+            case 'Surat Keterangan Usaha':
+                navigation.navigate('FormUsaha');
+                break;
+            case 'Surat Pengantar SKCK':
+                navigation.navigate('FormSkck');
+                break;
             default:
                 break;
         }

@@ -3,7 +3,6 @@ import React from 'react';
 import { StyleSheet, Text, Image, LayoutAnimation, SafeAreaView, View, Platform, UIManager } from 'react-native';
 import { RootStackParamList } from '../../../App';
 import { useAppSelector } from '../../hooks/hooks';
-import { set } from 'react-hook-form';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SplashScreen'>;
 
@@ -38,9 +37,6 @@ const SplashScreen = ({ navigation }: Props) => {
         setTimeout(() => {
             isLoggedIn ? navigation.replace('HomeTabs') : navigation.replace('Login');
         }, 2000);
-        // setTimeout(() => {
-        //     navigation.replace('Login');
-        // }, 2000);
     }, []);
 
     return (

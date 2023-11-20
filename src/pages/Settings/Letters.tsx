@@ -26,13 +26,19 @@ const Letters = ({ navigation }: Props) => {
     const handlePress = (id: string, title: string) => {
         switch (title) {
             case 'Surat Pengantar KK':
-                navigation.navigate('DetailKk', { id });
+                navigation.push('DetailKk', { id });
                 break;
             case 'Surat Pengantar KTP':
-                navigation.navigate('DetailKtp', { id });
+                navigation.push('DetailKtp', { id });
                 break;
             case 'Surat Keterangan Domisili':
-                navigation.navigate('DetailDomisili', { id });
+                navigation.push('DetailDomisili', { id });
+                break;
+            case 'Surat Pengantar SKCK':
+                navigation.push('DetailSkck', { id });
+                break;
+            case 'Surat Keterangan Usaha':
+                navigation.push('DetailUsaha', { id });
                 break;
             default:
                 break;

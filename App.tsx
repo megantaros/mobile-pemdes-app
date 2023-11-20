@@ -22,6 +22,12 @@ import { PRIMARY_COLOR } from './src/components/style';
 import Letters from './src/pages/Settings/Letters';
 import FormDomisili from './src/pages/Form/FormDomisili';
 import DetailDomisili from './src/pages/DetailLetter/DetailDomisili';
+import FormSkck from './src/pages/Form/FormSkck';
+import DetailSkck from './src/pages/DetailLetter/DetailSkck';
+import FormKtp from './src/pages/Form/FormKtp';
+import DetailKtp from './src/pages/DetailLetter/DetailKtp';
+import FormUsaha from './src/pages/Form/FormUsaha';
+import DetailUsaha from './src/pages/DetailLetter/DetailUsaha';
 
 export type RootStackParamList = {
   SplashScreen: undefined;
@@ -32,7 +38,9 @@ export type RootStackParamList = {
   ServiceScreen: undefined;
   FormKtp: undefined;
   FormKk: undefined;
+  FormSkck: undefined;
   FormDomisili: undefined;
+  FormUsaha: undefined;
   SettingScreen: undefined;
   InfoAccount: undefined;
   ModalUpdatePassword: { id_warga: string };
@@ -41,6 +49,8 @@ export type RootStackParamList = {
   DetailKk: { id: string };
   DetailKtp: { id: string };
   DetailDomisili: { id: string };
+  DetailSkck: { id: string };
+  DetailUsaha: { id: string };
 };
 
 function AppWrapper() {
@@ -92,6 +102,16 @@ function AppWrapper() {
                 options={screenOptions('Info Akun')}
               />
               <RootStack.Screen
+                name="FormKtp"
+                component={FormKtp}
+                options={screenOptions('Form KTP')}
+              />
+              <RootStack.Screen
+                name="DetailKtp"
+                component={DetailKtp}
+                options={screenOptions('Detail Surat')}
+              />
+              <RootStack.Screen
                 name="FormDomisili"
                 component={FormDomisili}
                 options={screenOptions('Form Domisili')}
@@ -99,6 +119,26 @@ function AppWrapper() {
               <RootStack.Screen
                 name="DetailDomisili"
                 component={DetailDomisili}
+                options={screenOptions('Detail Surat')}
+              />
+              <RootStack.Screen
+                name="FormSkck"
+                component={FormSkck}
+                options={screenOptions('Form SKCK')}
+              />
+              <RootStack.Screen
+                name="DetailSkck"
+                component={DetailSkck}
+                options={screenOptions('Detail Surat')}
+              />
+              <RootStack.Screen
+                name="FormUsaha"
+                component={FormUsaha}
+                options={screenOptions('Form Usaha')}
+              />
+              <RootStack.Screen
+                name="DetailUsaha"
+                component={DetailUsaha}
                 options={screenOptions('Detail Surat')}
               />
               <RootStack.Screen

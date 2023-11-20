@@ -8,7 +8,6 @@ import Loading from '../../components/Loading';
 import { File, IModalError, IModalSuccess } from '../../models/model';
 import { useForm } from 'react-hook-form';
 import { launchImageLibrary } from 'react-native-image-picker';
-import useGetDomisili from '../../hooks/Letters/useGetDomisili';
 import TextArea from '../../components/Form/TextArea';
 import InputFile from '../../components/Form/InputFile';
 import Location from '../../assets/icons/geo-alt-fill.svg';
@@ -21,8 +20,13 @@ import ModalSuccess from '../../components/Modal/ModalSuccess';
 import ModalError from '../../components/Modal/ModalError';
 import CommentIcon from '../../assets/icons/comment-alt-dots.svg';
 import DiskIcon from '../../assets/icons/disk.svg';
+import useGetUsaha from '../../hooks/Letters/useGetUsaha';
+import Select from '../../components/Form/Select';
+import Input from '../../components/Form/Input';
+import MarketIcon from '../../assets/icons/shop.svg';
+import CalendarIcon from '../../assets/icons/calendar-event.svg';
 
-type Props = NativeStackScreenProps<RootStackParamList, 'DetailDomisili'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'DetailUsaha'>;
 
 const initialValue = {
     uri: '',
@@ -30,7 +34,12 @@ const initialValue = {
     type: '',
 };
 
-const DetailDomisili = ({ route, navigation }: Props) => {
+const status = [
+    { value: 'Kawin', lable: 'Kawin' },
+    { value: 'Belum Kawin', lable: 'Belum Kawin' },
+];
+
+const DetailUsaha = ({ route, navigation }: Props) => {
 
     const { id } = route.params;
 
@@ -50,8 +59,6 @@ const DetailDomisili = ({ route, navigation }: Props) => {
         const images = await launchImageLibrary({
             mediaType: 'photo',
             includeBase64: false,
-            // maxHeight: 200,
-            // maxWidth: 200,
             selectionLimit: 1,
         });
 
@@ -86,7 +93,7 @@ const DetailDomisili = ({ route, navigation }: Props) => {
             case 'fc_kk':
                 setImageState(setThirdFile, 'File tidak boleh lebih dari 2MB');
                 break;
-            case 'foto_lokasi':
+            case 'foto_usaha':
                 setImageState(setFourthFile, 'File tidak boleh lebih dari 2MB');
                 break;
             default:
@@ -94,12 +101,14 @@ const DetailDomisili = ({ route, navigation }: Props) => {
         }
     };
 
-    const { data } = useGetDomisili(id);
+    const { data } = useGetUsaha(id);
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
     React.useEffect(() => {
-        // setValue('kk', data?.kk);
-        setValue('alamat_domisili', data?.alamat_domisili);
+        setValue('status_pernikahan', data?.status_pernikahan);
+        setValue('jenis_usaha', data?.jenis_usaha);
+        setValue('lama_usaha', data?.lama_usaha);
+        setValue('tempat_usaha', data?.tempat_usaha);
         setValue('keterangan_warga', data?.keterangan_warga);
         setFirstFile({
             uri: BASE_IMG + data?.pengantar_rt,
@@ -117,8 +126,8 @@ const DetailDomisili = ({ route, navigation }: Props) => {
             type: 'image/jpeg',
         });
         setFourthFile({
-            uri: BASE_IMG + data?.foto_lokasi,
-            name: data?.foto_lokasi,
+            uri: BASE_IMG + data?.foto_usaha,
+            name: data?.foto_usaha,
             type: 'image/jpeg',
         });
     }, [id, data, setValue]);
@@ -141,8 +150,10 @@ const DetailDomisili = ({ route, navigation }: Props) => {
 
         const formData = new FormData();
         formData.append('_method', 'PUT');
-        // formData.append('kk', form.kk);
-        formData.append('alamat_domisili', form.alamat_domisili);
+        formData.append('status_pernikahan', form.status_pernikahan);
+        formData.append('jenis_usaha', form.jenis_usaha);
+        formData.append('lama_usaha', form.lama_usaha);
+        formData.append('tempat_usaha', form.tempat_usaha);
         formData.append('keterangan_warga', form.keterangan_warga);
         formData.append('pengantar_rt', {
             uri: firstFile.uri,
@@ -159,7 +170,7 @@ const DetailDomisili = ({ route, navigation }: Props) => {
             name: thirdFile.name,
             type: thirdFile.type,
         });
-        formData.append('foto_lokasi', {
+        formData.append('foto_usaha', {
             uri: fourthFile.uri,
             name: fourthFile.name,
             type: fourthFile.type,
@@ -168,12 +179,12 @@ const DetailDomisili = ({ route, navigation }: Props) => {
         if (firstFile.uri === '' || secondFile.uri === '' || thirdFile.uri === '' || fourthFile.uri === '') {
             setModalError({
                 isVisible: true,
-                description: 'Harap isi semua form',
+                description: 'Harap isi semua form!',
             });
             setIsLoading(false);
             return;
         } else {
-            await apiClient.post(`surat/permohonan-domisili/${data?.id_surat_ket_domisili}`, formData, {
+            await apiClient.post(`surat/permohonan-usaha/${data?.id_surat_ket_usaha}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -217,55 +228,45 @@ const DetailDomisili = ({ route, navigation }: Props) => {
                     text="Silahkan lengkapi form dibawah ini"
                 >
                     {isLoading && <Loading />}
-                    {/* <InputDisabled
-                        placeholder="Nama Warga Kosong"
-                        value={data?.nama_warga}
-                    >
-                        <PersonCard
-                            width={16}
-                            height={16}
-                            fill={PRIMARY_COLOR}
-                        />
-                    </InputDisabled>
-                    <InputDisabled
-                        placeholder="NIK Kosong"
-                        value={data?.nik}
-                    >
-                        <PersonCard
-                            width={16}
-                            height={16}
-                            fill={PRIMARY_COLOR}
-                        />
-                    </InputDisabled>
-                    <InputDisabled
-                        placeholder="No. KK Kosong"
-                        value={data?.kk}
-                    >
-                        <PersonCard
-                            width={16}
-                            height={16}
-                            fill={PRIMARY_COLOR}
-                        />
-                    </InputDisabled>   */}
-                    {/* <Input
-                        name="kk"
-                        placeholder="Masukkan No. KK"
-                        keyType="numeric"
+                    <Select
+                        name="status_pernikahan"
+                        placeholder="Pilih Status Pernikahan"
                         control={control}
-                        rules={{ required: 'No. KK tidak boleh kosong' }}
-                        errors={errors.kk}
+                        data={status}
+                        rules={{ required: 'Status Pernikahan tidak boleh kosong' }}
+                        errors={errors.status_pernikahan}
+                    />
+                    <Input
+                        name="jenis_usaha"
+                        placeholder="Masukkan jenis usaha"
+                        control={control}
+                        rules={{ required: 'Jenis usaha tidak boleh kosong' }}
+                        errors={errors.jenis_usaha}
                     >
-                        <PersonCard
+                        <MarketIcon
                             width={16}
                             height={16}
                             fill={PRIMARY_COLOR}
                         />
-                    </Input> */}
+                    </Input>
+                    <Input
+                        name="lama_usaha"
+                        placeholder="Masukkan lama usaha"
+                        control={control}
+                        rules={{ required: 'Jenis usaha tidak boleh kosong' }}
+                        errors={errors.lama_usaha}
+                    >
+                        <CalendarIcon
+                            width={16}
+                            height={16}
+                            fill={PRIMARY_COLOR}
+                        />
+                    </Input>
                     <TextArea
-                        name="alamat_domisili"
-                        placeholder="Masukkan alamat domisili"
+                        name="tempat_usaha"
+                        placeholder="Masukkan tempat usaha"
                         control={control}
-                        rules={{ required: 'Alamat Domisili Harus Diisi!' }}
+                        rules={{ required: 'Tempat usaha tidak boleh kosong' }}
                         errors={errors.alamat_domisili}
                     >
                         <Location
@@ -395,4 +396,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default DetailDomisili;
+export default DetailUsaha;

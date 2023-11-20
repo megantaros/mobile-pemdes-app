@@ -37,6 +37,7 @@ export default function useGetUser() {
                     email: res.data.data.email,
                     notelpon: res.data.data.notelpon,
                     nik: res.data.data.nik,
+                    kk: res.data.data.kk,
                     ttl: res.data.data.ttl,
                     jenis_kelamin: res.data.data.jenis_kelamin,
                     pekerjaan: res.data.data.pekerjaan,

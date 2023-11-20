@@ -15,6 +15,7 @@ export interface IUpdateProfile {
     email?: string;
     notelpon?: string;
     nik?: string;
+    kk?: string;
     ttl?: string;
     jenis_kelamin?: string;
     pekerjaan?: string;
@@ -59,6 +60,8 @@ export interface File {
     uri?: string;
     name?: string;
     type?: string;
+    fileSize?: number;
+    message?: string;
 }
 
 export interface ILetters {

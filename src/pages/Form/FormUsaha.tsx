@@ -18,6 +18,10 @@ import { File, IModalError, IModalSuccess } from '../../models/model';
 import { useForm } from 'react-hook-form';
 import TextArea from '../../components/Form/TextArea';
 import Location from '../../assets/icons/geo-alt-fill.svg';
+import Select from '../../components/Form/Select';
+import Input from '../../components/Form/Input';
+import MarketIcon from '../../assets/icons/shop.svg';
+import CalendarIcon from '../../assets/icons/calendar-event.svg';
 
 const initialValue: File = {
     uri: '',
@@ -27,9 +31,14 @@ const initialValue: File = {
     message: '',
 };
 
-type Props = NativeStackScreenProps<RootStackParamList, 'FormDomisili'>;
+const status = [
+    { value: 'Kawin', lable: 'Kawin' },
+    { value: 'Belum Kawin', lable: 'Belum Kawin' },
+];
 
-const FormDomisili = ({ navigation }: Props) => {
+type Props = NativeStackScreenProps<RootStackParamList, 'FormUsaha'>;
+
+const FormUsaha = ({ navigation }: Props) => {
 
     const [firstFile, setFirstFile] = React.useState<File>(initialValue);
     const [secondFile, setSecondFile] = React.useState<File>(initialValue);
@@ -81,7 +90,7 @@ const FormDomisili = ({ navigation }: Props) => {
             case 'fc_kk':
                 setImageState(setThirdFile, 'File tidak boleh lebih dari 2MB');
                 break;
-            case 'foto_lokasi':
+            case 'foto_usaha':
                 setImageState(setFourthFile, 'File tidak boleh lebih dari 2MB');
                 break;
             default:
@@ -108,7 +117,10 @@ const FormDomisili = ({ navigation }: Props) => {
         setIsLoading(true);
 
         const formData = new FormData();
-        formData.append('alamat_domisili', data?.alamat_domisili);
+        formData.append('status_pernikahan', data.status_pernikahan);
+        formData.append('jenis_usaha', data.jenis_usaha);
+        formData.append('lama_usaha', data.lama_usaha);
+        formData.append('tempat_usaha', data.tempat_usaha);
         formData.append('pengantar_rt', {
             uri: firstFile.uri,
             name: firstFile.name,
@@ -124,21 +136,21 @@ const FormDomisili = ({ navigation }: Props) => {
             name: thirdFile.name,
             type: thirdFile.type,
         });
-        formData.append('foto_lokasi', {
+        formData.append('foto_usaha', {
             uri: fourthFile.uri,
             name: fourthFile.name,
             type: fourthFile.type,
         });
 
-        if (firstFile.uri === '' || secondFile.uri === '' || thirdFile.uri === '' || fourthFile.uri === '' || data?.alamat_domisili === '') {
+        if (firstFile.uri === '' || secondFile.uri === '' || thirdFile.uri === '' || fourthFile.uri === '' || data.status_pernikahan === '' || data.jenis_usaha === '' || data.lama_usaha === '' || data.tempat_usaha === '') {
             setModalError({
                 isVisible: true,
-                description: 'Harap isi semua form',
+                description: 'Harap isi semua form!',
             });
             setIsLoading(false);
             return;
         } else {
-            await apiClient.post('surat/permohonan-domisili', formData, {
+            await apiClient.post('surat/permohonan-usaha', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -179,13 +191,48 @@ const FormDomisili = ({ navigation }: Props) => {
             />
             <View style={styles.container}>
                 <Section
-                    title="Form Permohonan Domisili"
-                    text="Isi form dibawah ini untuk membuat permohonan surat">
-                    <TextArea
-                        name="alamat_domisili"
-                        placeholder="Masukkan alamat domisili"
+                    title="Form Permohonan Usaha"
+                    text="Isi form dibawah ini untuk membuat permohonan surat"
+                >
+                    <Select
+                        name="status_pernikahan"
+                        placeholder="Pilih Status Pernikahan"
                         control={control}
-                        rules={{ required: 'Alamat Domisili Harus Diisi!' }}
+                        data={status}
+                        rules={{ required: 'Status Pernikahan tidak boleh kosong' }}
+                        errors={errors.status_pernikahan}
+                    />
+                    <Input
+                        name="jenis_usaha"
+                        placeholder="Masukkan jenis usaha"
+                        control={control}
+                        rules={{ required: 'Jenis usaha tidak boleh kosong' }}
+                        errors={errors.jenis_usaha}
+                    >
+                        <MarketIcon
+                            width={16}
+                            height={16}
+                            fill={PRIMARY_COLOR}
+                        />
+                    </Input>
+                    <Input
+                        name="lama_usaha"
+                        placeholder="Masukkan lama usaha"
+                        control={control}
+                        rules={{ required: 'Jenis usaha tidak boleh kosong' }}
+                        errors={errors.lama_usaha}
+                    >
+                        <CalendarIcon
+                            width={16}
+                            height={16}
+                            fill={PRIMARY_COLOR}
+                        />
+                    </Input>
+                    <TextArea
+                        name="tempat_usaha"
+                        placeholder="Masukkan tempat usaha"
+                        control={control}
+                        rules={{ required: 'Tempat usaha tidak boleh kosong' }}
                         errors={errors.alamat_domisili}
                     >
                         <Location
@@ -219,8 +266,8 @@ const FormDomisili = ({ navigation }: Props) => {
                         uri={fourthFile.uri}
                         fileName={fourthFile.name}
                         message={fourthFile.message}
-                        placeholder="Upload Foto Lokasi"
-                        onPress={() => handleImagePicker('foto_lokasi')}
+                        placeholder="Upload Foto Usaha"
+                        onPress={() => handleImagePicker('foto_usaha')}
                     />
                     <ButtonVariant
                         title="Kirim Surat"
@@ -259,4 +306,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default FormDomisili;
+export default FormUsaha;

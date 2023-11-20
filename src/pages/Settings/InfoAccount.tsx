@@ -26,6 +26,7 @@ import useGetUser from '../../hooks/Auth/useGetUser';
 import ScreenHeader from '../../components/Header/ScreenHeader';
 import DiskIcon from '../../assets/icons/disk.svg';
 import KeyIcon from '../../assets/icons/key-fill.svg';
+import FamilyIcon from '../../assets/icons/users-alt.svg';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'InfoAccount'>;
 
@@ -42,10 +43,13 @@ export default function InfoAccount({ navigation }: Props) {
 
     const { data, loading } = useGetUser();
 
+    console.log(data);
+
     useEffect(() => {
         setValue('nama_warga', data?.nama_warga);
         setValue('email', data?.email);
         setValue('nik', data?.nik);
+        setValue('kk', data?.kk);
         setValue('notelpon', data?.notelpon);
         setValue('ttl', data?.ttl);
         setValue('pekerjaan', data?.pekerjaan);
@@ -106,10 +110,24 @@ export default function InfoAccount({ navigation }: Props) {
                             name="nik"
                             placeholder="Masukkan NIK"
                             control={control}
-                            rules={{ required: 'NIK tidak boleh kosong' }}
+                            rules={{ required: 'NIK tidak boleh kosong', minLength: { value: 16, message: 'NIK harus 16 digit' } }}
                             errors={errors.nik}
                         >
                             <PersonCard
+                                width={16}
+                                height={16}
+                                fill={PRIMARY_COLOR}
+                            />
+                        </Input>
+                        <Input
+                            keyType="numeric"
+                            name="kk"
+                            placeholder="Masukkan No. KK"
+                            control={control}
+                            rules={{ required: 'No. KK tidak boleh kosong', minLength: { value: 16, message: 'No. KK harus 16 digit' } }}
+                            errors={errors.kk}
+                        >
+                            <FamilyIcon
                                 width={16}
                                 height={16}
                                 fill={PRIMARY_COLOR}

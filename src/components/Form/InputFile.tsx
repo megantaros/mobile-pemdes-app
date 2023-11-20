@@ -10,7 +10,8 @@ interface Props {
     fileName: any;
     placeholder: string;
     onPress?: () => void;
-    isError?: boolean;
+    message?: string;
+    disabled?: boolean;
 }
 
 const File = ({ uri }: any) => {
@@ -24,7 +25,7 @@ const File = ({ uri }: any) => {
     );
 };
 
-const InputFile: FC<Props> = ({ uri, fileName, placeholder, onPress, isError }) => {
+const InputFile: FC<Props> = ({ uri, fileName, placeholder, onPress, message, disabled }) => {
 
     const [border, setBorder] = React.useState<boolean>(true);
 
@@ -63,12 +64,10 @@ const InputFile: FC<Props> = ({ uri, fileName, placeholder, onPress, isError }) 
                     onFocus={onFocus}
                     onBlur={!border ? onFocus : undefined}
                     value={fileName}
+                    disableFullscreenUI={disabled === null ? false : true}
                 />
             </View>
-            {isError === true
-                ? <Text style={styles.onError}>File tidak boleh kosong!</Text>
-                : null
-            }
+            {message && <Text style={styles.onError}>{message}</Text>}
         </View>
     );
 };

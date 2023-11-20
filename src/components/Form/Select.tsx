@@ -61,9 +61,7 @@ const Select: FC<Props> = ({ placeholder, control, name, rules, errors, data }) 
     };
 
     return (
-        <View
-            style={styles.container}
-        >
+        <View style={styles.container}>
             <Controller
                 name={name}
                 control={control}
@@ -85,15 +83,18 @@ const Select: FC<Props> = ({ placeholder, control, name, rules, errors, data }) 
                             onChange(e.value);
                         }}
                         renderLeftIcon={() => {
-                            return <List style={styles.imageStyle} />;
+                            return <List
+                                width={16}
+                                height={16}
+                                fill={PRIMARY_COLOR}
+                                style={styles.imageStyle}
+                            />;
                         }}
                         renderItem={renderItem}
                     />
                 )}
             />
-            {errors && <Text
-                style={styles.onError}
-            >
+            {errors && <Text style={styles.onError}>
                 {errors?.message}
             </Text>}
         </View>
@@ -120,7 +121,7 @@ const styles = StyleSheet.create({
         width: 24,
         height: 24,
         borderRadius: 12,
-        paddingHorizontal: 13,
+        paddingHorizontal: 15,
     },
     placeholderStyle: {
         fontSize: 12,

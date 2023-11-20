@@ -52,6 +52,7 @@ export const initialStateUpdateProfile: IUpdateProfile = {
     email: '',
     notelpon: '',
     nik: '',
+    kk: '',
     ttl: '',
     jenis_kelamin: '',
     pekerjaan: '',

@@ -8,7 +8,7 @@ interface Props {
     value?: string;
 }
 
-const Input: FC<Props> = ({ placeholder, children, value }) => {
+const InputDisabled: FC<Props> = ({ placeholder, children, value }) => {
 
     const [border] = React.useState<boolean>(false);
 
@@ -77,4 +77,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Input;
+export default InputDisabled;

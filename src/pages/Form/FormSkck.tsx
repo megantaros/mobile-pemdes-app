@@ -5,9 +5,7 @@ import Section from '../../components/Section';
 
 import PaperPlane from '../../assets/icons/paper-plane.svg';
 import { PRIMARY_COLOR } from '../../components/style';
-import Select from '../../components/Form/Select';
 import ButtonVariant from '../../components/Form/Button';
-import { useForm } from 'react-hook-form';
 import InputFile from '../../components/Form/InputFile';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { useAppSelector } from '../../hooks/hooks';
@@ -16,43 +14,25 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import ModalSuccess from '../../components/Modal/ModalSuccess';
 import ModalError from '../../components/Modal/ModalError';
 import { RootStackParamList } from '../../../App';
+import { File, IModalError, IModalSuccess } from '../../models/model';
+import { useForm } from 'react-hook-form';
+import WorkIcon from '../../assets/icons/briefcase-fill.svg';
+import Input from '../../components/Form/Input';
 
-const jenis_permohonan = [
-    { value: 'Baru', lable: 'Baru' },
-    { value: 'Perpanjangan', lable: 'Perpanjangan' },
-    { value: 'Pergantian', lable: 'Pergantian' },
-];
-
-interface File {
-    uri?: string;
-    name?: string;
-    type?: string;
-}
-
-const initialValue = {
+const initialValue: File = {
     uri: '',
     name: '',
     type: '',
+    fileSize: 0,
+    message: '',
 };
 
-interface IModalError {
-    isVisible: boolean;
-    description: string;
-}
+type Props = NativeStackScreenProps<RootStackParamList, 'FormSkck'>;
 
-interface IModalSuccess {
-    isVisible: boolean;
-    description: string;
-}
-
-type Props = NativeStackScreenProps<RootStackParamList, 'FormKtp'>;
-
-const FormKtp = ({ navigation }: Props) => {
+const FormSkck = ({ navigation }: Props) => {
 
     const [firstFile, setFirstFile] = React.useState<File>(initialValue);
     const [secondFile, setSecondFile] = React.useState<File>(initialValue);
-    const [thirdFile, setThirdFile] = React.useState<File>(initialValue);
-
     const {
         control,
         handleSubmit,
@@ -63,35 +43,42 @@ const FormKtp = ({ navigation }: Props) => {
         const images = await launchImageLibrary({
             mediaType: 'photo',
             includeBase64: false,
-            maxHeight: 200,
-            maxWidth: 200,
+            // maxHeight: 200,
+            // maxWidth: 200,
             selectionLimit: 1,
         });
 
-        if (name === 'pengantar_rt') {
-            setFirstFile({
-                uri: images.assets?.[0].uri,
-                name: images.assets?.[0].fileName,
-                type: images.assets?.[0].type,
-            });
-        }
+        const setImageState = (stateSetter: any, errorMessage: any) => {
+            if (Number(images.assets?.[0].fileSize) > 2000000) {
+                stateSetter({
+                    uri: '',
+                    name: '',
+                    type: '',
+                    fileSize: 0,
+                    message: errorMessage,
+                });
+            } else {
+                stateSetter({
+                    uri: images.assets?.[0].uri,
+                    name: images.assets?.[0].fileName,
+                    type: images.assets?.[0].type,
+                    fileSize: images.assets?.[0].fileSize,
+                    message: '',
+                });
+                console.log(images.assets?.[0].fileSize);
+            }
+        };
 
-        if (name === 'foto_ktp') {
-            setSecondFile({
-                uri: images.assets?.[0].uri,
-                name: images.assets?.[0].fileName,
-                type: images.assets?.[0].type,
-            });
+        switch (name) {
+            case 'pengantar_rt':
+                setImageState(setFirstFile, 'File tidak boleh lebih dari 2MB');
+                break;
+            case 'fc_ktp':
+                setImageState(setSecondFile, 'File tidak boleh lebih dari 2MB');
+                break;
+            default:
+                break;
         }
-
-        if (name === 'foto_kk') {
-            setThirdFile({
-                uri: images.assets?.[0].uri,
-                name: images.assets?.[0].fileName,
-                type: images.assets?.[0].type,
-            });
-        }
-
     };
 
     const token = useAppSelector((state) => state.user.token);
@@ -103,7 +90,6 @@ const FormKtp = ({ navigation }: Props) => {
         isVisible: false,
         description: '',
     });
-
     const [isModalSuccess, setModalSuccess] = React.useState<IModalSuccess>({
         isVisible: false,
         description: '',
@@ -114,45 +100,48 @@ const FormKtp = ({ navigation }: Props) => {
         setIsLoading(true);
 
         const formData = new FormData();
-
-        // formData.append('kk', data.kk);
-        formData.append('jenis_permohonan', data.jenis_permohonan);
+        // formData.append('kewarganegaraan', data?.kewarganegaraan);
+        formData.append('keperluan', data?.keperluan);
         formData.append('pengantar_rt', {
             uri: firstFile.uri,
             name: firstFile.name,
             type: firstFile.type,
         });
-        formData.append('foto_ktp', {
+        formData.append('fc_ktp', {
             uri: secondFile.uri,
             name: secondFile.name,
             type: secondFile.type,
         });
-        formData.append('foto_kk', {
-            uri: thirdFile.uri,
-            name: thirdFile.name,
-            type: thirdFile.type,
-        });
 
-        await apiClient.post('surat/permohonan-ktp', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        }).then((res) => {
-            console.log(res);
-            setModalSuccess({
-                isVisible: true,
-                description: 'Surat berhasil dikirim',
-            });
-            setIsLoading(false);
-        }).catch((err) => {
-            console.log(err);
+        if (firstFile.uri === '' || secondFile.uri === '' || data?.keperluan === '') {
             setModalError({
                 isVisible: true,
-                description: 'Surat gagal dikirim',
+                description: 'Harap isi semua form',
             });
             setIsLoading(false);
-        });
+            return;
+        } else {
+            await apiClient.post('surat/permohonan-skck', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            }).then((res) => {
+                setModalSuccess({
+                    isVisible: true,
+                    description: res.data.message,
+                });
+                setIsLoading(false);
+            }).catch((err) => {
+                console.log(err);
+                setModalError({
+                    isVisible: true,
+                    description: 'Surat Gagal Dibuat',
+                });
+                setIsLoading(false);
+            });
+        }
     };
+
     return (
         <LayoutWithoutHeader>
             <ModalSuccess
@@ -163,7 +152,7 @@ const FormKtp = ({ navigation }: Props) => {
                         isVisible: false,
                         description: '',
                     });
-                    navigation.navigate('Letters');
+                    navigation.push('Letters');
                 }}
             />
             <ModalError
@@ -173,46 +162,34 @@ const FormKtp = ({ navigation }: Props) => {
             />
             <View style={styles.container}>
                 <Section
-                    title="Form Permohonan KTP"
+                    title="Form Permohonan SKCK"
                     text="Isi form dibawah ini untuk membuat permohonan surat">
-                    {/* <Input
-                        name="kk"
-                        placeholder="Masukkan No. KK"
+                    <Input
+                        name="keperluan"
+                        placeholder="Masukkan Keperluan"
                         control={control}
-                        rules={{ required: 'No. KK tidak boleh kosong' }}
-                        errors={errors.kk}
+                        rules={{ required: 'Keperluan tidak boleh kosong!' }}
+                        errors={errors.jml_angg_keluarga}
                     >
-                        <PersonCard
+                        <WorkIcon
                             width={16}
                             height={16}
                             fill={PRIMARY_COLOR}
                         />
-                    </Input> */}
-                    <Select
-                        name="jenis_permohonan"
-                        placeholder="Pilih Jenis Permohonan"
-                        control={control}
-                        data={jenis_permohonan}
-                        rules={{ required: 'Jenis Permohonan tidak boleh kosong' }}
-                        errors={errors.jenis_permohonan}
-                    />
+                    </Input>
                     <InputFile
                         uri={firstFile.uri}
                         fileName={firstFile.name}
+                        message={firstFile.message}
                         placeholder="Upload Pengantar RT"
                         onPress={() => handleImagePicker('pengantar_rt')}
                     />
                     <InputFile
                         uri={secondFile.uri}
                         fileName={secondFile.name}
-                        placeholder="Upload Scan KTP Asli"
-                        onPress={() => handleImagePicker('foto_ktp')}
-                    />
-                    <InputFile
-                        uri={thirdFile.uri}
-                        fileName={thirdFile.name}
-                        placeholder="Upload Scan KK Asli"
-                        onPress={() => handleImagePicker('foto_kk')}
+                        message={secondFile.message}
+                        placeholder="Upload Fotokopi KTP Asli"
+                        onPress={() => handleImagePicker('fc_ktp')}
                     />
                     <ButtonVariant
                         title="Kirim Surat"
@@ -251,4 +228,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default FormKtp;
+export default FormSkck;

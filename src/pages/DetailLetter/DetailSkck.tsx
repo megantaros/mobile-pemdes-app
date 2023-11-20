@@ -8,10 +8,9 @@ import Loading from '../../components/Loading';
 import { File, IModalError, IModalSuccess } from '../../models/model';
 import { useForm } from 'react-hook-form';
 import { launchImageLibrary } from 'react-native-image-picker';
-import useGetDomisili from '../../hooks/Letters/useGetDomisili';
 import TextArea from '../../components/Form/TextArea';
 import InputFile from '../../components/Form/InputFile';
-import Location from '../../assets/icons/geo-alt-fill.svg';
+import WorkIcon from '../../assets/icons/briefcase-fill.svg';
 import { PRIMARY_COLOR, WARNING_COLOR } from '../../components/style';
 import https, { BASE_IMG } from '../../utils/api/http';
 import ButtonVariant from '../../components/Form/Button';
@@ -21,8 +20,10 @@ import ModalSuccess from '../../components/Modal/ModalSuccess';
 import ModalError from '../../components/Modal/ModalError';
 import CommentIcon from '../../assets/icons/comment-alt-dots.svg';
 import DiskIcon from '../../assets/icons/disk.svg';
+import Input from '../../components/Form/Input';
+import useGetSkck from '../../hooks/Letters/useGetSkck';
 
-type Props = NativeStackScreenProps<RootStackParamList, 'DetailDomisili'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'DetailSkck'>;
 
 const initialValue = {
     uri: '',
@@ -30,14 +31,12 @@ const initialValue = {
     type: '',
 };
 
-const DetailDomisili = ({ route, navigation }: Props) => {
+const DetailSkck = ({ route, navigation }: Props) => {
 
     const { id } = route.params;
 
     const [firstFile, setFirstFile] = React.useState<File>(initialValue);
     const [secondFile, setSecondFile] = React.useState<File>(initialValue);
-    const [thirdFile, setThirdFile] = React.useState<File>(initialValue);
-    const [fourthFile, setFourthFile] = React.useState<File>(initialValue);
 
     const {
         control,
@@ -83,23 +82,17 @@ const DetailDomisili = ({ route, navigation }: Props) => {
             case 'fc_ktp':
                 setImageState(setSecondFile, 'File tidak boleh lebih dari 2MB');
                 break;
-            case 'fc_kk':
-                setImageState(setThirdFile, 'File tidak boleh lebih dari 2MB');
-                break;
-            case 'foto_lokasi':
-                setImageState(setFourthFile, 'File tidak boleh lebih dari 2MB');
-                break;
             default:
                 break;
         }
     };
 
-    const { data } = useGetDomisili(id);
+    const { data } = useGetSkck(id);
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
     React.useEffect(() => {
         // setValue('kk', data?.kk);
-        setValue('alamat_domisili', data?.alamat_domisili);
+        setValue('keperluan', data?.keperluan);
         setValue('keterangan_warga', data?.keterangan_warga);
         setFirstFile({
             uri: BASE_IMG + data?.pengantar_rt,
@@ -109,16 +102,6 @@ const DetailDomisili = ({ route, navigation }: Props) => {
         setSecondFile({
             uri: BASE_IMG + data?.fc_ktp,
             name: data?.fc_ktp,
-            type: 'image/jpeg',
-        });
-        setThirdFile({
-            uri: BASE_IMG + data?.fc_kk,
-            name: data?.fc_kk,
-            type: 'image/jpeg',
-        });
-        setFourthFile({
-            uri: BASE_IMG + data?.foto_lokasi,
-            name: data?.foto_lokasi,
             type: 'image/jpeg',
         });
     }, [id, data, setValue]);
@@ -133,7 +116,6 @@ const DetailDomisili = ({ route, navigation }: Props) => {
         description: '',
     });
 
-
     const token = useAppSelector((state) => state.user.token);
     const apiClient = https(token ? token : '');
     const onSubmit = async (form: any) => {
@@ -141,8 +123,7 @@ const DetailDomisili = ({ route, navigation }: Props) => {
 
         const formData = new FormData();
         formData.append('_method', 'PUT');
-        // formData.append('kk', form.kk);
-        formData.append('alamat_domisili', form.alamat_domisili);
+        formData.append('keperluan', form.keperluan);
         formData.append('keterangan_warga', form.keterangan_warga);
         formData.append('pengantar_rt', {
             uri: firstFile.uri,
@@ -154,18 +135,8 @@ const DetailDomisili = ({ route, navigation }: Props) => {
             name: secondFile.name,
             type: secondFile.type,
         });
-        formData.append('fc_kk', {
-            uri: thirdFile.uri,
-            name: thirdFile.name,
-            type: thirdFile.type,
-        });
-        formData.append('foto_lokasi', {
-            uri: fourthFile.uri,
-            name: fourthFile.name,
-            type: fourthFile.type,
-        });
 
-        if (firstFile.uri === '' || secondFile.uri === '' || thirdFile.uri === '' || fourthFile.uri === '') {
+        if (firstFile.uri === '' || secondFile.uri === '') {
             setModalError({
                 isVisible: true,
                 description: 'Harap isi semua form',
@@ -173,7 +144,7 @@ const DetailDomisili = ({ route, navigation }: Props) => {
             setIsLoading(false);
             return;
         } else {
-            await apiClient.post(`surat/permohonan-domisili/${data?.id_surat_ket_domisili}`, formData, {
+            await apiClient.post(`surat/permohonan-skck/${data?.id_surat_peng_skck}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -213,67 +184,23 @@ const DetailDomisili = ({ route, navigation }: Props) => {
             />
             <View style={styles.container}>
                 <Section
-                    title="Detail Surat Domisili"
+                    title="Detail Surat SKCK"
                     text="Silahkan lengkapi form dibawah ini"
                 >
                     {isLoading && <Loading />}
-                    {/* <InputDisabled
-                        placeholder="Nama Warga Kosong"
-                        value={data?.nama_warga}
-                    >
-                        <PersonCard
-                            width={16}
-                            height={16}
-                            fill={PRIMARY_COLOR}
-                        />
-                    </InputDisabled>
-                    <InputDisabled
-                        placeholder="NIK Kosong"
-                        value={data?.nik}
-                    >
-                        <PersonCard
-                            width={16}
-                            height={16}
-                            fill={PRIMARY_COLOR}
-                        />
-                    </InputDisabled>
-                    <InputDisabled
-                        placeholder="No. KK Kosong"
-                        value={data?.kk}
-                    >
-                        <PersonCard
-                            width={16}
-                            height={16}
-                            fill={PRIMARY_COLOR}
-                        />
-                    </InputDisabled>   */}
-                    {/* <Input
-                        name="kk"
-                        placeholder="Masukkan No. KK"
-                        keyType="numeric"
+                    <Input
+                        name="keperluan"
+                        placeholder="Masukkan Keperluan"
                         control={control}
-                        rules={{ required: 'No. KK tidak boleh kosong' }}
-                        errors={errors.kk}
+                        rules={{ required: 'Keperluan tidak boleh kosong!' }}
+                        errors={errors.jml_angg_keluarga}
                     >
-                        <PersonCard
+                        <WorkIcon
                             width={16}
                             height={16}
                             fill={PRIMARY_COLOR}
                         />
-                    </Input> */}
-                    <TextArea
-                        name="alamat_domisili"
-                        placeholder="Masukkan alamat domisili"
-                        control={control}
-                        rules={{ required: 'Alamat Domisili Harus Diisi!' }}
-                        errors={errors.alamat_domisili}
-                    >
-                        <Location
-                            width={16}
-                            height={16}
-                            fill={PRIMARY_COLOR}
-                        />
-                    </TextArea>
+                    </Input>
                     <InputFile
                         uri={firstFile.uri}
                         fileName={firstFile.name}
@@ -294,30 +221,6 @@ const DetailDomisili = ({ route, navigation }: Props) => {
                         onPress={
                             data?.status === '1'
                                 ? () => handleImagePicker('fc_ktp')
-                                : () => ToastAndroid.show('Surat telah diproses...', ToastAndroid.SHORT)
-                        }
-                        disabled={data?.status === '1' ? false : true}
-                    />
-                    <InputFile
-                        uri={thirdFile.uri}
-                        fileName={thirdFile.name}
-                        message={thirdFile.message}
-                        placeholder="Upload Fotokopi KK Asli"
-                        onPress={
-                            data?.status === '1'
-                                ? () => handleImagePicker('fc_kk')
-                                : () => ToastAndroid.show('Surat telah diproses...', ToastAndroid.SHORT)
-                        }
-                        disabled={data?.status === '1' ? false : true}
-                    />
-                    <InputFile
-                        uri={fourthFile.uri}
-                        fileName={fourthFile.name}
-                        message={fourthFile.message}
-                        placeholder="Upload Foto Lokasi"
-                        onPress={
-                            data?.status === '1'
-                                ? () => handleImagePicker('foto_lokasi')
                                 : () => ToastAndroid.show('Surat telah diproses...', ToastAndroid.SHORT)
                         }
                         disabled={data?.status === '1' ? false : true}
@@ -395,4 +298,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default DetailDomisili;
+export default DetailSkck;
