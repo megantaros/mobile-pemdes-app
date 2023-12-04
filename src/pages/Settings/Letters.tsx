@@ -14,6 +14,7 @@ import ModalSuccess from '../../components/Modal/ModalSuccess';
 import { IModalConfirm, IModalError, IModalSuccess } from '../../models/model';
 import ModalError from '../../components/Modal/ModalError';
 import { DANGER_COLOR } from '../../components/style';
+import ModalRules from '../../components/Modal/ModalRules';
 
 const ListLetters = lazy(() => import('../../features/ListLetters/ListLetters'));
 
@@ -21,7 +22,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Letters'>;
 
 const Letters = ({ navigation }: Props) => {
 
-    const { data, isLoading } = useGetLetters();
+    const { data, isLoading, setData } = useGetLetters();
 
     const handlePress = (id: string, title: string) => {
         switch (title) {
@@ -40,6 +41,12 @@ const Letters = ({ navigation }: Props) => {
             case 'Surat Keterangan Usaha':
                 navigation.push('DetailUsaha', { id });
                 break;
+            case 'Surat Keterangan Pindah':
+                navigation.push('DetailPindah', { id });
+                break;
+            case 'Surat Keterangan Pindah Datang':
+                navigation.push('DetailDatang', { id });
+                break;
             default:
                 break;
         }
@@ -57,6 +64,9 @@ const Letters = ({ navigation }: Props) => {
         isVisible: false,
         isLoading: false,
     });
+
+    const [isVisibleRules, setIsVisibleRules] = React.useState<boolean>(false);
+
     const [idPermohonanSurat, setIdPermohonanSurat] = React.useState<string>('');
     const handleDestroy = (id: string) => {
         setModalConfirm({
@@ -85,7 +95,7 @@ const Letters = ({ navigation }: Props) => {
                     isVisible: true,
                     description: res.data.message,
                 });
-                navigation.push('Letters');
+                setData(data.filter(letter => letter.id_permohonan_surat !== idPermohonanSurat));
                 return;
             } else {
                 setModalConfirm({
@@ -125,6 +135,11 @@ const Letters = ({ navigation }: Props) => {
                 onConfirm={onDestroy}
                 isLoading={modalConfirm.isLoading}
             />
+            <ModalRules
+                id={8}
+                isVisible={isVisibleRules}
+                onPress={() => setIsVisibleRules(false)}
+            />
             {isLoading && <Loading />}
             <View style={styles.container}>
                 <Section
@@ -139,6 +154,7 @@ const Letters = ({ navigation }: Props) => {
                                 {...letter}
                                 onPress={() => handlePress(letter.id_permohonan_surat, letter.jenis_surat)}
                                 onDestroy={() => handleDestroy(letter.id_permohonan_surat)}
+                                onGetDocument={() => setIsVisibleRules(true)}
                             />
                         ))}
                     </Suspense>

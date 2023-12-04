@@ -25,7 +25,7 @@ const letters = [
     { value: 'Surat Keterangan Domisili', lable: 'Surat Keterangan Domisili' },
     { value: 'Surat Keterangan Usaha', lable: 'Surat Keterangan Usaha' },
     { value: 'Surat Keterangan Pindah', lable: 'Surat Keterangan Pindah' },
-    { value: 'Surat Keterangan Datang', lable: 'Surat Keterangan Datang' },
+    { value: 'Surat Keterangan Pindah Datang', lable: 'Surat Keterangan Pindah Datang' },
 ];
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ServiceScreen'>;
@@ -50,22 +50,24 @@ const ServiceScreen = ({ navigation }: Props) => {
     const apiClient = https(token ? token : '');
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const getUser = async () => {
-        setIsLoading(true);
-
-        const response = await apiClient.get('/user');
-        const { data } = response.data;
-        if (data) {
-            setValue('nama_warga', data.nama_warga);
-            setValue('nik', data.nik);
-            setValue('notelpon', data.notelpon);
-
-            setIsLoading(false);
-        }
-
-    };
-
     React.useEffect(() => {
+        const getUser = async () => {
+            setIsLoading(true);
+
+            const response = await apiClient.get('/user');
+            const { data } = response.data;
+            if (data) {
+                setValue('nama_warga', data.nama_warga);
+                setValue('nik', data.nik);
+                setValue('notelpon', data.notelpon);
+
+                setIsLoading(false);
+            } else {
+                setIsLoading(false);
+            }
+
+        };
+
         getUser();
     }, []);
 
@@ -83,8 +85,14 @@ const ServiceScreen = ({ navigation }: Props) => {
             case 'Surat Keterangan Usaha':
                 navigation.navigate('FormUsaha');
                 break;
+            case 'Surat Keterangan Pindah':
+                navigation.navigate('FormPindah');
+                break;
             case 'Surat Pengantar SKCK':
                 navigation.navigate('FormSkck');
+                break;
+            case 'Surat Keterangan Pindah Datang':
+                navigation.navigate('FormDatang');
                 break;
             default:
                 break;

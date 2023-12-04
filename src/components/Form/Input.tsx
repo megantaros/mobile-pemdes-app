@@ -93,6 +93,7 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: PRIMARY_COLOR,
         flex: 6,
+        // placeholderTextColor: '#fff',
     },
     onError: {
         fontFamily: PRIMARY_FONT,

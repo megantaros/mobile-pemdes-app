@@ -28,6 +28,12 @@ import FormKtp from './src/pages/Form/FormKtp';
 import DetailKtp from './src/pages/DetailLetter/DetailKtp';
 import FormUsaha from './src/pages/Form/FormUsaha';
 import DetailUsaha from './src/pages/DetailLetter/DetailUsaha';
+import FormDatang from './src/pages/Form/FormDatang';
+import DetailDatang from './src/pages/DetailLetter/DetailDatang';
+import FormKk from './src/pages/Form/FormKk';
+import DetailKk from './src/pages/DetailLetter/DetailKk';
+import FormPindah from './src/pages/Form/FormPindah';
+import DetailPindah from './src/pages/DetailLetter/DetailPindah';
 
 export type RootStackParamList = {
   SplashScreen: undefined;
@@ -41,6 +47,8 @@ export type RootStackParamList = {
   FormSkck: undefined;
   FormDomisili: undefined;
   FormUsaha: undefined;
+  FormPindah: undefined;
+  FormDatang: undefined;
   SettingScreen: undefined;
   InfoAccount: undefined;
   ModalUpdatePassword: { id_warga: string };
@@ -51,6 +59,8 @@ export type RootStackParamList = {
   DetailDomisili: { id: string };
   DetailSkck: { id: string };
   DetailUsaha: { id: string };
+  DetailPindah: { id: string };
+  DetailDatang: { id: string };
 };
 
 function AppWrapper() {
@@ -102,6 +112,16 @@ function AppWrapper() {
                 options={screenOptions('Info Akun')}
               />
               <RootStack.Screen
+                name="FormKk"
+                component={FormKk}
+                options={screenOptions('Form KK')}
+              />
+              <RootStack.Screen
+                name="DetailKk"
+                component={DetailKk}
+                options={screenOptions('Detail Surat')}
+              />
+              <RootStack.Screen
                 name="FormKtp"
                 component={FormKtp}
                 options={screenOptions('Form KTP')}
@@ -137,8 +157,28 @@ function AppWrapper() {
                 options={screenOptions('Form Usaha')}
               />
               <RootStack.Screen
+                name="FormPindah"
+                component={FormPindah}
+                options={screenOptions('Form Pindah')}
+              />
+              <RootStack.Screen
+                name="DetailPindah"
+                component={DetailPindah}
+                options={screenOptions('Detail Surat')}
+              />
+              <RootStack.Screen
                 name="DetailUsaha"
                 component={DetailUsaha}
+                options={screenOptions('Detail Surat')}
+              />
+              <RootStack.Screen
+                name="FormDatang"
+                component={FormDatang}
+                options={screenOptions('Form Surat Ket Pindah Datang')}
+              />
+              <RootStack.Screen
+                name="DetailDatang"
+                component={DetailDatang}
                 options={screenOptions('Detail Surat')}
               />
               <RootStack.Screen

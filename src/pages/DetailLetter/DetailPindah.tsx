@@ -1,29 +1,30 @@
-import React from 'react';
-import { RootStackParamList } from '../../../App';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import React from 'react';
 import { StyleSheet, ToastAndroid, View } from 'react-native';
 import LayoutWithoutHeader from '../../components/Layout/LayoutWithoutHeader';
 import Section from '../../components/Section';
 import Loading from '../../components/Loading';
+import { RootStackParamList } from '../../../App';
+import { useAppSelector } from '../../hooks/hooks';
+import https, { BASE_IMG } from '../../utils/api/http';
 import { File, IModalError, IModalSuccess } from '../../models/model';
 import { useForm } from 'react-hook-form';
 import { launchImageLibrary } from 'react-native-image-picker';
-import TextArea from '../../components/Form/TextArea';
-import InputFile from '../../components/Form/InputFile';
-import WorkIcon from '../../assets/icons/briefcase-fill.svg';
-import { PRIMARY_COLOR, WARNING_COLOR } from '../../components/style';
-import https, { BASE_IMG } from '../../utils/api/http';
-import ButtonVariant from '../../components/Form/Button';
-import TextAreaDisabled from '../../components/DisabledForm/TextAreaDisabled';
-import { useAppSelector } from '../../hooks/hooks';
 import ModalSuccess from '../../components/Modal/ModalSuccess';
 import ModalError from '../../components/Modal/ModalError';
+import Select from '../../components/Form/Select';
+import TextAreaDisabled from '../../components/DisabledForm/TextAreaDisabled';
+import TextArea from '../../components/Form/TextArea';
+import { PRIMARY_COLOR, PRIMARY_FONT, WARNING_COLOR } from '../../components/style';
+import ButtonVariant from '../../components/Form/Button';
 import CommentIcon from '../../assets/icons/comment-alt-dots.svg';
 import DiskIcon from '../../assets/icons/disk.svg';
+import InputFile from '../../components/Form/InputFile';
+import useGetPindah from '../../hooks/Letters/useGetPindah';
 import Input from '../../components/Form/Input';
-import useGetSkck from '../../hooks/Letters/useGetSkck';
-
-type Props = NativeStackScreenProps<RootStackParamList, 'DetailSkck'>;
+import OtherIcon from '../../assets/icons/briefcase-fill.svg';
+import UserIcon from '../../assets/icons/person-fill.svg';
+import Location from '../../assets/icons/geo-alt-fill.svg';
 
 const initialValue: File = {
     uri: '',
@@ -33,12 +34,38 @@ const initialValue: File = {
     message: '',
 };
 
-const DetailSkck = ({ route, navigation }: Props) => {
+const shdk = [
+    { lable: 'Kepala Keluarga', value: 'Kepala Keluarga' },
+    { lable: 'Suami', value: 'Suami' },
+    { lable: 'Istri', value: 'Istri' },
+    { lable: 'Anak', value: 'Anak' },
+    { lable: 'Menantu', value: 'Menantu' },
+    { lable: 'Cucu', value: 'Cucu' },
+    { lable: 'Orang Tua', value: 'Orang Tua' },
+    { lable: 'Mertua', value: 'Mertua' },
+    { lable: 'Famili Lainnya', value: 'Famili Lainnya' },
+    { lable: 'Pembantu', value: 'Pembantu' },
+];
+
+const alasan_pindah = [
+    { lable: 'Pekerjaan', value: 'Pekerjaan' },
+    { lable: 'Pendidikan', value: 'Pendidikan' },
+    { lable: 'Keamanan', value: 'Keamanan' },
+    { lable: 'Kesehatan', value: 'Kesehatan' },
+    { lable: 'Perumahan', value: 'Perumahan' },
+    { lable: 'Keluarga', value: 'Keluarga' },
+    { lable: 'Lainnya', value: 'Lainnya' },
+];
+
+type Props = NativeStackScreenProps<RootStackParamList, 'DetailPindah'>;
+
+const DetailPindah = ({ route, navigation }: Props) => {
 
     const { id } = route.params;
 
     const [firstFile, setFirstFile] = React.useState<File>(initialValue);
     const [secondFile, setSecondFile] = React.useState<File>(initialValue);
+    const [thirdFile, setThirdFile] = React.useState<File>(initialValue);
 
     const {
         control,
@@ -51,8 +78,6 @@ const DetailSkck = ({ route, navigation }: Props) => {
         const images = await launchImageLibrary({
             mediaType: 'photo',
             includeBase64: false,
-            // maxHeight: 200,
-            // maxWidth: 200,
             selectionLimit: 1,
         });
 
@@ -81,20 +106,26 @@ const DetailSkck = ({ route, navigation }: Props) => {
             case 'pengantar_rt':
                 setImageState(setFirstFile, 'File tidak boleh lebih dari 2MB');
                 break;
-            case 'fc_ktp':
+            case 'foto_ktp':
                 setImageState(setSecondFile, 'File tidak boleh lebih dari 2MB');
+                break;
+            case 'foto_kk':
+                setImageState(setThirdFile, 'File tidak boleh lebih dari 2MB');
                 break;
             default:
                 break;
         }
     };
 
-    const { data } = useGetSkck(id);
+    const { data } = useGetPindah(id);
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
     React.useEffect(() => {
-        // setValue('kk', data?.kk);
-        setValue('keperluan', data?.keperluan);
+        setValue('nama_kepala_keluarga', data?.nama_kepala_keluarga);
+        setValue('alasan_pindah', data?.alasan_pindah);
+        setValue('alamat_tujuan', data?.alamat_tujuan);
+        setValue('shdk', data?.shdk);
+        data?.lainnya && setValue('lainnya', data?.lainnya);
         setValue('keterangan_warga', data?.keterangan_warga);
         setFirstFile({
             uri: BASE_IMG + data?.pengantar_rt,
@@ -102,8 +133,13 @@ const DetailSkck = ({ route, navigation }: Props) => {
             type: 'image/jpeg',
         });
         setSecondFile({
-            uri: BASE_IMG + data?.fc_ktp,
-            name: data?.fc_ktp,
+            uri: BASE_IMG + data?.foto_ktp,
+            name: data?.foto_ktp,
+            type: 'image/jpeg',
+        });
+        setThirdFile({
+            uri: BASE_IMG + data?.foto_kk,
+            name: data?.foto_kk,
             type: 'image/jpeg',
         });
     }, [id, data, setValue]);
@@ -112,7 +148,6 @@ const DetailSkck = ({ route, navigation }: Props) => {
         isVisible: false,
         description: '',
     });
-
     const [isModalSuccess, setModalSuccess] = React.useState<IModalSuccess>({
         isVisible: false,
         description: '',
@@ -125,28 +160,40 @@ const DetailSkck = ({ route, navigation }: Props) => {
 
         const formData = new FormData();
         formData.append('_method', 'PUT');
-        formData.append('keperluan', form.keperluan);
+        formData.append('nama_kepala_keluarga', form?.nama_kepala_keluarga);
+        formData.append('shdk', form?.shdk);
+        formData.append('alasan_pindah', form?.alasan_pindah);
+        form?.lainnya && formData.append('lainnya', form?.lainnya);
+        formData.append('alamat_tujuan', form?.alamat_tujuan);
         form?.keterangan_warga && formData.append('keterangan_warga', form?.keterangan_warga);
+        if (form?.alasan_pindah !== 'Lainnya') {
+            formData.append('lainnya', '');
+        }
         formData.append('pengantar_rt', {
             uri: firstFile.uri,
             name: firstFile.name,
             type: firstFile.type,
         });
-        formData.append('fc_ktp', {
+        formData.append('foto_ktp', {
             uri: secondFile.uri,
             name: secondFile.name,
             type: secondFile.type,
         });
+        formData.append('foto_kk', {
+            uri: thirdFile.uri,
+            name: thirdFile.name,
+            type: thirdFile.type,
+        });
 
-        if (firstFile.uri === '' || secondFile.uri === '') {
+        if (firstFile.uri === '' || secondFile.uri === '' || thirdFile.uri === '' || data?.shdk === '' || data?.alasan_pindah === '' || data?.alamat_tujuan === '' || data?.nama_kepala_keluarga === '') {
             setModalError({
                 isVisible: true,
-                description: 'Harap isi semua form!',
+                description: 'Harap isi semua form',
             });
             setIsLoading(false);
             return;
         } else {
-            await apiClient.post(`surat/permohonan-skck/${data?.id_surat_peng_skck}`, formData, {
+            await apiClient.post(`surat/permohonan-pindah/${data?.id_surat_ket_pindah}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -157,10 +204,10 @@ const DetailSkck = ({ route, navigation }: Props) => {
                 });
                 setIsLoading(false);
             }).catch((err) => {
-                console.log(err.message);
+                console.log(err);
                 setModalError({
                     isVisible: true,
-                    description: 'Masalah koneksi!',
+                    description: 'Masalah koneksi',
                 });
                 setIsLoading(false);
             });
@@ -185,23 +232,63 @@ const DetailSkck = ({ route, navigation }: Props) => {
             />
             <View style={styles.container}>
                 <Section
-                    title="Detail Surat Permohonan SKCK"
-                    text="Pastikan data yang anda masukkan sudah benar"
+                    title="Detail Surat Keterangan Pindah"
+                    text="Silahkan lengkapi form dibawah ini"
                 >
                     {isLoading && <Loading />}
                     <Input
-                        name="keperluan"
-                        placeholder="Masukkan Keperluan"
+                        name="nama_kepala_keluarga"
+                        placeholder="Masukkan Nama Kepala Keluarga"
                         control={control}
-                        rules={{ required: 'Keperluan tidak boleh kosong!' }}
-                        errors={errors.jml_angg_keluarga}
                     >
-                        <WorkIcon
+                        <UserIcon
                             width={16}
                             height={16}
                             fill={PRIMARY_COLOR}
                         />
                     </Input>
+                    <Select
+                        name="shdk"
+                        placeholder="Pilih SHDK"
+                        control={control}
+                        data={shdk}
+                        rules={{ required: 'SHDK tidak boleh kosong' }}
+                        errors={errors.shdk}
+                    />
+                    <Select
+                        name="alasan_pindah"
+                        placeholder="Pilih Alasan Pindah"
+                        control={control}
+                        data={alasan_pindah}
+                        rules={{ required: 'Alasan Pindah tidak boleh kosong' }}
+                        errors={errors.alasan_pindah}
+                    />
+                    {data?.alasan_pindah === 'Lainnya' && (
+                        <Input
+                            name="lainnya"
+                            placeholder="Masukkan Alasan Lain"
+                            control={control}
+                        >
+                            <OtherIcon
+                                width={16}
+                                height={16}
+                                fill={PRIMARY_COLOR}
+                            />
+                        </Input>
+                    )}
+                    <TextArea
+                        name="alamat_tujuan"
+                        placeholder="Masukkan alamat tujuan"
+                        control={control}
+                        rules={{ required: 'Alamat Tujuan Harus Diisi!' }}
+                        errors={errors.alamat_tujuan}
+                    >
+                        <Location
+                            width={16}
+                            height={16}
+                            fill={PRIMARY_COLOR}
+                        />
+                    </TextArea>
                     <InputFile
                         uri={firstFile.uri}
                         fileName={firstFile.name}
@@ -218,10 +305,22 @@ const DetailSkck = ({ route, navigation }: Props) => {
                         uri={secondFile.uri}
                         fileName={secondFile.name}
                         message={secondFile.message}
-                        placeholder="Upload Fotokopi KTP Asli"
+                        placeholder="Upload Foto KTP Asli"
                         onPress={
                             data?.status === '1'
-                                ? () => handleImagePicker('fc_ktp')
+                                ? () => handleImagePicker('foto_ktp')
+                                : () => ToastAndroid.show('Surat telah diproses...', ToastAndroid.SHORT)
+                        }
+                        disabled={data?.status === '1' ? false : true}
+                    />
+                    <InputFile
+                        uri={thirdFile.uri}
+                        fileName={thirdFile.name}
+                        message={thirdFile.message}
+                        placeholder="Upload Foto KK Asli"
+                        onPress={
+                            data?.status === '1'
+                                ? () => handleImagePicker('foto_kk')
                                 : () => ToastAndroid.show('Surat telah diproses...', ToastAndroid.SHORT)
                         }
                         disabled={data?.status === '1' ? false : true}
@@ -297,6 +396,46 @@ const styles = StyleSheet.create({
         padding: 20,
         marginTop: -120,
     },
+    dropdown: {
+        height: 50,
+        marginVertical: 4,
+        width: '100%',
+        backgroundColor: '#fff',
+        borderRadius: 25,
+        borderColor: '#fff',
+        paddingHorizontal: 16,
+        borderWidth: 1,
+        fontFamily: PRIMARY_FONT,
+        fontSize: 12,
+    },
+    placeholderStyle: {
+        fontSize: 12,
+        fontFamily: 'Viga-Regular',
+        marginLeft: 7,
+    },
+    selectedTextStyle: {
+        fontSize: 12,
+        fontFamily: 'Viga-Regular',
+        marginLeft: 10,
+        color: PRIMARY_COLOR,
+    },
+    renderItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 20,
+    },
+    renderItemText: {
+        fontSize: 12,
+        fontFamily: 'Viga-Regular',
+        marginLeft: 12,
+        color: PRIMARY_COLOR,
+    },
+    imageStyle: {
+        width: 24,
+        height: 24,
+        borderRadius: 12,
+        paddingHorizontal: 15,
+    },
 });
 
-export default DetailSkck;
+export default DetailPindah;

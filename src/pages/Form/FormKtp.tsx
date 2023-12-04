@@ -16,6 +16,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import ModalSuccess from '../../components/Modal/ModalSuccess';
 import ModalError from '../../components/Modal/ModalError';
 import { RootStackParamList } from '../../../App';
+import { File, IModalError, IModalSuccess } from '../../models/model';
 
 const jenis_permohonan = [
     { value: 'Baru', lable: 'Baru' },
@@ -23,27 +24,13 @@ const jenis_permohonan = [
     { value: 'Pergantian', lable: 'Pergantian' },
 ];
 
-interface File {
-    uri?: string;
-    name?: string;
-    type?: string;
-}
-
-const initialValue = {
+const initialValue: File = {
     uri: '',
     name: '',
     type: '',
+    fileSize: 0,
+    message: '',
 };
-
-interface IModalError {
-    isVisible: boolean;
-    description: string;
-}
-
-interface IModalSuccess {
-    isVisible: boolean;
-    description: string;
-}
 
 type Props = NativeStackScreenProps<RootStackParamList, 'FormKtp'>;
 
@@ -63,33 +50,42 @@ const FormKtp = ({ navigation }: Props) => {
         const images = await launchImageLibrary({
             mediaType: 'photo',
             includeBase64: false,
-            maxHeight: 200,
-            maxWidth: 200,
             selectionLimit: 1,
         });
 
-        if (name === 'pengantar_rt') {
-            setFirstFile({
-                uri: images.assets?.[0].uri,
-                name: images.assets?.[0].fileName,
-                type: images.assets?.[0].type,
-            });
-        }
+        const setImageState = (stateSetter: any, errorMessage: any) => {
+            if (Number(images.assets?.[0].fileSize) > 2000000) {
+                stateSetter({
+                    uri: '',
+                    name: '',
+                    type: '',
+                    fileSize: 0,
+                    message: errorMessage,
+                });
+            } else {
+                stateSetter({
+                    uri: images.assets?.[0].uri,
+                    name: images.assets?.[0].fileName,
+                    type: images.assets?.[0].type,
+                    fileSize: images.assets?.[0].fileSize,
+                    message: '',
+                });
+                console.log(images.assets?.[0].fileSize);
+            }
+        };
 
-        if (name === 'foto_ktp') {
-            setSecondFile({
-                uri: images.assets?.[0].uri,
-                name: images.assets?.[0].fileName,
-                type: images.assets?.[0].type,
-            });
-        }
-
-        if (name === 'foto_kk') {
-            setThirdFile({
-                uri: images.assets?.[0].uri,
-                name: images.assets?.[0].fileName,
-                type: images.assets?.[0].type,
-            });
+        switch (name) {
+            case 'pengantar_rt':
+                setImageState(setFirstFile, 'File tidak boleh lebih dari 2MB');
+                break;
+            case 'foto_ktp':
+                setImageState(setSecondFile, 'File tidak boleh lebih dari 2MB');
+                break;
+            case 'foto_kk':
+                setImageState(setThirdFile, 'File tidak boleh lebih dari 2MB');
+                break;
+            default:
+                break;
         }
 
     };
@@ -114,8 +110,6 @@ const FormKtp = ({ navigation }: Props) => {
         setIsLoading(true);
 
         const formData = new FormData();
-
-        // formData.append('kk', data.kk);
         formData.append('jenis_permohonan', data.jenis_permohonan);
         formData.append('pengantar_rt', {
             uri: firstFile.uri,
@@ -138,17 +132,16 @@ const FormKtp = ({ navigation }: Props) => {
                 'Content-Type': 'multipart/form-data',
             },
         }).then((res) => {
-            console.log(res);
             setModalSuccess({
                 isVisible: true,
-                description: 'Surat berhasil dikirim',
+                description: res.data.message,
             });
             setIsLoading(false);
         }).catch((err) => {
             console.log(err);
             setModalError({
                 isVisible: true,
-                description: 'Surat gagal dikirim',
+                description: 'Permohonan surat gagal dibuat!',
             });
             setIsLoading(false);
         });
@@ -175,19 +168,6 @@ const FormKtp = ({ navigation }: Props) => {
                 <Section
                     title="Form Permohonan KTP"
                     text="Isi form dibawah ini untuk membuat permohonan surat">
-                    {/* <Input
-                        name="kk"
-                        placeholder="Masukkan No. KK"
-                        control={control}
-                        rules={{ required: 'No. KK tidak boleh kosong' }}
-                        errors={errors.kk}
-                    >
-                        <PersonCard
-                            width={16}
-                            height={16}
-                            fill={PRIMARY_COLOR}
-                        />
-                    </Input> */}
                     <Select
                         name="jenis_permohonan"
                         placeholder="Pilih Jenis Permohonan"

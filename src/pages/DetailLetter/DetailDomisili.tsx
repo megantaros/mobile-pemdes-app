@@ -24,10 +24,12 @@ import DiskIcon from '../../assets/icons/disk.svg';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'DetailDomisili'>;
 
-const initialValue = {
+const initialValue: File = {
     uri: '',
     name: '',
     type: '',
+    fileSize: 0,
+    message: '',
 };
 
 const DetailDomisili = ({ route, navigation }: Props) => {
@@ -98,9 +100,9 @@ const DetailDomisili = ({ route, navigation }: Props) => {
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
     React.useEffect(() => {
-        // setValue('kk', data?.kk);
         setValue('alamat_domisili', data?.alamat_domisili);
         setValue('keterangan_warga', data?.keterangan_warga);
+        setValue('keterangan_admin', data?.keterangan_admin);
         setFirstFile({
             uri: BASE_IMG + data?.pengantar_rt,
             name: data?.pengantar_rt,
@@ -134,16 +136,15 @@ const DetailDomisili = ({ route, navigation }: Props) => {
     });
 
 
-    const token = useAppSelector((state) => state.user.token);
+    const token = useAppSelector((state) => state?.user?.token);
     const apiClient = https(token ? token : '');
     const onSubmit = async (form: any) => {
         setIsLoading(true);
 
         const formData = new FormData();
         formData.append('_method', 'PUT');
-        // formData.append('kk', form.kk);
         formData.append('alamat_domisili', form.alamat_domisili);
-        formData.append('keterangan_warga', form.keterangan_warga);
+        form?.keterangan_warga && formData.append('keterangan_warga', form?.keterangan_warga);
         formData.append('pengantar_rt', {
             uri: firstFile.uri,
             name: firstFile.name,
@@ -178,17 +179,16 @@ const DetailDomisili = ({ route, navigation }: Props) => {
                     'Content-Type': 'multipart/form-data',
                 },
             }).then((res) => {
-                console.log(res.data.data);
                 setModalSuccess({
                     isVisible: true,
-                    description: 'Data Surat berhasil diubah',
+                    description: res.data.message,
                 });
                 setIsLoading(false);
             }).catch((err) => {
                 console.log(err.message);
                 setModalError({
                     isVisible: true,
-                    description: 'Masalah koneksi',
+                    description: 'Masalah koneksi!',
                 });
                 setIsLoading(false);
             });
@@ -213,54 +213,10 @@ const DetailDomisili = ({ route, navigation }: Props) => {
             />
             <View style={styles.container}>
                 <Section
-                    title="Detail Surat Domisili"
-                    text="Silahkan lengkapi form dibawah ini"
+                    title="Detail Surat Permohonan Domisili"
+                    text="Pastikan data yang anda masukkan sudah benar"
                 >
                     {isLoading && <Loading />}
-                    {/* <InputDisabled
-                        placeholder="Nama Warga Kosong"
-                        value={data?.nama_warga}
-                    >
-                        <PersonCard
-                            width={16}
-                            height={16}
-                            fill={PRIMARY_COLOR}
-                        />
-                    </InputDisabled>
-                    <InputDisabled
-                        placeholder="NIK Kosong"
-                        value={data?.nik}
-                    >
-                        <PersonCard
-                            width={16}
-                            height={16}
-                            fill={PRIMARY_COLOR}
-                        />
-                    </InputDisabled>
-                    <InputDisabled
-                        placeholder="No. KK Kosong"
-                        value={data?.kk}
-                    >
-                        <PersonCard
-                            width={16}
-                            height={16}
-                            fill={PRIMARY_COLOR}
-                        />
-                    </InputDisabled>   */}
-                    {/* <Input
-                        name="kk"
-                        placeholder="Masukkan No. KK"
-                        keyType="numeric"
-                        control={control}
-                        rules={{ required: 'No. KK tidak boleh kosong' }}
-                        errors={errors.kk}
-                    >
-                        <PersonCard
-                            width={16}
-                            height={16}
-                            fill={PRIMARY_COLOR}
-                        />
-                    </Input> */}
                     <TextArea
                         name="alamat_domisili"
                         placeholder="Masukkan alamat domisili"
@@ -324,7 +280,7 @@ const DetailDomisili = ({ route, navigation }: Props) => {
                     />
                     <TextAreaDisabled
                         placeholder="Keterangan Admin"
-                        value={data?.keterangan_admin ? data?.keterangan_admin : 'Belum ada keterangan admin'}
+                        value={data?.keterangan_admin ? data?.keterangan_admin : 'Tidak ada keterangan admin'}
                     >
                         <CommentIcon
                             width={16}
@@ -335,7 +291,7 @@ const DetailDomisili = ({ route, navigation }: Props) => {
                     {data?.status === '1'
                         ? <TextArea
                             name="keterangan_warga"
-                            placeholder="Masukkan keterangan warga (opsional)"
+                            placeholder="Masukkan keterangan anda (opsional)"
                             control={control}
                         >
                             <CommentIcon
@@ -347,7 +303,7 @@ const DetailDomisili = ({ route, navigation }: Props) => {
                         :
                         <TextAreaDisabled
                             placeholder="Keterangan Warga"
-                            value={data?.keterangan_warga ? data?.keterangan_warga : 'Belum ada keterangan'}
+                            value={data?.keterangan_warga ? data?.keterangan_warga : 'Anda tidak memberikan keterangan'}
                         >
                             <CommentIcon
                                 width={16}

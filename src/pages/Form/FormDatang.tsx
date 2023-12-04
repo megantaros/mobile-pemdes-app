@@ -16,8 +16,6 @@ import ModalError from '../../components/Modal/ModalError';
 import { RootStackParamList } from '../../../App';
 import { File, IModalError, IModalSuccess } from '../../models/model';
 import { useForm } from 'react-hook-form';
-import TextArea from '../../components/Form/TextArea';
-import Location from '../../assets/icons/geo-alt-fill.svg';
 
 const initialValue: File = {
     uri: '',
@@ -27,26 +25,17 @@ const initialValue: File = {
     message: '',
 };
 
-type Props = NativeStackScreenProps<RootStackParamList, 'FormDomisili'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'FormDatang'>;
 
-const FormDomisili = ({ navigation }: Props) => {
+const FormDatang = ({ navigation }: Props) => {
 
     const [firstFile, setFirstFile] = React.useState<File>(initialValue);
-    const [secondFile, setSecondFile] = React.useState<File>(initialValue);
-    const [thirdFile, setThirdFile] = React.useState<File>(initialValue);
-    const [fourthFile, setFourthFile] = React.useState<File>(initialValue);
-    const {
-        control,
-        handleSubmit,
-        formState: { errors },
-    } = useForm();
+    const { handleSubmit } = useForm();
 
     const handleImagePicker = async (name: string) => {
         const images = await launchImageLibrary({
             mediaType: 'photo',
             includeBase64: false,
-            // maxHeight: 200,
-            // maxWidth: 200,
             selectionLimit: 1,
         });
 
@@ -72,24 +61,15 @@ const FormDomisili = ({ navigation }: Props) => {
         };
 
         switch (name) {
-            case 'pengantar_rt':
+            case 'foto_surat_ket_pindah_capil':
                 setImageState(setFirstFile, 'File tidak boleh lebih dari 2MB');
-                break;
-            case 'fc_ktp':
-                setImageState(setSecondFile, 'File tidak boleh lebih dari 2MB');
-                break;
-            case 'fc_kk':
-                setImageState(setThirdFile, 'File tidak boleh lebih dari 2MB');
-                break;
-            case 'foto_lokasi':
-                setImageState(setFourthFile, 'File tidak boleh lebih dari 2MB');
                 break;
             default:
                 break;
         }
     };
 
-    const token = useAppSelector((state) => state?.user?.token);
+    const token = useAppSelector((state) => state.user.token);
     const apiClient = https(token ? token : '');
 
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
@@ -103,34 +83,18 @@ const FormDomisili = ({ navigation }: Props) => {
         description: '',
     });
 
-    const onSubmit = async (data: any) => {
+    const onSubmit = async () => {
 
         setIsLoading(true);
 
         const formData = new FormData();
-        formData.append('alamat_domisili', data?.alamat_domisili);
-        formData.append('pengantar_rt', {
+        formData.append('foto_surat_ket_pindah_capil', {
             uri: firstFile.uri,
             name: firstFile.name,
             type: firstFile.type,
         });
-        formData.append('fc_ktp', {
-            uri: secondFile.uri,
-            name: secondFile.name,
-            type: secondFile.type,
-        });
-        formData.append('fc_kk', {
-            uri: thirdFile.uri,
-            name: thirdFile.name,
-            type: thirdFile.type,
-        });
-        formData.append('foto_lokasi', {
-            uri: fourthFile.uri,
-            name: fourthFile.name,
-            type: fourthFile.type,
-        });
 
-        if (firstFile.uri === '' || secondFile.uri === '' || thirdFile.uri === '' || fourthFile.uri === '' || data?.alamat_domisili === '') {
+        if (firstFile.uri === '') {
             setModalError({
                 isVisible: true,
                 description: 'Harap isi semua form!',
@@ -138,7 +102,7 @@ const FormDomisili = ({ navigation }: Props) => {
             setIsLoading(false);
             return;
         } else {
-            await apiClient.post('surat/permohonan-domisili', formData, {
+            await apiClient.post('surat/permohonan-datang', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -179,48 +143,14 @@ const FormDomisili = ({ navigation }: Props) => {
             />
             <View style={styles.container}>
                 <Section
-                    title="Form Permohonan Domisili"
+                    title="Form Permohonan Pindah Datang"
                     text="Isi form dibawah ini untuk membuat permohonan surat">
-                    <TextArea
-                        name="alamat_domisili"
-                        placeholder="Masukkan alamat domisili"
-                        control={control}
-                        rules={{ required: 'Alamat Domisili Harus Diisi!' }}
-                        errors={errors.alamat_domisili}
-                    >
-                        <Location
-                            width={16}
-                            height={16}
-                            fill={PRIMARY_COLOR}
-                        />
-                    </TextArea>
                     <InputFile
                         uri={firstFile.uri}
                         fileName={firstFile.name}
                         message={firstFile.message}
-                        placeholder="Upload Pengantar RT"
-                        onPress={() => handleImagePicker('pengantar_rt')}
-                    />
-                    <InputFile
-                        uri={secondFile.uri}
-                        fileName={secondFile.name}
-                        message={secondFile.message}
-                        placeholder="Upload Fotokopi KTP Asli"
-                        onPress={() => handleImagePicker('fc_ktp')}
-                    />
-                    <InputFile
-                        uri={thirdFile.uri}
-                        fileName={thirdFile.name}
-                        message={thirdFile.message}
-                        placeholder="Upload Fotokopi KK Asli"
-                        onPress={() => handleImagePicker('fc_kk')}
-                    />
-                    <InputFile
-                        uri={fourthFile.uri}
-                        fileName={fourthFile.name}
-                        message={fourthFile.message}
-                        placeholder="Upload Foto Lokasi"
-                        onPress={() => handleImagePicker('foto_lokasi')}
+                        placeholder="Foto Surat Keterangan Pindah dari Capil"
+                        onPress={() => handleImagePicker('foto_surat_ket_pindah_capil')}
                     />
                     <ButtonVariant
                         title="Kirim Surat"
@@ -259,4 +189,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default FormDomisili;
+export default FormDatang;

@@ -2,23 +2,23 @@ import React from 'react';
 import { useAppSelector } from '../hooks';
 import https from '../../utils/api/http';
 
-const useGetDomisili = (id_permohonan_surat: string) => {
+const useGetKk = (id_permohonan_surat: string) => {
 
     const [data, setData] = React.useState<any>(null);
     const token = useAppSelector(state => state.user.token);
     const apiClient = https(token ? token : '');
 
     React.useEffect(() => {
-        const fetchDomisili = async (id: string) => {
+        const fetchKk = async (id: string) => {
             try {
-                const response = await apiClient.get(`surat/permohonan-domisili/${id}/edit`);
+                const response = await apiClient.get(`surat/permohonan-kk/${id}/edit`);
                 setData(response.data.data);
             } catch (error) {
                 console.log(error);
             }
         };
 
-        fetchDomisili(id_permohonan_surat);
+        fetchKk(id_permohonan_surat);
     }, [id_permohonan_surat]);
 
   return {
@@ -26,4 +26,4 @@ const useGetDomisili = (id_permohonan_surat: string) => {
   };
 };
 
-export default useGetDomisili;
+export default useGetKk;

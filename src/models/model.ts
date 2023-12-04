@@ -71,6 +71,7 @@ export interface ILetters {
     tanggal: string;
     onPress: () => void;
     onDestroy: () => void;
+    onGetDocument?: () => void;
 }
 
 

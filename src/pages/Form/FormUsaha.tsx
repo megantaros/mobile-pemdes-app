@@ -164,7 +164,7 @@ const FormUsaha = ({ navigation }: Props) => {
                 console.log(err);
                 setModalError({
                     isVisible: true,
-                    description: 'Surat Gagal Dibuat',
+                    description: 'Permohonan surat gagal dibuat!',
                 });
                 setIsLoading(false);
             });
@@ -199,14 +199,14 @@ const FormUsaha = ({ navigation }: Props) => {
                         placeholder="Pilih Status Pernikahan"
                         control={control}
                         data={status}
-                        rules={{ required: 'Status Pernikahan tidak boleh kosong' }}
+                        rules={{ required: 'Status Pernikahan tidak boleh kosong!' }}
                         errors={errors.status_pernikahan}
                     />
                     <Input
                         name="jenis_usaha"
                         placeholder="Masukkan jenis usaha"
                         control={control}
-                        rules={{ required: 'Jenis usaha tidak boleh kosong' }}
+                        rules={{ required: 'Jenis usaha tidak boleh kosong!' }}
                         errors={errors.jenis_usaha}
                     >
                         <MarketIcon
@@ -219,7 +219,7 @@ const FormUsaha = ({ navigation }: Props) => {
                         name="lama_usaha"
                         placeholder="Masukkan lama usaha"
                         control={control}
-                        rules={{ required: 'Jenis usaha tidak boleh kosong' }}
+                        rules={{ required: 'Jenis usaha tidak boleh kosong!' }}
                         errors={errors.lama_usaha}
                     >
                         <CalendarIcon
@@ -232,7 +232,7 @@ const FormUsaha = ({ navigation }: Props) => {
                         name="tempat_usaha"
                         placeholder="Masukkan tempat usaha"
                         control={control}
-                        rules={{ required: 'Tempat usaha tidak boleh kosong' }}
+                        rules={{ required: 'Tempat usaha tidak boleh kosong!' }}
                         errors={errors.alamat_domisili}
                     >
                         <Location

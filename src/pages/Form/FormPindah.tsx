@@ -1,17 +1,18 @@
 import React from 'react';
 import LayoutWithoutHeader from '../../components/Layout/LayoutWithoutHeader';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { StyleSheet, View } from 'react-native';
-import { useForm } from 'react-hook-form';
+import { StyleSheet, View, Text } from 'react-native';
+import { Controller, useForm } from 'react-hook-form';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { useAppSelector } from '../../hooks/hooks';
 import https from '../../utils/api/http';
 import Section from '../../components/Section';
-// import Input from '../../components/Form/Input';
+import Input from '../../components/Form/Input';
 
-// import PersonCard from '../../assets/icons/person-vcard-fill.svg';
-// import Family from '../../assets/icons/users-alt.svg';
-// import { PRIMARY_COLOR } from '../../components/style';
+import OtherIcon from '../../assets/icons/briefcase-fill.svg';
+import List from '../../assets/icons/list-ul.svg';
+import UserIcon from '../../assets/icons/person-fill.svg';
+import { PRIMARY_COLOR, PRIMARY_FONT } from '../../components/style';
 import Select from '../../components/Form/Select';
 import InputFile from '../../components/Form/InputFile';
 import ButtonVariant from '../../components/Form/Button';
@@ -19,6 +20,9 @@ import { RootStackParamList } from '../../../App';
 import ModalSuccess from '../../components/Modal/ModalSuccess';
 import ModalError from '../../components/Modal/ModalError';
 import { File, IModalError, IModalSuccess } from '../../models/model';
+import TextArea from '../../components/Form/TextArea';
+import Location from '../../assets/icons/geo-alt-fill.svg';
+import { Dropdown } from 'react-native-element-dropdown';
 
 
 const initialValue: File = {
@@ -42,26 +46,31 @@ const shdk = [
     { lable: 'Pembantu', value: 'Pembantu' },
 ];
 
-const alasan_permohonan = [
-    { lable: 'Membentuk Rumah Tangga Baru', value: 1 },
-    { lable: 'KK Hilang/Rusak', value: 2 },
-    { lable: 'Lainnnya', value: 3 },
+const alasan_pindah = [
+    { lable: 'Pekerjaan', value: 'Pekerjaan' },
+    { lable: 'Pendidikan', value: 'Pendidikan' },
+    { lable: 'Keamanan', value: 'Keamanan' },
+    { lable: 'Kesehatan', value: 'Kesehatan' },
+    { lable: 'Perumahan', value: 'Perumahan' },
+    { lable: 'Keluarga', value: 'Keluarga' },
+    { lable: 'Lainnya', value: 'Lainnya' },
 ];
 
-type Props = NativeStackScreenProps<RootStackParamList, 'FormKk'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'FormPindah'>;
 
-const FormKk = ({ navigation }: Props) => {
+const FormPindah = ({ navigation }: Props) => {
 
     const [firstFile, setFirstFile] = React.useState<File>(initialValue);
     const [secondFile, setSecondFile] = React.useState<File>(initialValue);
     const [thirdFile, setThirdFile] = React.useState<File>(initialValue);
-    const [fourthFile, setFourthFile] = React.useState<File>(initialValue);
 
     const {
         control,
         handleSubmit,
         formState: { errors },
     } = useForm();
+
+    const [showFormLainnya, setShowFormLainnya] = React.useState<boolean>(false);
 
     const handleImagePicker = async (name: string) => {
         const images = await launchImageLibrary({
@@ -101,9 +110,6 @@ const FormKk = ({ navigation }: Props) => {
             case 'foto_kk':
                 setImageState(setThirdFile, 'File tidak boleh lebih dari 2MB');
                 break;
-            case 'fc_buku_nikah':
-                setImageState(setFourthFile, 'File tidak boleh lebih dari 2MB');
-                break;
             default:
                 break;
         }
@@ -130,10 +136,11 @@ const FormKk = ({ navigation }: Props) => {
         setIsLoading(true);
 
         const formData = new FormData();
-        // formData.append('kk_lama', data.kk_lama);
+        formData.append('nama_kepala_keluarga', data?.nama_kepala_keluarga);
         formData.append('shdk', data?.shdk);
-        formData.append('alasan_permohonan', data?.alasan_permohonan);
-        // formData.append('jml_angg_keluarga', data.jml_angg_keluarga);
+        formData.append('alasan_pindah', data?.alasan_pindah);
+        data?.lainnya && formData.append('lainnya', data?.lainnya);
+        formData.append('alamat_tujuan', data?.alamat_tujuan);
         formData.append('pengantar_rt', {
             uri: firstFile.uri,
             name: firstFile.name,
@@ -149,13 +156,10 @@ const FormKk = ({ navigation }: Props) => {
             name: thirdFile.name,
             type: thirdFile.type,
         });
-        formData.append('fc_buku_nikah', {
-            uri: fourthFile.uri,
-            name: fourthFile.name,
-            type: fourthFile.type,
-        });
 
-        if (firstFile.uri === '' || secondFile.uri === '' || thirdFile.uri === '' || fourthFile.uri === '' || data?.shdk === '') {
+        console.log(formData);
+
+        if (firstFile.uri === '' || secondFile.uri === '' || thirdFile.uri === '' || data?.shdk === '' || data?.alasan_pindah === '' || data?.alamat_tujuan === '' || data?.nama_kepala_keluarga === '') {
             setModalError({
                 isVisible: true,
                 description: 'Harap isi semua form!',
@@ -163,7 +167,7 @@ const FormKk = ({ navigation }: Props) => {
             setIsLoading(false);
             return;
         } else {
-            await apiClient.post('surat/permohonan-kk', formData, {
+            await apiClient.post('surat/permohonan-pindah', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -207,37 +211,96 @@ const FormKk = ({ navigation }: Props) => {
             />
             <View style={styles.container}>
                 <Section
-                    title="Form Permohonan KK"
+                    title="Form Permohonan Pindah"
                     text="Isi form dibawah ini untuk membuat permohonan surat">
-                    {/* <Input
-                        name="kk_lama"
-                        placeholder="Masukkan No. KK Lama"
+                    <Input
+                        name="nama_kepala_keluarga"
+                        placeholder="Masukkan Nama Kepala Keluarga"
                         control={control}
-                        rules={{ required: 'No. KK Lama tidak boleh kosong' }}
-                        errors={errors.kk_lama}
+                        rules={{ required: 'Nama Kepala Keluarga tidak boleh kosong!' }}
+                        errors={errors.nama_kepala_keluarga}
                     >
-                        <PersonCard
+                        <UserIcon
                             width={16}
                             height={16}
                             fill={PRIMARY_COLOR}
                         />
-                    </Input> */}
+                    </Input>
                     <Select
                         name="shdk"
                         placeholder="Pilih SHDK"
                         control={control}
                         data={shdk}
-                        rules={{ required: 'SHDK tidak boleh kosong' }}
+                        rules={{ required: 'SHDK tidak boleh kosong!' }}
                         errors={errors.shdk}
                     />
-                    <Select
-                        name="alasan_permohonan"
-                        placeholder="Pilih Alasan Permohonan"
+                    <Controller
+                        name="alasan_pindah"
                         control={control}
-                        data={alasan_permohonan}
-                        rules={{ required: 'Alasan Permohonan tidak boleh kosong' }}
-                        errors={errors.alasan_permohonan}
+                        rules={{ required: 'Alasan Pindah tidak boleh kosong!' }}
+                        render={({ field: { onChange, value } }) => (
+                            <Dropdown
+                                style={styles.dropdown}
+                                selectedTextStyle={styles.selectedTextStyle}
+                                placeholderStyle={styles.placeholderStyle}
+                                maxHeight={200}
+                                value={value}
+                                data={alasan_pindah}
+                                valueField="value"
+                                labelField="lable"
+                                placeholder="Pilih Alasan Pindah Lainnya"
+                                renderItem={(item: any) => (
+                                    <View style={styles.renderItem}>
+                                        <Text style={styles.renderItemText}>{item.lable}</Text>
+                                    </View>
+                                )}
+                                onChange={(e: any) => {
+                                    onChange(e.value);
+                                    if (e.value === 'Lainnya') {
+                                        setShowFormLainnya(true);
+                                    } else {
+                                        setShowFormLainnya(false);
+                                    }
+                                }}
+                                renderLeftIcon={() => {
+                                    return <List
+                                        width={16}
+                                        height={16}
+                                        fill={PRIMARY_COLOR}
+                                        style={styles.imageStyle}
+                                    />;
+                                }}
+                            />
+                        )}
                     />
+                    {showFormLainnya && (
+                        <Input
+                            name="lainnya"
+                            placeholder="Masukkan Alasan Lain"
+                            control={control}
+                            rules={{ required: 'Alasan Pindah tidak boleh kosong!' }}
+                            errors={errors.lainnya}
+                        >
+                            <OtherIcon
+                                width={16}
+                                height={16}
+                                fill={PRIMARY_COLOR}
+                            />
+                        </Input>
+                    )}
+                    <TextArea
+                        name="alamat_tujuan"
+                        placeholder="Masukkan alamat tujuan"
+                        control={control}
+                        rules={{ required: 'Alamat Tujuan Harus Diisi!' }}
+                        errors={errors.alamat_tujuan}
+                    >
+                        <Location
+                            width={16}
+                            height={16}
+                            fill={PRIMARY_COLOR}
+                        />
+                    </TextArea>
                     {/* <Input
                         name="jml_angg_keluarga"
                         placeholder="Masukkan Jumlah Anggota Keluarga"
@@ -269,12 +332,6 @@ const FormKk = ({ navigation }: Props) => {
                         placeholder="Upload Scan KK Asli"
                         onPress={() => handleImagePicker('foto_kk')}
                     />
-                    <InputFile
-                        uri={fourthFile.uri}
-                        fileName={fourthFile.name}
-                        placeholder="Upload Fotokopi Buku Nikah"
-                        onPress={() => handleImagePicker('fc_buku_nikah')}
-                    />
                     <ButtonVariant
                         title="Kirim"
                         onPress={handleSubmit(onSubmit)}
@@ -302,6 +359,46 @@ const styles = StyleSheet.create({
         padding: 20,
         marginTop: -120,
     },
+    dropdown: {
+        height: 50,
+        marginVertical: 4,
+        width: '100%',
+        backgroundColor: '#fff',
+        borderRadius: 25,
+        borderColor: '#fff',
+        paddingHorizontal: 16,
+        borderWidth: 1,
+        fontFamily: PRIMARY_FONT,
+        fontSize: 12,
+    },
+    placeholderStyle: {
+        fontSize: 12,
+        fontFamily: 'Viga-Regular',
+        marginLeft: 7,
+    },
+    selectedTextStyle: {
+        fontSize: 12,
+        fontFamily: 'Viga-Regular',
+        marginLeft: 10,
+        color: PRIMARY_COLOR,
+    },
+    renderItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 20,
+    },
+    renderItemText: {
+        fontSize: 12,
+        fontFamily: 'Viga-Regular',
+        marginLeft: 12,
+        color: PRIMARY_COLOR,
+    },
+    imageStyle: {
+        width: 24,
+        height: 24,
+        borderRadius: 12,
+        paddingHorizontal: 15,
+    },
 });
 
-export default FormKk;
+export default FormPindah;

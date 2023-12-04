@@ -10,23 +10,23 @@ export default function useGetLetters() {
     const token = useAppSelector(state => state.user.token);
     const apiClient = https(token ? token : '');
 
-    const fetchLetters = async () => {
-        setIsLoading(true);
-        try {
-            const response = await apiClient.get('surat/permohonan-surat');
-            setData(response.data.data);
-            setIsLoading(false);
-        } catch (error) {
-            console.log(error);
-            setIsLoading(false);
-        }
-    };
-
     useEffect(() => {
+        const fetchLetters = async () => {
+            setIsLoading(true);
+            try {
+                const response = await apiClient.get('surat/permohonan-surat');
+                setData(response.data.data);
+                setIsLoading(false);
+            } catch (error) {
+                console.log(error);
+                setIsLoading(false);
+            }
+        };
+
         fetchLetters();
     }, []);
 
   return {
-    data, isLoading,
+    data, isLoading, setData,
   };
 }

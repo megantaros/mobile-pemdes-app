@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Modal from 'react-native-modal';
 import ButtonVariant from '../Form/Button';
-import { INFO_COLOR, PRIMARY_COLOR } from '../style';
+import { PRIMARY_COLOR } from '../style';
 import Info from '../../assets/icons/comment-info.svg';
 import Memo from '../../assets/icons/memo-circle-check.svg';
 
@@ -55,6 +55,12 @@ const data_datang = [
     'Scan Surat Pindah Asli',
 ];
 
+const pengambilanSurat = [
+    'Menunjukkan Kode Surat',
+    'Dokumen Persyaratan Surat',
+    'Dokumen dapat diambil pada hari Senin - Jumat pukul 08.00 - 14.00 WIB',
+];
+
 const ModalRules: FC<Props> = ({ id, isVisible, onPress }) => {
 
     return (
@@ -68,58 +74,61 @@ const ModalRules: FC<Props> = ({ id, isVisible, onPress }) => {
             backdropTransitionOutTiming={500}
         >
             <View style={styles.contentModal}>
-                <Info height={50} width={50} fill={PRIMARY_COLOR} />
-                <Text
-                    style={styles.titleModal}
-                >
-                    Dokumen yang harus disiapkan
-                </Text>
+                <Info height={40} width={40} fill={PRIMARY_COLOR} />
+                <Text style={styles.titleModal}>Dokumen yang harus disiapkan</Text>
 
                 {id === 1 && data_kk.map((item, index) => (
                     <View key={index} style={styles.rowModal}>
-                        <Memo height={20} width={20} fill={PRIMARY_COLOR} />
+                        <Memo height={18} width={18} fill={PRIMARY_COLOR} />
                         <Text style={styles.descModal}>{item}</Text>
                     </View>
                 ))}
 
                 {id === 2 && data_ktp.map((item, index) => (
                     <View key={index} style={styles.rowModal}>
-                        <Memo height={20} width={20} fill={PRIMARY_COLOR} />
+                        <Memo height={18} width={18} fill={PRIMARY_COLOR} />
                         <Text style={styles.descModal}>{item}</Text>
                     </View>
                 ))}
 
                 {id === 3 && data_skck.map((item, index) => (
                     <View key={index} style={styles.rowModal}>
-                        <Memo height={20} width={20} fill={PRIMARY_COLOR} />
+                        <Memo height={18} width={18} fill={PRIMARY_COLOR} />
                         <Text style={styles.descModal}>{item}</Text>
                     </View>
                 ))}
 
                 {id === 4 && data_domisili.map((item, index) => (
                     <View key={index} style={styles.rowModal}>
-                        <Memo height={20} width={20} fill={PRIMARY_COLOR} />
+                        <Memo height={18} width={18} fill={PRIMARY_COLOR} />
                         <Text style={styles.descModal}>{item}</Text>
                     </View>
                 ))}
 
                 {id === 5 && data_usaha.map((item, index) => (
                     <View key={index} style={styles.rowModal}>
-                        <Memo height={20} width={20} fill={PRIMARY_COLOR} />
+                        <Memo height={18} width={18} fill={PRIMARY_COLOR} />
                         <Text style={styles.descModal}>{item}</Text>
                     </View>
                 ))}
 
                 {id === 6 && data_pindah.map((item, index) => (
                     <View key={index} style={styles.rowModal}>
-                        <Memo height={20} width={20} fill={PRIMARY_COLOR} />
+                        <Memo height={18} width={18} fill={PRIMARY_COLOR} />
                         <Text style={styles.descModal}>{item}</Text>
                     </View>
                 ))}
 
                 {id === 7 && data_datang.map((item, index) => (
                     <View key={index} style={styles.rowModal}>
-                        <Memo height={20} width={20} fill={PRIMARY_COLOR} />
+                        <Memo height={18} width={18} fill={PRIMARY_COLOR} />
+                        <Text style={styles.descModal}>{item}</Text>
+                    </View>
+                ))}
+
+                {id === 8 && pengambilanSurat.map((item, index) => (
+                    <View key={index} style={styles.rowModal}>
+                        <Memo height={18} width={18} fill={PRIMARY_COLOR} />
                         <Text style={styles.descModal}>{item}</Text>
                     </View>
                 ))}
@@ -163,10 +172,11 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'center',
         width: '100%',
-        gap: 10,
+        gap: 6,
         borderRadius: 10,
         backgroundColor: '#d4eaf7',
-        padding: 10,
+        padding: 15,
+        // flex: 1,
     },
     descModal: {
         fontFamily: 'Poppins-Regular',

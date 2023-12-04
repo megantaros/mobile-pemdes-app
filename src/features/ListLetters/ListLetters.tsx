@@ -1,10 +1,11 @@
 import React from 'react';
 import Card from '../../components/Card';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { DANGER_COLOR, INFO_COLOR, PRIMARY_COLOR, SUCCESS_COLOR, WARNING_COLOR } from '../../components/style';
+import { DANGER_COLOR, GRAY_COLOR, INFO_COLOR, PRIMARY_COLOR, SUCCESS_COLOR, WARNING_COLOR } from '../../components/style';
 
 import TrashIcon from '../../assets/icons/trash-fill.svg';
 import InfoAccount from '../../assets/icons/info.svg';
+import MessageIcon from '../../assets/icons/memo-circle-check.svg';
 // import SentIcon from '../../assets/icons/send-fill.svg';
 // import AcceptIcon from '../../assets/icons/send-check-fill.svg';
 // import RejectIcon from '../../assets/icons/send-x-fill.svg';
@@ -12,18 +13,18 @@ import InfoAccount from '../../assets/icons/info.svg';
 // import VerifyIcon from '../../assets/icons/verifying.svg';
 import { ILetters } from '../../models/model';
 
-const ListLetters = ({ jenis_surat, status, tanggal, onPress, onDestroy }: ILetters) => {
+const ListLetters = ({ id_permohonan_surat, jenis_surat, status, tanggal, onPress, onDestroy, onGetDocument }: ILetters) => {
 
     const statusColor = (statusLetter: string) => {
         switch (statusLetter) {
             case '1':
                 return WARNING_COLOR;
             case '2':
-                return WARNING_COLOR;
+                return PRIMARY_COLOR;
             case '3':
-                return WARNING_COLOR;
+                return GRAY_COLOR;
             case '4':
-                return SUCCESS_COLOR;
+                return INFO_COLOR;
             case '5':
                 return SUCCESS_COLOR;
             case '6':
@@ -46,28 +47,28 @@ const ListLetters = ({ jenis_surat, status, tanggal, onPress, onDestroy }: ILett
                 return (
                     <View style={styles.textStatus}>
                         {/* <VerifyIcon width={13} height={13} fill={WARNING_COLOR} /> */}
-                        <Text style={[styles.textLetter, { backgroundColor: WARNING_COLOR }]}>Surat Sedang Diverifikasi</Text>
+                        <Text style={[styles.textLetter, { backgroundColor: PRIMARY_COLOR }]}>Surat Sedang Diverifikasi</Text>
                     </View>
                 );
             case '3':
                 return (
                     <View style={styles.textStatus}>
                         {/* <WaitingIcon width={13} height={13} fill={WARNING_COLOR} /> */}
-                        <Text style={[styles.textLetter, { backgroundColor: WARNING_COLOR }]}>Surat Sedang Diproses</Text>
+                        <Text style={[styles.textLetter, { backgroundColor: GRAY_COLOR }]}>Surat Sedang Diproses</Text>
                     </View>
                 );
             case '4':
                 return (
                     <View style={styles.textStatus}>
                         {/* <AcceptIcon width={13} height={13} fill={SUCCESS_COLOR} /> */}
-                        <Text style={[styles.textLetter, { backgroundColor: SUCCESS_COLOR }]}>Surat Telah Ditandatangani oleh Kades</Text>
+                        <Text style={[styles.textLetter, { backgroundColor: INFO_COLOR }]}>Surat Dapat Diambil di Kantor Kepala Desa</Text>
                     </View>
                 );
             case '5':
                 return (
                     <View style={styles.textStatus}>
                         {/* <AcceptIcon width={13} height={13} fill={SUCCESS_COLOR} /> */}
-                        <Text style={[styles.textLetter, { backgroundColor: SUCCESS_COLOR }]}>Surat Dapat Diambil di Kantor Kepala Desa</Text>
+                        <Text style={[styles.textLetter, { backgroundColor: SUCCESS_COLOR }]}>Surat Telah Diambil</Text>
                     </View>
                 );
             case '6':
@@ -141,6 +142,24 @@ const ListLetters = ({ jenis_surat, status, tanggal, onPress, onDestroy }: ILett
             alignItems: 'center',
             justifyContent: 'center',
         },
+        btnMessage: {
+            backgroundColor: WARNING_COLOR,
+            padding: 5,
+            borderRadius: 5,
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+        textKode: {
+            fontSize: 12,
+            fontFamily: 'Poppins-Regular',
+            color: GRAY_COLOR,
+            textTransform: 'uppercase',
+            fontWeight: '500',
+            // marginBottom: 5,
+            // padding: 5,
+            // borderRadius: 5,
+            // backgroundColor: '#f2f2f2',
+        },
         titleLetter: {
             fontSize: 14,
             fontFamily: 'Viga-Regular',
@@ -168,26 +187,45 @@ const ListLetters = ({ jenis_surat, status, tanggal, onPress, onDestroy }: ILett
         <Card style={styles.cardStyle}>
             <View style={styles.cardContainer}>
                 <Text style={styles.titleLetter}>{jenis_surat}</Text>
+                <View
+                    style={{
+                        flex: 1,
+                        width: '100%',
+                        // marginVertical: 5,
+                        flexDirection: 'row',
+                    }}
+                >
+                    <Text style={{ color: GRAY_COLOR, fontSize: 12 }}>Kode </Text>
+                    <Text style={styles.textKode}>{id_permohonan_surat.slice(0, 6)}</Text>
+                </View>
                 <View style={styles.textStatus}>
                     {statusSurat(status ? status : '')}
                 </View>
-                <Text style={styles.dateLetter}>Tanggal: {formattedDate(tanggal)}</Text>
+                <Text style={styles.dateLetter}>Tanggal {formattedDate(tanggal)}</Text>
             </View>
             <View style={styles.cardAction}>
 
                 {status === '1' ? (
                     <>
                         <Pressable onPress={onPress} style={styles.btnInfo}>
-                            <InfoAccount width={20} height={20} fill="#fff" />
+                            <InfoAccount width={18} height={18} fill="#fff" />
                         </Pressable>
                         <Pressable onPress={onDestroy} style={styles.btnDestroy}>
-                            <TrashIcon width={20} height={20} fill="#fff" />
+                            <TrashIcon width={18} height={18} fill="#fff" />
                         </Pressable>
                     </>
                 ) : (
                     <Pressable onPress={onPress} style={styles.btnInfo}>
-                        <InfoAccount width={20} height={20} fill="#fff" />
+                        <InfoAccount width={18} height={18} fill="#fff" />
                     </Pressable>
+                )}
+
+                {status === '4' && (
+                    <>
+                        <Pressable onPress={onGetDocument} style={styles.btnMessage}>
+                            <MessageIcon width={18} height={18} fill="#fff" />
+                        </Pressable>
+                    </>
                 )}
 
             </View>

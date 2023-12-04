@@ -28,10 +28,12 @@ import CalendarIcon from '../../assets/icons/calendar-event.svg';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'DetailUsaha'>;
 
-const initialValue = {
+const initialValue: File = {
     uri: '',
     name: '',
     type: '',
+    fileSize: 0,
+    message: '',
 };
 
 const status = [
@@ -79,7 +81,6 @@ const DetailUsaha = ({ route, navigation }: Props) => {
                     fileSize: images.assets?.[0].fileSize,
                     message: '',
                 });
-                console.log(images.assets?.[0].fileSize);
             }
         };
 
@@ -154,7 +155,7 @@ const DetailUsaha = ({ route, navigation }: Props) => {
         formData.append('jenis_usaha', form.jenis_usaha);
         formData.append('lama_usaha', form.lama_usaha);
         formData.append('tempat_usaha', form.tempat_usaha);
-        formData.append('keterangan_warga', form.keterangan_warga);
+        form?.keterangan_warga && formData.append('keterangan_warga', form?.keterangan_warga);
         formData.append('pengantar_rt', {
             uri: firstFile.uri,
             name: firstFile.name,
@@ -192,14 +193,14 @@ const DetailUsaha = ({ route, navigation }: Props) => {
                 console.log(res.data.data);
                 setModalSuccess({
                     isVisible: true,
-                    description: 'Data Surat berhasil diubah',
+                    description: res.data.message,
                 });
                 setIsLoading(false);
             }).catch((err) => {
                 console.log(err.message);
                 setModalError({
                     isVisible: true,
-                    description: 'Masalah koneksi',
+                    description: 'Masalah koneksi!',
                 });
                 setIsLoading(false);
             });
@@ -224,8 +225,8 @@ const DetailUsaha = ({ route, navigation }: Props) => {
             />
             <View style={styles.container}>
                 <Section
-                    title="Detail Surat Domisili"
-                    text="Silahkan lengkapi form dibawah ini"
+                    title="Detail Surat Permohonan Usaha"
+                    text="Pastikan data yang anda masukkan sudah benar"
                 >
                     {isLoading && <Loading />}
                     <Select
@@ -325,7 +326,7 @@ const DetailUsaha = ({ route, navigation }: Props) => {
                     />
                     <TextAreaDisabled
                         placeholder="Keterangan Admin"
-                        value={data?.keterangan_admin ? data?.keterangan_admin : 'Belum ada keterangan admin'}
+                        value={data?.keterangan_admin ? data?.keterangan_admin : 'Tidak ada keterangan admin'}
                     >
                         <CommentIcon
                             width={16}
@@ -336,7 +337,7 @@ const DetailUsaha = ({ route, navigation }: Props) => {
                     {data?.status === '1'
                         ? <TextArea
                             name="keterangan_warga"
-                            placeholder="Masukkan keterangan warga (opsional)"
+                            placeholder="Masukkan keterangan anda (opsional)"
                             control={control}
                         >
                             <CommentIcon
@@ -348,7 +349,7 @@ const DetailUsaha = ({ route, navigation }: Props) => {
                         :
                         <TextAreaDisabled
                             placeholder="Keterangan Warga"
-                            value={data?.keterangan_warga ? data?.keterangan_warga : 'Belum ada keterangan'}
+                            value={data?.keterangan_warga ? data?.keterangan_warga : 'Anda tidak memberikan keterangan'}
                         >
                             <CommentIcon
                                 width={16}

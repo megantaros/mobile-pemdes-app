@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const BASE_URL = 'http://192.168.1.23:8000/';
+export const BASE_URL = 'http://192.168.1.24:8000/';
 export const BASE_IMG = BASE_URL + 'berkaspemohon/';
 
 export default function https(token: string | null) {

@@ -43,8 +43,6 @@ export default function InfoAccount({ navigation }: Props) {
 
     const { data, loading } = useGetUser();
 
-    console.log(data);
-
     useEffect(() => {
         setValue('nama_warga', data?.nama_warga);
         setValue('email', data?.email);

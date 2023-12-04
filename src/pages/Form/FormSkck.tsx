@@ -43,8 +43,6 @@ const FormSkck = ({ navigation }: Props) => {
         const images = await launchImageLibrary({
             mediaType: 'photo',
             includeBase64: false,
-            // maxHeight: 200,
-            // maxWidth: 200,
             selectionLimit: 1,
         });
 
@@ -116,7 +114,7 @@ const FormSkck = ({ navigation }: Props) => {
         if (firstFile.uri === '' || secondFile.uri === '' || data?.keperluan === '') {
             setModalError({
                 isVisible: true,
-                description: 'Harap isi semua form',
+                description: 'Harap isi semua form!',
             });
             setIsLoading(false);
             return;
@@ -135,7 +133,7 @@ const FormSkck = ({ navigation }: Props) => {
                 console.log(err);
                 setModalError({
                     isVisible: true,
-                    description: 'Surat Gagal Dibuat',
+                    description: 'Permohonan surat gagal dibuat!',
                 });
                 setIsLoading(false);
             });

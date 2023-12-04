@@ -1,29 +1,26 @@
-import React from 'react';
-import { RootStackParamList } from '../../../App';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import React from 'react';
 import { StyleSheet, ToastAndroid, View } from 'react-native';
 import LayoutWithoutHeader from '../../components/Layout/LayoutWithoutHeader';
 import Section from '../../components/Section';
-import Loading from '../../components/Loading';
-import { File, IModalError, IModalSuccess } from '../../models/model';
 import { useForm } from 'react-hook-form';
-import { launchImageLibrary } from 'react-native-image-picker';
-import TextArea from '../../components/Form/TextArea';
-import InputFile from '../../components/Form/InputFile';
-import WorkIcon from '../../assets/icons/briefcase-fill.svg';
-import { PRIMARY_COLOR, WARNING_COLOR } from '../../components/style';
-import https, { BASE_IMG } from '../../utils/api/http';
+
+import DiskIcon from '../../assets/icons/disk.svg';
+import CommentIcon from '../../assets/icons/comment-alt-dots.svg';
 import ButtonVariant from '../../components/Form/Button';
-import TextAreaDisabled from '../../components/DisabledForm/TextAreaDisabled';
+import { PRIMARY_COLOR, WARNING_COLOR } from '../../components/style';
+import { RootStackParamList } from '../../../App';
+import { File, IModalError, IModalSuccess } from '../../models/model';
+import { launchImageLibrary } from 'react-native-image-picker';
+import https, { BASE_IMG } from '../../utils/api/http';
 import { useAppSelector } from '../../hooks/hooks';
 import ModalSuccess from '../../components/Modal/ModalSuccess';
 import ModalError from '../../components/Modal/ModalError';
-import CommentIcon from '../../assets/icons/comment-alt-dots.svg';
-import DiskIcon from '../../assets/icons/disk.svg';
-import Input from '../../components/Form/Input';
-import useGetSkck from '../../hooks/Letters/useGetSkck';
-
-type Props = NativeStackScreenProps<RootStackParamList, 'DetailSkck'>;
+import Loading from '../../components/Loading';
+import InputFile from '../../components/Form/InputFile';
+import TextAreaDisabled from '../../components/DisabledForm/TextAreaDisabled';
+import TextArea from '../../components/Form/TextArea';
+import useGetDatang from '../../hooks/Letters/useGetDatang';
 
 const initialValue: File = {
     uri: '',
@@ -33,26 +30,23 @@ const initialValue: File = {
     message: '',
 };
 
-const DetailSkck = ({ route, navigation }: Props) => {
+type Props = NativeStackScreenProps<RootStackParamList, 'DetailDatang'>;
+
+const DetailDatang = ({ navigation, route }: Props) => {
 
     const { id } = route.params;
-
     const [firstFile, setFirstFile] = React.useState<File>(initialValue);
-    const [secondFile, setSecondFile] = React.useState<File>(initialValue);
 
     const {
         control,
-        setValue,
         handleSubmit,
-        formState: { errors },
+        setValue,
     } = useForm();
 
     const handleImagePicker = async (name: string) => {
         const images = await launchImageLibrary({
             mediaType: 'photo',
             includeBase64: false,
-            // maxHeight: 200,
-            // maxWidth: 200,
             selectionLimit: 1,
         });
 
@@ -78,32 +72,22 @@ const DetailSkck = ({ route, navigation }: Props) => {
         };
 
         switch (name) {
-            case 'pengantar_rt':
+            case 'foto_surat_ket_pindah_capil':
                 setImageState(setFirstFile, 'File tidak boleh lebih dari 2MB');
-                break;
-            case 'fc_ktp':
-                setImageState(setSecondFile, 'File tidak boleh lebih dari 2MB');
                 break;
             default:
                 break;
         }
     };
 
-    const { data } = useGetSkck(id);
+    const { data } = useGetDatang(id);
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
     React.useEffect(() => {
-        // setValue('kk', data?.kk);
-        setValue('keperluan', data?.keperluan);
         setValue('keterangan_warga', data?.keterangan_warga);
         setFirstFile({
-            uri: BASE_IMG + data?.pengantar_rt,
-            name: data?.pengantar_rt,
-            type: 'image/jpeg',
-        });
-        setSecondFile({
-            uri: BASE_IMG + data?.fc_ktp,
-            name: data?.fc_ktp,
+            uri: BASE_IMG + data?.foto_surat_ket_pindah_capil,
+            name: data?.foto_surat_ket_pindah_capil,
             type: 'image/jpeg',
         });
     }, [id, data, setValue]);
@@ -120,25 +104,20 @@ const DetailSkck = ({ route, navigation }: Props) => {
 
     const token = useAppSelector((state) => state.user.token);
     const apiClient = https(token ? token : '');
+
     const onSubmit = async (form: any) => {
         setIsLoading(true);
 
         const formData = new FormData();
         formData.append('_method', 'PUT');
-        formData.append('keperluan', form.keperluan);
         form?.keterangan_warga && formData.append('keterangan_warga', form?.keterangan_warga);
-        formData.append('pengantar_rt', {
+        formData.append('foto_surat_ket_pindah_capil', {
             uri: firstFile.uri,
             name: firstFile.name,
             type: firstFile.type,
         });
-        formData.append('fc_ktp', {
-            uri: secondFile.uri,
-            name: secondFile.name,
-            type: secondFile.type,
-        });
 
-        if (firstFile.uri === '' || secondFile.uri === '') {
+        if (firstFile.uri === '') {
             setModalError({
                 isVisible: true,
                 description: 'Harap isi semua form!',
@@ -146,7 +125,7 @@ const DetailSkck = ({ route, navigation }: Props) => {
             setIsLoading(false);
             return;
         } else {
-            await apiClient.post(`surat/permohonan-skck/${data?.id_surat_peng_skck}`, formData, {
+            await apiClient.post(`surat/permohonan-datang/${data?.id_surat_ket_pindah_datang}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -165,7 +144,6 @@ const DetailSkck = ({ route, navigation }: Props) => {
                 setIsLoading(false);
             });
         }
-
     };
 
     return (
@@ -185,43 +163,18 @@ const DetailSkck = ({ route, navigation }: Props) => {
             />
             <View style={styles.container}>
                 <Section
-                    title="Detail Surat Permohonan SKCK"
+                    title="Detail Surat Keterangan Pindah Datang"
                     text="Pastikan data yang anda masukkan sudah benar"
                 >
                     {isLoading && <Loading />}
-                    <Input
-                        name="keperluan"
-                        placeholder="Masukkan Keperluan"
-                        control={control}
-                        rules={{ required: 'Keperluan tidak boleh kosong!' }}
-                        errors={errors.jml_angg_keluarga}
-                    >
-                        <WorkIcon
-                            width={16}
-                            height={16}
-                            fill={PRIMARY_COLOR}
-                        />
-                    </Input>
                     <InputFile
                         uri={firstFile.uri}
                         fileName={firstFile.name}
                         message={firstFile.message}
-                        placeholder="Upload Pengantar RT"
+                        placeholder="Foto Surat Keterangan Pindah dari Capil"
                         onPress={
                             data?.status === '1'
-                                ? () => handleImagePicker('pengantar_rt')
-                                : () => ToastAndroid.show('Surat telah diproses...', ToastAndroid.SHORT)
-                        }
-                        disabled={data?.status === '1' ? false : true}
-                    />
-                    <InputFile
-                        uri={secondFile.uri}
-                        fileName={secondFile.name}
-                        message={secondFile.message}
-                        placeholder="Upload Fotokopi KTP Asli"
-                        onPress={
-                            data?.status === '1'
-                                ? () => handleImagePicker('fc_ktp')
+                                ? () => handleImagePicker('foto_surat_ket_pindah_capil')
                                 : () => ToastAndroid.show('Surat telah diproses...', ToastAndroid.SHORT)
                         }
                         disabled={data?.status === '1' ? false : true}
@@ -299,4 +252,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default DetailSkck;
+export default DetailDatang;

@@ -62,6 +62,11 @@ const mision = [
     '2. Menyelenggarakan sistem pelayanan dasar dalam bidang pemerintahan, pembangunan, kemasyarakatan secara adil dan transparan.',
     '3. Mendorong terciptanya Lembaga Perekonomian Desa yang profesional dan meningkatkan derajat kehidupan masyarakat.',
     '4. Mendorong kegiatan dunia usaha guna menciptakan lapangan kerja.',
+    '5. Mengoptimalkan pemanfaatan Sumber Daya Ekonomi Desa sesuai dengan Potensi Desa.',
+    '6. Menciptakan keamanan yang kondusif untuk melakukan kegiatan usaha.',
+    '7. Mendorong terbentuknya sikap dan perilaku anggota masyarakat di Pemerintahan Desa yang menghormati dan menjunjung tinggi hukum yang berlaku.',
+    '8. Mengerakkan kegiatan sosial dan keagamaan untuk lebih meningkatkan kualitas Keimanan dan Ketaqwaan.',
+    '9. Menghargai Musyawarah dan Keputusan sesuai dengan keadilan yang melibatkan perempuan serta anak dan remaja.',
 ];
 
 type Props = NativeStackScreenProps<RootStackParamList, 'HomeScreen'>;

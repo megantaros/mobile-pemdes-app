@@ -36,10 +36,12 @@ const jenis_permohonan = [
     { value: 'Penggantian', lable: 'Penggantian' },
 ];
 
-const initialValue = {
+const initialValue: File = {
     uri: '',
     name: '',
     type: '',
+    fileSize: 0,
+    message: '',
 };
 
 type Props = NativeStackScreenProps<RootStackParamList, 'DetailKtp'>;
@@ -144,7 +146,7 @@ const DetailKtp = ({ navigation, route }: Props) => {
         const formData = new FormData();
         formData.append('_method', 'PUT');
         formData.append('jenis_permohonan', form?.jenis_permohonan);
-        formData.append('keterangan_warga', form.keterangan_warga);
+        form?.keterangan_warga && formData.append('keterangan_warga', form?.keterangan_warga);
         formData.append('pengantar_rt', {
             uri: firstFile.uri,
             name: firstFile.name,
@@ -174,10 +176,9 @@ const DetailKtp = ({ navigation, route }: Props) => {
                     'Content-Type': 'multipart/form-data',
                 },
             }).then((res) => {
-                console.log(res.data.data);
                 setModalSuccess({
                     isVisible: true,
-                    description: 'Data Surat berhasil diubah',
+                    description: res.data.message,
                 });
                 setIsLoading(false);
             }).catch((err) => {
@@ -208,8 +209,8 @@ const DetailKtp = ({ navigation, route }: Props) => {
             />
             <View style={styles.container}>
                 <Section
-                    title="Detail Surat KTP"
-                    text="Silahkan lengkapi form dibawah ini"
+                    title="Detail Surat Permohonan KTP"
+                    text="Pastikan data yang anda masukkan sudah benar"
                 >
                     {isLoading && <Loading />}
                     {/* <InputDisabled
@@ -298,7 +299,7 @@ const DetailKtp = ({ navigation, route }: Props) => {
                     />
                     <TextAreaDisabled
                         placeholder="Keterangan Admin"
-                        value={data?.keterangan_admin ? data?.keterangan_admin : 'Belum ada keterangan admin'}
+                        value={data?.keterangan_admin ? data?.keterangan_admin : 'Tidak ada keterangan admin'}
                     >
                         <CommentIcon
                             width={16}
@@ -309,7 +310,7 @@ const DetailKtp = ({ navigation, route }: Props) => {
                     {data?.status === '1'
                         ? <TextArea
                             name="keterangan_warga"
-                            placeholder="Masukkan keterangan warga (opsional)"
+                            placeholder="Masukkan keterangan anda (opsional)"
                             control={control}
                         >
                             <CommentIcon
@@ -321,7 +322,7 @@ const DetailKtp = ({ navigation, route }: Props) => {
                         :
                         <TextAreaDisabled
                             placeholder="Keterangan Warga"
-                            value={data?.keterangan_warga ? data?.keterangan_warga : 'Belum ada keterangan'}
+                            value={data?.keterangan_warga ? data?.keterangan_warga : 'Anda tidak memberikan keterangan'}
                         >
                             <CommentIcon
                                 width={16}
