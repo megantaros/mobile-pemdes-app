@@ -151,8 +151,9 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     bg_header: {
-        maxHeight: 260,
-        resizeMode: 'contain',
+        maxHeight: 270,
+        minHeight: 260,
+        resizeMode: 'cover',
         width: '100%',
     },
     container_header_logo: {
