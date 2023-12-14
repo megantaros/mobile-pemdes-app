@@ -1,8 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Text, Image } from 'react-native';
 import { PRIMARY_COLOR, SECONDARY_COLOR } from '../style';
-import ListIcon from '../../assets/icons/list.svg';
-import Person from '../../assets/icons/person-fill.svg';
 
 const logoKebumen = require('../../assets/img/logo-kebumen.png');
 

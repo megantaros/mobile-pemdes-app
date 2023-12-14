@@ -34,10 +34,9 @@ export default function ScreenHeader({ title, text, body, action }: Props) {
 const styles = StyleSheet.create({
     imgStyle: {
         width: '100%',
-        height: 260,
+        height: 320,
         objectFit: 'cover',
         resizeMode: 'cover',
-        overflow: 'hidden',
     },
     cardStyle: {
         marginTop: -200,
