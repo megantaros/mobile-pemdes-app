@@ -96,7 +96,6 @@ const FormPindah = ({ navigation }: Props) => {
                     fileSize: images.assets?.[0].fileSize,
                     message: '',
                 });
-                console.log(images.assets?.[0].fileSize);
             }
         };
 
