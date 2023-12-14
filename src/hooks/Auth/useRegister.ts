@@ -38,7 +38,7 @@ export default function useRegister() {
         } catch (err) {
             setModalError({
                 isVisible: true,
-                description: 'Koneksi bermasalah!',
+                description: 'Anda gagal melakukan registrasi!',
             });
         }
         setIsLoading(false);

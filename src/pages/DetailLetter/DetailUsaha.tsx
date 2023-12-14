@@ -200,7 +200,7 @@ const DetailUsaha = ({ route, navigation }: Props) => {
                 console.log(err.message);
                 setModalError({
                     isVisible: true,
-                    description: 'Masalah koneksi!',
+                    description: 'Gagal mengupdate data!',
                 });
                 setIsLoading(false);
             });
@@ -234,14 +234,14 @@ const DetailUsaha = ({ route, navigation }: Props) => {
                         placeholder="Pilih Status Pernikahan"
                         control={control}
                         data={status}
-                        rules={{ required: 'Status Pernikahan tidak boleh kosong' }}
+                        rules={{ required: 'Status Pernikahan tidak boleh kosong!' }}
                         errors={errors.status_pernikahan}
                     />
                     <Input
                         name="jenis_usaha"
                         placeholder="Masukkan jenis usaha"
                         control={control}
-                        rules={{ required: 'Jenis usaha tidak boleh kosong' }}
+                        rules={{ required: 'Jenis usaha tidak boleh kosong!' }}
                         errors={errors.jenis_usaha}
                     >
                         <MarketIcon
@@ -254,7 +254,7 @@ const DetailUsaha = ({ route, navigation }: Props) => {
                         name="lama_usaha"
                         placeholder="Masukkan lama usaha"
                         control={control}
-                        rules={{ required: 'Jenis usaha tidak boleh kosong' }}
+                        rules={{ required: 'Jenis usaha tidak boleh kosong!' }}
                         errors={errors.lama_usaha}
                     >
                         <CalendarIcon
@@ -267,7 +267,7 @@ const DetailUsaha = ({ route, navigation }: Props) => {
                         name="tempat_usaha"
                         placeholder="Masukkan tempat usaha"
                         control={control}
-                        rules={{ required: 'Tempat usaha tidak boleh kosong' }}
+                        rules={{ required: 'Tempat usaha tidak boleh kosong!' }}
                         errors={errors.alamat_domisili}
                     >
                         <Location

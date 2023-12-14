@@ -169,7 +169,7 @@ const DetailDomisili = ({ route, navigation }: Props) => {
         if (firstFile.uri === '' || secondFile.uri === '' || thirdFile.uri === '' || fourthFile.uri === '') {
             setModalError({
                 isVisible: true,
-                description: 'Harap isi semua form',
+                description: 'Harap isi semua form!',
             });
             setIsLoading(false);
             return;
@@ -188,7 +188,7 @@ const DetailDomisili = ({ route, navigation }: Props) => {
                 console.log(err.message);
                 setModalError({
                     isVisible: true,
-                    description: 'Masalah koneksi!',
+                    description: 'Gagal mengupdate surat!',
                 });
                 setIsLoading(false);
             });

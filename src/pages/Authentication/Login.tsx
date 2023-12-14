@@ -70,7 +70,7 @@ const LoginScreen = ({ navigation }: Props) => {
                         placeholder="Email"
                         control={control}
                         name="email"
-                        rules={{ required: 'Email tidak boleh kosong!' }}
+                        rules={{ required: 'Email tidak boleh kosong!', pattern: { value: /\S+@\S+\.\S+/, message: 'Email tidak valid!' } }}
                         errors={errors.email}
                     >
                         <EmailIcon width={16} height={16} />

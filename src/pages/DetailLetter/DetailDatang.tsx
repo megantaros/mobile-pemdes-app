@@ -139,7 +139,7 @@ const DetailDatang = ({ navigation, route }: Props) => {
                 console.log(err.message);
                 setModalError({
                     isVisible: true,
-                    description: 'Masalah koneksi!',
+                    description: 'Gagal mengupdate data!',
                 });
                 setIsLoading(false);
             });

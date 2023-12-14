@@ -209,19 +209,6 @@ const FormKk = ({ navigation }: Props) => {
                 <Section
                     title="Form Permohonan KK"
                     text="Isi form dibawah ini untuk membuat permohonan surat">
-                    {/* <Input
-                        name="kk_lama"
-                        placeholder="Masukkan No. KK Lama"
-                        control={control}
-                        rules={{ required: 'No. KK Lama tidak boleh kosong' }}
-                        errors={errors.kk_lama}
-                    >
-                        <PersonCard
-                            width={16}
-                            height={16}
-                            fill={PRIMARY_COLOR}
-                        />
-                    </Input> */}
                     <Select
                         name="shdk"
                         placeholder="Pilih SHDK"
@@ -238,19 +225,6 @@ const FormKk = ({ navigation }: Props) => {
                         rules={{ required: 'Alasan Permohonan tidak boleh kosong' }}
                         errors={errors.alasan_permohonan}
                     />
-                    {/* <Input
-                        name="jml_angg_keluarga"
-                        placeholder="Masukkan Jumlah Anggota Keluarga"
-                        control={control}
-                        rules={{ required: 'Jumlah Anggota Keluarga tidak boleh kosong' }}
-                        errors={errors.jml_angg_keluarga}
-                    >
-                        <Family
-                            width={16}
-                            height={16}
-                            fill={PRIMARY_COLOR}
-                        />
-                    </Input> */}
                     <InputFile
                         uri={firstFile.uri}
                         fileName={firstFile.name}

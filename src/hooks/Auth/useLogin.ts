@@ -27,7 +27,7 @@ export default function useLogin() {
             const res = await apiClient.post('login', form);
             setModalSuccess({
                 isVisible: true,
-                description: 'Anda berhasil login!',
+                description: res.data.message,
             });
             dispatch(setUser({
                 id_warga: res.data.data.id_warga,
@@ -37,7 +37,7 @@ export default function useLogin() {
         } catch (err) {
             setModalError({
                 isVisible: true,
-                description: 'Koneksi bermasalah!',
+                description: 'Email / Password Salah!',
             });
         }
         setIsLoading(false);

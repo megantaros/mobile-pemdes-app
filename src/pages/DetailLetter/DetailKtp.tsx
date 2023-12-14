@@ -185,7 +185,7 @@ const DetailKtp = ({ navigation, route }: Props) => {
                 console.log(err.message);
                 setModalError({
                     isVisible: true,
-                    description: 'Masalah koneksi',
+                    description: 'Gagal mengupdate surat!',
                 });
                 setIsLoading(false);
             });
@@ -259,6 +259,7 @@ const DetailKtp = ({ navigation, route }: Props) => {
                         placeholder="Pilih Jenis Permohonan"
                         control={control}
                         data={jenis_permohonan}
+                        rules={{ required: true, message: 'Jenis permohonan tidak boleh kosong!' }}
                         errors={errors.jenis_permohonan}
                     />
                     <InputFile

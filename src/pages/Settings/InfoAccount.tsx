@@ -81,7 +81,7 @@ export default function InfoAccount({ navigation }: Props) {
                             name="nama_warga"
                             placeholder="Masukkan nama lengkap"
                             control={control}
-                            rules={{ required: 'Nama lengkap tidak boleh kosong' }}
+                            rules={{ required: 'Nama lengkap tidak boleh kosong!' }}
                             errors={errors.nama_warga}
                         >
                             <PersonSolid
@@ -94,7 +94,7 @@ export default function InfoAccount({ navigation }: Props) {
                             name="email"
                             placeholder="Masukkan email"
                             control={control}
-                            rules={{ required: 'Email tidak boleh kosong' }}
+                            rules={{ required: 'Email tidak boleh kosong!', pattern: { value: /\S+@\S+\.\S+/, message: 'Email tidak valid' } }}
                             errors={errors.email}
                         >
                             <EmailIcon
@@ -108,7 +108,7 @@ export default function InfoAccount({ navigation }: Props) {
                             name="nik"
                             placeholder="Masukkan NIK"
                             control={control}
-                            rules={{ required: 'NIK tidak boleh kosong', minLength: { value: 16, message: 'NIK harus 16 digit' } }}
+                            rules={{ required: 'NIK tidak boleh kosong!', minLength: { value: 16, message: 'NIK harus 16 digit' } }}
                             errors={errors.nik}
                         >
                             <PersonCard
@@ -122,7 +122,7 @@ export default function InfoAccount({ navigation }: Props) {
                             name="kk"
                             placeholder="Masukkan No. KK"
                             control={control}
-                            rules={{ required: 'No. KK tidak boleh kosong', minLength: { value: 16, message: 'No. KK harus 16 digit' } }}
+                            rules={{ required: 'No. KK tidak boleh kosong!', minLength: { value: 16, message: 'No. KK harus 16 digit' } }}
                             errors={errors.kk}
                         >
                             <FamilyIcon
@@ -136,7 +136,7 @@ export default function InfoAccount({ navigation }: Props) {
                             name="notelpon"
                             placeholder="Masukkan Nomor Telephone"
                             control={control}
-                            rules={{ required: 'Nomor Telephone tidak boleh kosong' }}
+                            rules={{ required: 'Nomor Telephone tidak boleh kosong!', number: { value: true, message: 'Nomor Telephone harus angka!' } }}
                             errors={errors.notelpon}
                         >
                             <Mobile
@@ -149,7 +149,7 @@ export default function InfoAccount({ navigation }: Props) {
                             name="ttl"
                             placeholder="Masukkan Tempat, Tgl Lahir"
                             control={control}
-                            rules={{ required: 'Tempat, Tgl Lahir tidak boleh kosong' }}
+                            rules={{ required: 'Tempat, Tgl Lahir tidak boleh kosong!' }}
                             errors={errors.ttl}
                         >
                             <Calendar
@@ -162,7 +162,7 @@ export default function InfoAccount({ navigation }: Props) {
                             name="pekerjaan"
                             placeholder="Masukkan pekerjaan"
                             control={control}
-                            rules={{ required: 'Pekerjaan tidak boleh kosong' }}
+                            rules={{ required: 'Pekerjaan tidak boleh kosong!' }}
                             errors={errors.pekerjaan}
                         >
                             <Work
@@ -176,7 +176,7 @@ export default function InfoAccount({ navigation }: Props) {
                             placeholder="Pilih Jenis Kelamin"
                             control={control}
                             data={sex}
-                            rules={{ required: 'Jenis Kelamin tidak boleh kosong' }}
+                            rules={{ required: 'Jenis Kelamin tidak boleh kosong!' }}
                             errors={errors.jenis_kelamin}
                         />
                         <Select
@@ -184,13 +184,13 @@ export default function InfoAccount({ navigation }: Props) {
                             placeholder="Pilih Agama"
                             control={control}
                             data={religion}
-                            rules={{ required: 'Agama tidak boleh kosong' }}
+                            rules={{ required: 'Agama tidak boleh kosong!' }}
                         />
                         <TextArea
                             name="alamat"
                             placeholder="Masukkan alamat"
                             control={control}
-                            rules={{ required: 'Alamat tidak boleh kosong' }}
+                            rules={{ required: 'Alamat tidak boleh kosong!' }}
                             errors={errors.alamat}
                         >
                             <Location

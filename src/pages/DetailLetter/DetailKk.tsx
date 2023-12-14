@@ -204,7 +204,7 @@ const DetailKk = ({ route, navigation }: Props) => {
                 console.log(err);
                 setModalError({
                     isVisible: true,
-                    description: 'Masalah koneksi!',
+                    description: 'Gagal mengupdate surat!',
                 });
                 setIsLoading(false);
             });

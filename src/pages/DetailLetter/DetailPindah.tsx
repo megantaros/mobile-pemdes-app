@@ -240,6 +240,8 @@ const DetailPindah = ({ route, navigation }: Props) => {
                         name="nama_kepala_keluarga"
                         placeholder="Masukkan Nama Kepala Keluarga"
                         control={control}
+                        rules={{ required: 'Nama Kepala Keluarga tidak boleh kosong!' }}
+                        errors={errors.nama_kepala_keluarga}
                     >
                         <UserIcon
                             width={16}
@@ -252,7 +254,7 @@ const DetailPindah = ({ route, navigation }: Props) => {
                         placeholder="Pilih SHDK"
                         control={control}
                         data={shdk}
-                        rules={{ required: 'SHDK tidak boleh kosong' }}
+                        rules={{ required: 'SHDK tidak boleh kosong!' }}
                         errors={errors.shdk}
                     />
                     <Select
@@ -260,7 +262,7 @@ const DetailPindah = ({ route, navigation }: Props) => {
                         placeholder="Pilih Alasan Pindah"
                         control={control}
                         data={alasan_pindah}
-                        rules={{ required: 'Alasan Pindah tidak boleh kosong' }}
+                        rules={{ required: 'Alasan Pindah tidak boleh kosong!' }}
                         errors={errors.alasan_pindah}
                     />
                     {data?.alasan_pindah === 'Lainnya' && (
