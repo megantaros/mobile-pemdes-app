@@ -45,7 +45,7 @@ const SplashScreen = ({ navigation }: Props) => {
             <View style={styles.section}>
                 <Image source={require('../../assets/img/logo-kebumen.png')} style={styles.image} />
                 <View style={styles.textHero}>
-                    <Text style={styles.heading_1}>Portals Pelayanan</Text>
+                    <Text style={styles.heading_1}>Portal Pelayanan</Text>
                     <Text style={styles.heading_2}>Pemdes Kembaran</Text>
                 </View>
             </View>
